@@ -54,7 +54,13 @@ Add additional notes about how to deploy this on a live system
 
 ## Authors
 
+* **Janneke van Baden**
 * **Merlin Koehler** - [MerlinKoehler](https://github.com/MerlinKoehler)
+* **Oskar Wielgos**
+* **Paula-Alexandra Gitu**
+* **Rita Naryzhnyaya**
+* **Victor Breda**
+
 
 See also the list of [contributors](https://github.com/MerlinKoehler/e8bd358abeeacbb7ccc8c667ccd837e4/contributors) who participated in this project.
 
