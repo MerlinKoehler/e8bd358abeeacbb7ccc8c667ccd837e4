@@ -1,4 +1,4 @@
-package GUI;
+package Group3;
 
 
 import javafx.application.Application;

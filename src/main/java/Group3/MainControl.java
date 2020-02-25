@@ -1,4 +1,4 @@
-package GameController;
+package Group3;
 
 /*
  * We can start the controller from here.

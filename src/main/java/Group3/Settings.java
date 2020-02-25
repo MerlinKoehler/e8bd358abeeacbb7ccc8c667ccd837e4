@@ -1,4 +1,4 @@
-package GUI;
+package Group3;
 
 /*
  * Example given: if we want to put in maps, choose different agents etc.
