@@ -3,6 +3,8 @@ package Group3;
 public class Storage {
 	
 	private int gameMode;
+	private double height;
+	private double width;
 	private int numGuards;
 	private int numIntruders;
 	private double captureDistance;
@@ -217,6 +219,18 @@ public class Storage {
 	}
 	public void setDoorSoundRadius(double doorSoundRadius) {
 		this.doorSoundRadius = doorSoundRadius;
+	}
+	public double getHeight() {
+		return height;
+	}
+	public void setHeight(double height) {
+		this.height = height;
+	}
+	public double getWidth() {
+		return width;
+	}
+	public void setWidth(double width) {
+		this.width = width;
 	}
 
 }
