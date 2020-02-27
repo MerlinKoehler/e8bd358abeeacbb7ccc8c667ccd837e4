@@ -1,5 +1,6 @@
 package Group3;
 
+import Interop.Action.Action;
 import Interop.Geometry.Direction;
 
 public class AgentState {
@@ -9,7 +10,8 @@ public class AgentState {
 	private boolean lastActionExecuted = false;
 	private Direction targetDirection;
 	private Object agent;
-	private int penalty; 
+	private int penalty;
+	private Action lastAction;
 	
 	public AgentState(int x1, int y1, Direction targetDirection, Object agent) {
 		this.x1 = x1;
@@ -59,5 +61,13 @@ public class AgentState {
 
 	public void setPenalty(int penalty) {
 		this.penalty = penalty;
+	}
+
+	public Action getLastAction() {
+		return lastAction;
+	}
+
+	public void setLastAction(Action lastAction) {
+		this.lastAction = lastAction;
 	}
 }

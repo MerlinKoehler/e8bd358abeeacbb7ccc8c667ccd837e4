@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Interop.Action.Action;
+import Interop.Action.NoAction;
 import Interop.Geometry.*;
 import Interop.Percept.AreaPercepts;
 import Interop.Percept.GuardPercepts;
@@ -22,7 +23,7 @@ public class MainControl {
 
 	ArrayList<StaticObject> staticObjects;
 	ArrayList<AgentState> agentStates;
-	
+
 	List<Interop.Agent.Intruder> intruders;
 	List<Interop.Agent.Guard> guards;
 	
@@ -86,6 +87,10 @@ public class MainControl {
 		 	// 6. Update the game state according to the action. 
 		    if(legalAction) {
 		    	updateAgentState(state, action);
+		    	state.setLastAction(action);
+		    }
+		    else {
+		    	state.setLastAction(new NoAction());
 		    }
 			state.setLastActionExecuted(legalAction);
 			
@@ -118,6 +123,10 @@ public class MainControl {
 		 	// 6. Update the game state according to the action. 
 		    if(legalAction) {
 		    	updateAgentState(state, action);
+		    	state.setLastAction(action);
+		    }
+		    else {
+		    	state.setLastAction(new NoAction());
 		    }
 			state.setLastActionExecuted(legalAction);
 			
@@ -128,10 +137,6 @@ public class MainControl {
 			return(gameFinished());
 		}
 		return -1;
-	}
-	
-	public ArrayList<StaticObject> getStaticObjects(){
-		return staticObjects;
 	}
 	
 	private Object getAgentNextTurn() {
@@ -190,6 +195,14 @@ public class MainControl {
 	// TODO: implement a function which checks if the game is finished. Take into account the current game mode.
 	private int gameFinished() {
 		return 0;
+	}
+	
+	public ArrayList<StaticObject> getStaticObjects(){
+		return staticObjects;
+	}
+	
+	public ArrayList<AgentState> getAgentStates() {
+		return agentStates;
 	}
 	
 	public static void main(String[] args) {
