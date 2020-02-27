@@ -142,52 +142,52 @@ public class MainControl {
 		return agentStates.get(currentTurn).getAgent();
 	}
 	
-	// TODO: implement
+	// TODO: implement a function which returns all vision perceptions of the agent in the current state.
 	private VisionPrecepts visionPercepts(AgentState state) {
 		return null;
 	}
 	
-	// TODO: implement
+	// TODO: implement a function which returns all sound perceptions of the agent in the current state.
 	private SoundPercepts soundPercepts(AgentState state) {
 		return null;
 	}
 	
-	// TODO: implement
+	// TODO: implement a function which returns all smell perceptions of the agent in the current state.
 	private SmellPercepts smellPercepts(AgentState state) {
 		return null;
 	}
 	
-	// TODO: implement
+	// TODO: implement a function which returns all area perceptions of the agent in the current state.
 	private AreaPercepts areaPercepts(AgentState state) {
 		return null;
 	}
 	
-	// TODO: implement
+	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
 	private ScenarioIntruderPercepts scenarioIntruderPercepts(AgentState state) {
 		return null;
 	}
 	
-	// TODO: implement
+	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
 	private ScenarioGuardPercepts scenarioGuardPercepts(AgentState state) {
 		return null;
 	}
 	
-	// TODO: implement
+	// TODO: implement a function which checks if an action is legal based on the current state of the agent.
 	private boolean checkLegalIntruderAction(AgentState state, Interop.Action.IntruderAction action) {
 		return false;
 	}
 	
-	// TODO: implement
+	// TODO: implement a function which checks if an action is legal based on the current state of the agent.
 	private boolean checkLegalGuardAction(AgentState state, Interop.Action.GuardAction action) {
 		return false;
 	}
 	
-	// TODO: implement
+	// TODO: implement a function, which updates the current game state based on the action of the agent.
 	private void updateAgentState(AgentState state, Action action) {
 		return;
 	}
 	
-	// TODO: implement
+	// TODO: implement a function which checks if the game is finished. Take into account the current game mode.
 	private int gameFinished() {
 		return 0;
 	}
