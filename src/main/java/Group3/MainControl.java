@@ -8,13 +8,14 @@ import java.util.ArrayList;
 
 public class MainControl {
 
-	
 	ArrayList<StaticObject> staticObjects = new ArrayList<StaticObject>();
+	MapReader readMap;
+	Storage storage;
 	
-	public MainControl() {
-		// Read map file
-		// Load static objects
-		// Get initial position of agents
+	public MainControl(String path) {
+		readMap = new MapReader(path);
+		storage = readMap.getStorage();
+		staticObjects = readMap.getStaticObjects();
 	}
 	
 	public void doStep() {
