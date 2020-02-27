@@ -1,6 +1,6 @@
 package Group3;
 
-public class Wall extends StaticObject {
+public class SpawnAreaIntruder extends StaticObject {
 	
 	private int x1;
 	public int getX1() {
@@ -42,7 +42,7 @@ public class Wall extends StaticObject {
 		return y4;
 	}
 	
-	public Wall(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
+	public SpawnAreaIntruder(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
 		this.x1 = x1;
 		this.x2 = x2;
 		this.x3 = x3;

@@ -1,5 +1,5 @@
 package Group3;
 
-public class StaticObject {
+public abstract class StaticObject {
 
 }
