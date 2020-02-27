@@ -43,7 +43,7 @@ public class MapReader {
 				try {
 					split = inputLine.split("=");
 					for (int i = 0; i < split.length; i++) {
-						split[i].trim();
+						split[i] = split[i].trim();
 					}
 					
 					switch(split[0]) {
@@ -167,7 +167,7 @@ public class MapReader {
 					case "targetArea":
 						doubleSplit = split[1].split(",");
 						for (int i = 0; i < doubleSplit.length; i++) {
-							doubleSplit[i].trim();
+							doubleSplit[i] = doubleSplit[i].trim();
 						}
 						target = new TargetArea(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
 						staticObjects.add(target);
@@ -176,7 +176,7 @@ public class MapReader {
 					case "spawnAreaIntruders":
 						doubleSplit = split[1].split(",");
 						for (int i = 0; i < doubleSplit.length; i++) {
-							doubleSplit[i].trim();
+							doubleSplit[i] = doubleSplit[i].trim();
 						}
 						spawnIntr = new SpawnAreaIntruder(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
 						staticObjects.add(spawnIntr);
@@ -185,7 +185,7 @@ public class MapReader {
 					case "spawnAreaGuards":
 						doubleSplit = split[1].split(",");
 						for (int i = 0; i < doubleSplit.length; i++) {
-							doubleSplit[i].trim();
+							doubleSplit[i] = doubleSplit[i].trim();
 						}
 						spawnGuards = new SpawnAreaGuards(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
 						staticObjects.add(spawnGuards);
@@ -194,7 +194,7 @@ public class MapReader {
 					case "wall":
 						doubleSplit = split[1].split(",");
 						for (int i = 0; i < doubleSplit.length; i++) {
-							doubleSplit[i].trim();
+							doubleSplit[i] = doubleSplit[i].trim();
 						}
 						wall = new Wall(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
 						staticObjects.add(wall);
@@ -203,7 +203,7 @@ public class MapReader {
 					case "teleport":
 						doubleSplit = split[1].split(",");
 						for (int i = 0; i < doubleSplit.length; i++) {
-							doubleSplit[i].trim();
+							doubleSplit[i] = doubleSplit[i].trim();
 						}
 						teleport = new Teleport(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]), Integer.parseInt(doubleSplit[8]), Integer.parseInt(doubleSplit[9]));
 						staticObjects.add(teleport);
@@ -212,7 +212,7 @@ public class MapReader {
 					case "shaded":
 						doubleSplit = split[1].split(",");
 						for (int i = 0; i < doubleSplit.length; i++) {
-							doubleSplit[i].trim();
+							doubleSplit[i] = doubleSplit[i].trim();
 						}
 						shaded = new ShadedArea(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
 						staticObjects.add(shaded);
@@ -221,7 +221,7 @@ public class MapReader {
 					case "door":
 						doubleSplit = split[1].split(",");
 						for (int i = 0; i < doubleSplit.length; i++) {
-							doubleSplit[i].trim();
+							doubleSplit[i] = doubleSplit[i].trim();
 						}
 						door = new Door(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
 						staticObjects.add(door);
@@ -230,7 +230,7 @@ public class MapReader {
 					case "window":
 						doubleSplit = split[1].split(",");
 						for (int i = 0; i < doubleSplit.length; i++) {
-							doubleSplit[i].trim();
+							doubleSplit[i] = doubleSplit[i].trim();
 						}
 						window = new Window(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
 						staticObjects.add(window);
@@ -239,7 +239,7 @@ public class MapReader {
 					case "sentry":
 						doubleSplit = split[1].split(",");
 						for (int i = 0; i < doubleSplit.length; i++) {
-							doubleSplit[i].trim();
+							doubleSplit[i] = doubleSplit[i].trim();
 						}
 						sentry = new SentryTower(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
 						staticObjects.add(sentry);
@@ -247,7 +247,9 @@ public class MapReader {
 						
 					default:
 						System.out.println(split[0] + " has no been read correctly.");
+						break;
 					}
+					
 					
 					inputLine = buffReader.readLine();
 				} 
