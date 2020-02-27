@@ -91,7 +91,7 @@ public class MapReader {
 						gameStorage.setMaxMoveDistanceGuard(Double.parseDouble(split[1]));
 						break;
 						
-					case "sprintCoolDown":
+					case "sprintCooldown":
 						gameStorage.setSprintCoolDown(Integer.parseInt(split[1]));
 						break;
 					

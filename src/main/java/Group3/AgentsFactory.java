@@ -3,6 +3,7 @@ package Group3;
 import Interop.Agent.Guard;
 import Interop.Agent.Intruder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,9 +17,23 @@ import java.util.List;
  */
 public class AgentsFactory {
     static public List<Intruder> createIntruders(int number) {
-        return Collections.emptyList();
+        
+    	List<Intruder> intruders = new ArrayList<Intruder>();
+    	
+    	for(int i = 0; i < number; i++) {
+    		Group3.Intruder intruder =  new Group3.Intruder();
+    		intruders.add(intruder);
+    	}
+    	
+    	return intruders;
     }
     static public List<Guard> createGuards(int number) {
-        return Collections.emptyList();
+    	
+    	List<Guard> guards = new ArrayList<Guard>();
+    	for(int i = 0; i < number; i++) {
+    		Group3.Guard guard =  new Group3.Guard();
+    		guards.add(guard);
+    	}
+    	return guards;
     }
 }
