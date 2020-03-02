@@ -42,47 +42,9 @@ public class SentryTower extends StaticObject {
 		return y4;
 	}
 	
-	private int ix1;
-	public int getIX1() {
-		return ix1;
-	}
 	
-	private int ix2;
-	public int getIX2() {
-		return ix2;
-	}
 	
-	private int ix3;
-	public int getIX3() {
-		return ix3;
-	}
-	
-	private int ix4;
-	public int getIX4() {
-		return ix4;
-	}
-	
-	private int iy1;
-	public int getIY1() {
-		return iy1;
-	}
-	
-	private int iy2;
-	public int getIY2() {
-		return iy2;
-	}
-	
-	private int iy3;
-	public int getIY3() {
-		return iy3;
-	}
-	
-	private int iy4;
-	public int getIY4() {
-		return iy4;
-	}
-	
-	public SentryTower(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int ix1, int iy1, int ix2, int iy2, int ix3, int iy3, int ix4, int iy4) {
+	public SentryTower(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
 		this.x1 = x1;
 		this.x2 = x2;
 		this.x3 = x3;
@@ -92,13 +54,6 @@ public class SentryTower extends StaticObject {
 		this.y3 = y3;
 		this.y4 = y4;
 		
-		this.ix1 = ix1;
-		this.ix2 = ix2;
-		this.ix3 = ix3;
-		this.ix4 = ix4;
-		this.iy1 = iy1;
-		this.iy2 = iy2;
-		this.iy3 = iy3;
-		this.iy4 = iy4;
+		
 	}
 }
