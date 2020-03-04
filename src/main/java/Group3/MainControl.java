@@ -148,21 +148,25 @@ public class MainControl {
 	}
 	
 	// TODO: implement a function which returns all vision perceptions of the agent in the current state.
+	// Oskar
 	private VisionPrecepts visionPercepts(AgentState state) {
 		return null;
 	}
 	
 	// TODO: implement a function which returns all sound perceptions of the agent in the current state.
+	// Janneke
 	private SoundPercepts soundPercepts(AgentState state) {
 		return null;
 	}
 	
 	// TODO: implement a function which returns all smell perceptions of the agent in the current state.
+	// Janneke
 	private SmellPercepts smellPercepts(AgentState state) {
 		return null;
 	}
 	
 	// TODO: implement a function which returns all area perceptions of the agent in the current state.
+	// Oskar
 	private AreaPercepts areaPercepts(AgentState state) {
 		return null;
 	}
@@ -178,21 +182,25 @@ public class MainControl {
 	}
 	
 	// TODO: implement a function which checks if an action is legal based on the current state of the agent.
+	// Victor
 	private boolean checkLegalIntruderAction(AgentState state, Interop.Action.IntruderAction action) {
 		return false;
 	}
 	
 	// TODO: implement a function which checks if an action is legal based on the current state of the agent.
+	// Victor
 	private boolean checkLegalGuardAction(AgentState state, Interop.Action.GuardAction action) {
 		return false;
 	}
 	
 	// TODO: implement a function, which updates the current game state based on the action of the agent.
+	// Merlin
 	private void updateAgentState(AgentState state, Action action) {
 		return;
 	}
 	
 	// TODO: implement a function which checks if the game is finished. Take into account the current game mode.
+	// Victor
 	private int gameFinished() {
 		return 0;
 	}
