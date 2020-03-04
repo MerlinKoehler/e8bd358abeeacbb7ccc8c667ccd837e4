@@ -206,7 +206,7 @@ public class MainControl {
 	}
 	
 	public static void main(String[] args) {
-		MainControl gameController = new MainControl("C:\\Users\\Merlin Köhler\\Desktop\\Project 2-2\\e8bd358abeeacbb7ccc8c667ccd837e4\\samplemap.txt");
+		MainControl gameController = new MainControl(args[0]);
     }
 	
 }
