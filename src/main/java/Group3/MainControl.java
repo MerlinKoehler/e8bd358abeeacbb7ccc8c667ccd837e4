@@ -172,11 +172,13 @@ public class MainControl {
 	}
 	
 	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
+	// Oskar
 	private ScenarioIntruderPercepts scenarioIntruderPercepts(AgentState state) {
 		return null;
 	}
 	
 	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
+	// Oskar
 	private ScenarioGuardPercepts scenarioGuardPercepts(AgentState state) {
 		return null;
 	}
