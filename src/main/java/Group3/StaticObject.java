@@ -10,5 +10,5 @@ public abstract class StaticObject {
 	abstract int getY2();
 	abstract int getY3();
 	abstract int getY4();
-
+	
 }

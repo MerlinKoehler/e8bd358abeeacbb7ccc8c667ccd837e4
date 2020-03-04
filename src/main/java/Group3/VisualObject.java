@@ -1,5 +1,9 @@
 package Group3;
 
+import javafx.event.EventHandler;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
@@ -25,15 +29,15 @@ public class VisualObject {
 			(double)object.getX4(), (double)object.getY4()
 		});
 		if(object instanceof Wall) {
-			shape.setFill(Color.CHOCOLATE);
+			shape.setFill(Color.PALEGREEN);
 		}else if(object instanceof Window) {
-			shape.setFill(Color.SKYBLUE);
+			shape.setFill(Color.MEDIUMTURQUOISE);
+		}else if(object instanceof Door) {
+			shape.setFill(Color.TEAL);
 		}else if(object instanceof Teleport) {
-			shape.setFill(Color.MEDIUMORCHID);
+			shape.setFill(Color.ROYALBLUE);
 		}else if(object instanceof TargetArea) {
 			shape.setFill(Color.MEDIUMPURPLE);
-		}else if(object instanceof Door) {
-			shape.setFill(Color.DARKRED);
 		}else if(object instanceof SentryTower) {
 			shape.setFill(Color.GREY);
 		}else if(object instanceof ShadedArea) {
@@ -41,7 +45,16 @@ public class VisualObject {
 		}else if(object instanceof SpawnAreaGuards) {
 			shape.setFill(Color.CORNFLOWERBLUE);
 		}else if(object instanceof SpawnAreaIntruder) {
-			shape.setFill(Color.LIGHTCYAN);
+			shape.setFill(Color.PLUM);
 		}
+		this.shape.addEventHandler(MouseEvent.MOUSE_ENTERED,
+                new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent e) {
+            	ScrollPane scroll = new ScrollPane();
+            	scroll.setContent(new Label("here is the " + object.getClass().toString()));
+            	System.out.println("here is the " + object.getClass().toString());
+            }
+  });
 	}
+	public Polygon getShape(){	return  this.shape;	}
 }
