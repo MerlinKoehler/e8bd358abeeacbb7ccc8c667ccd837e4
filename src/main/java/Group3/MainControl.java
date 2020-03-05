@@ -13,6 +13,7 @@ import Interop.Percept.Scenario.ScenarioGuardPercepts;
 import Interop.Percept.Scenario.ScenarioIntruderPercepts;
 import Interop.Percept.Smell.SmellPercepts;
 import Interop.Percept.Sound.SoundPercepts;
+import Interop.Percept.Vision.FieldOfView;
 import Interop.Percept.Vision.VisionPrecepts;
 
 /*
@@ -149,7 +150,26 @@ public class MainControl {
 	
 	// TODO: implement a function which returns all vision perceptions of the agent in the current state.
 	// Oskar
+	/**
+	 Cannot tell the difference between the guard and the intruder, assume the view range is the same for both.
+	 Same for what penalty should be applied to range - it seems to be a binary choice (normal, shaded), however
+	 @see Group3.AgentState, penalty is an integer!
+
+	 disclaimer: there should probably be an Agent class that holds this information (AgentState would then be its
+	 subclass and we could get rid of the generic Object type that serves no purpose..)
+	 */
 	private VisionPrecepts visionPercepts(AgentState state) {
+
+
+		/* FOV */
+		FieldOfView fieldOfView = new FieldOfView(
+				new Distance(storage.getViewRangeGuardNormal()),
+				Angle.fromDegrees(storage.getViewAngle()));
+
+		/* ObjectPercepts */
+
+
+		// return new VisionPrecepts(fieldOfView, objectPercepts)
 		return null;
 	}
 	
@@ -168,7 +188,24 @@ public class MainControl {
 	// TODO: implement a function which returns all area perceptions of the agent in the current state.
 	// Oskar
 	private AreaPercepts areaPercepts(AgentState state) {
-		return null;
+		boolean inWindow = false;
+		boolean inDoor = false;
+		boolean inSentryTower = false;
+		boolean justTeleported = false;
+
+		for (StaticObject staticObject : staticObjects) {
+			if (staticObject instanceof Teleport){
+				if (state.getX1() == ((Teleport) staticObject).getTx() &&
+						state.getY1() == ((Teleport) staticObject).getTy()) justTeleported = true;
+			}
+			else if (staticObject.isInside(state.getX1(), state.getY1())) {
+				if (staticObject instanceof Window) inWindow = true;
+				else if (staticObject instanceof Door) inDoor = true;
+				else if (staticObject instanceof SentryTower) inSentryTower = true;
+			}
+		}
+
+		return new AreaPercepts(inWindow, inDoor, inSentryTower, justTeleported);
 	}
 	
 	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
