@@ -1,5 +1,7 @@
 package Group3;
 
+import Interop.Geometry.Distance;
+
 public class Storage {
 	
 	private int gameMode;
@@ -10,9 +12,9 @@ public class Storage {
 	private double captureDistance;
 	private int winConditionIntruderRounds;
 	private double maxRotationAngle;
-	private double maxMoveDistanceIntruder;
-	private double maxSprintDistanceIntruder;
-	private double maxMoveDistanceGuard;
+	private Distance maxMoveDistanceIntruder;
+	private Distance maxSprintDistanceIntruder;
+	private Distance maxMoveDistanceGuard;
 	private int sprintCoolDown;
 	private int pheromoneCoolDown;
 	private double radiusPheromone;
@@ -74,25 +76,25 @@ public class Storage {
 		this.maxRotationAngle = maxRotationAngle;
 	}
 	
-	public double getMaxMoveDistanceIntruder() {
+	public Distance getMaxMoveDistanceIntruder() {
 		return maxMoveDistanceIntruder;
 	}
 	public void setMaxMoveDistanceIntruder(double maxMoveDistanceIntruder) {
-		this.maxMoveDistanceIntruder = maxMoveDistanceIntruder;
+		this.maxMoveDistanceIntruder = new Distance(maxMoveDistanceIntruder);
 	}
 	
-	public double getMaxSprintDistanceIntruder() {
+	public Distance getMaxSprintDistanceIntruder() {
 		return maxSprintDistanceIntruder;
 	}
 	public void setMaxSprintDistanceIntruder(double maxSprintDistanceIntruder) {
-		this.maxSprintDistanceIntruder = maxSprintDistanceIntruder;
+		this.maxSprintDistanceIntruder = new Distance(maxSprintDistanceIntruder);
 	}
 	
-	public double getMaxMoveDistanceGuard() {
+	public Distance getMaxMoveDistanceGuard() {
 		return maxMoveDistanceGuard;
 	}
 	public void setMaxMoveDistanceGuard(double maxMoveDistanceGuard) {
-		this.maxMoveDistanceGuard = maxMoveDistanceGuard;
+		this.maxMoveDistanceGuard = new Distance(maxMoveDistanceGuard);
 	}
 	
 	public int getSprintCoolDown() {

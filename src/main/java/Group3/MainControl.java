@@ -11,6 +11,7 @@ import Interop.Percept.GuardPercepts;
 import Interop.Percept.IntruderPercepts;
 import Interop.Percept.Scenario.ScenarioGuardPercepts;
 import Interop.Percept.Scenario.ScenarioIntruderPercepts;
+import Interop.Percept.Scenario.ScenarioPercepts;
 import Interop.Percept.Smell.SmellPercepts;
 import Interop.Percept.Sound.SoundPercepts;
 import Interop.Percept.Vision.FieldOfView;
@@ -30,7 +31,8 @@ public class MainControl {
 	
 	MapReader readMap;
 	Storage storage;
-	
+
+	ScenarioPercepts scenarioPercepts = scenarioPercepts();
 	int currentTurn = -1;
 	
 	public MainControl(String path) {
@@ -76,7 +78,7 @@ public class MainControl {
 		    		soundPercepts(state), 
 		    		smellPercepts(state),
 		    		areaPercepts(state),
-		    		scenarioGuardPercepts(state),
+		    		scenarioGuardPercepts(),
 		    		state.isLastActionExecuted());
 		    
 		 	// 3. Pass the perception to the agent and retrieve the action
@@ -112,7 +114,7 @@ public class MainControl {
 		    		soundPercepts(state),
 		    		smellPercepts(state),
 		    		areaPercepts(state),
-		    		scenarioIntruderPercepts(state),
+		    		scenarioIntruderPercepts(),
 		    		state.isLastActionExecuted());
 		    
 		 	// 3. Pass the perception to the agent and retrieve the action
@@ -207,17 +209,25 @@ public class MainControl {
 
 		return new AreaPercepts(inWindow, inDoor, inSentryTower, justTeleported);
 	}
-	
+
+	// TODO
+	private ScenarioPercepts scenarioPercepts() {
+		return null;
+	}
+
 	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
 	// Oskar
-	private ScenarioIntruderPercepts scenarioIntruderPercepts(AgentState state) {
-		return null;
+	private ScenarioIntruderPercepts scenarioIntruderPercepts() {
+		return new ScenarioIntruderPercepts(scenarioPercepts, storage.getWinConditionIntruderRounds(),
+				storage.getMaxMoveDistanceIntruder(), storage.getMaxSprintDistanceIntruder(), storage.getSprintCoolDown()
+				);
+
 	}
 	
 	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
 	// Oskar
-	private ScenarioGuardPercepts scenarioGuardPercepts(AgentState state) {
-		return null;
+	private ScenarioGuardPercepts scenarioGuardPercepts() {
+		return new ScenarioGuardPercepts(scenarioPercepts, storage.getMaxMoveDistanceGuard());
 	}
 	
 	// TODO: implement a function which checks if an action is legal based on the current state of the agent.
