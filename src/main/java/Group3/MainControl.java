@@ -2,6 +2,7 @@ package Group3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import Interop.Action.Action;
 import Interop.Action.NoAction;
@@ -15,6 +16,8 @@ import Interop.Percept.Scenario.ScenarioPercepts;
 import Interop.Percept.Smell.SmellPercepts;
 import Interop.Percept.Sound.SoundPercepts;
 import Interop.Percept.Vision.FieldOfView;
+import Interop.Percept.Vision.ObjectPercept;
+import Interop.Percept.Vision.ObjectPercepts;
 import Interop.Percept.Vision.VisionPrecepts;
 
 /*
@@ -32,7 +35,13 @@ public class MainControl {
 	MapReader readMap;
 	Storage storage;
 
-	ScenarioPercepts scenarioPercepts = scenarioPercepts();
+	private ScenarioPercepts scenarioPercepts = scenarioPercepts();
+
+	/*
+	 * TODO: Implement reading objects from the map description file (in MapReader)
+	  * No need for StaticObject and its sublcasses, we already have the ObjectPercept class!! */
+	private Set<ObjectPercept> objectPercepts;
+
 	int currentTurn = -1;
 	
 	public MainControl(String path) {
@@ -161,18 +170,11 @@ public class MainControl {
 	 subclass and we could get rid of the generic Object type that serves no purpose..)
 	 */
 	private VisionPrecepts visionPercepts(AgentState state) {
-
-
-		/* FOV */
 		FieldOfView fieldOfView = new FieldOfView(
 				new Distance(storage.getViewRangeGuardNormal()),
 				Angle.fromDegrees(storage.getViewAngle()));
 
-		/* ObjectPercepts */
-
-
-		// return new VisionPrecepts(fieldOfView, objectPercepts)
-		return null;
+		return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
 	}
 	
 	// TODO: implement a function which returns all sound perceptions of the agent in the current state.
