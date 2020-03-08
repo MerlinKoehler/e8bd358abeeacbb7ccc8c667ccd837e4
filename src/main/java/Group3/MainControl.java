@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import Group3.StaticObjects.*;
 import Interop.Action.Action;
 import Interop.Action.NoAction;
 import Interop.Geometry.*;
@@ -228,8 +229,8 @@ public class MainControl {
 
 		for (StaticObject staticObject : staticObjects) {
 			if (staticObject instanceof Teleport){
-				if (state.getX1() == ((Teleport) staticObject).getTx() &&
-						state.getY1() == ((Teleport) staticObject).getTy()) justTeleported = true;
+				if (state.getX1() == ((Teleport) staticObject).getTeleportTo().getX() &&
+						state.getY1() == ((Teleport) staticObject).getTeleportTo().getY()) justTeleported = true;
 			}
 			else if (staticObject.isInside(state.getX1(), state.getY1())) {
 				if (staticObject instanceof Window) inWindow = true;

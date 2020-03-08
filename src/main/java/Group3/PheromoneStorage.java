@@ -41,7 +41,6 @@ public class PheromoneStorage {
 			
 			pheromonesGuard.removeAll(remove);
 		
-		
 			remove.clear();
 			
 			for (int i = 0; i < pheromonesIntruder.size(); i++) {

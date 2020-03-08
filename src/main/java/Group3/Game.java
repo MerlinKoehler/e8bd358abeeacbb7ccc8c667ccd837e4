@@ -1,6 +1,10 @@
 package Group3;
 
 
+import Group3.StaticObjects.TargetArea;
+import Group3.StaticObjects.Teleport;
+import Group3.StaticObjects.Wall;
+import Interop.Geometry.Point;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -52,13 +56,13 @@ public class Game extends Application {
 			Rectangle mapR = new Rectangle();
 			mapR.setWidth((bounds.getWidth()*4)/5);
 			mapR.setHeight((bounds.getHeight()*4)/5);
-			Wall wa = new Wall(0,0,(int)mapR.getWidth(),0,(int)mapR.getWidth(),100,0,100);
+			Wall wa = new Wall(new Point(0,0),new Point((int)mapR.getWidth(),0),new Point((int)mapR.getWidth(),100),new Point(0,100));
 			VisualObject w = new VisualObject(wa);
 			
-			TargetArea t = new TargetArea(20,120,70,120,70,160,20,160);
+			TargetArea t = new TargetArea(new Point(20,120), new Point(70,120), new Point(70,160), new Point(20,160));
 			VisualObject ta = new VisualObject(t);
 			
-			Teleport tel = new Teleport(100,200,180,200,180,280,100,280, 300, 300);
+			Teleport tel = new Teleport(new Point(100,200),new Point(180,200),new Point(180,280),new Point(100,280), new Point(300, 300));
 			VisualObject tell = new VisualObject(tel);
 			
 			mapR.setFill(Color.BLACK);

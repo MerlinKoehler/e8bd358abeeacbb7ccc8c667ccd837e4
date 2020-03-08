@@ -1,5 +1,6 @@
 package Group3;
 
+import Group3.StaticObjects.*;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -23,10 +24,10 @@ public class VisualObject {
 		this.object = object;
 		this.shape = new Polygon(); 
 		this.shape.getPoints().addAll(new Double[] {
-			(double)object.getX1(), (double)object.getY1(), 
-			(double)object.getX2(), (double)object.getY2(),
-			(double)object.getX3(), (double)object.getY3(),
-			(double)object.getX4(), (double)object.getY4()
+			(double)object.getP1().getX(), (double)object.getP1().getY(), 
+			(double)object.getP2().getX(), (double)object.getP2().getY(),
+			(double)object.getP3().getX(), (double)object.getP3().getY(),
+			(double)object.getP4().getX(), (double)object.getP4().getY()
 		});
 		if(object instanceof Wall) {
 			shape.setFill(Color.PALEGREEN);
@@ -44,7 +45,7 @@ public class VisualObject {
 			shape.setFill(Color.DARKGRAY);
 		}else if(object instanceof SpawnAreaGuards) {
 			shape.setFill(Color.CORNFLOWERBLUE);
-		}else if(object instanceof SpawnAreaIntruder) {
+		}else if(object instanceof SpawnAreaIntruders) {
 			shape.setFill(Color.PLUM);
 		}
 		this.shape.addEventHandler(MouseEvent.MOUSE_ENTERED,

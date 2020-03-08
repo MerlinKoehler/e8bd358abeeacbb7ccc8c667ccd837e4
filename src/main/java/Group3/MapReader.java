@@ -3,12 +3,15 @@ package Group3;
 import java.io.*;
 import java.util.ArrayList;
 
+import Group3.StaticObjects.*;
+import Interop.Geometry.Point;
+
 public class MapReader {
 
 	private Storage gameStorage = new Storage();
 	private ArrayList<StaticObject> staticObjects = new ArrayList<StaticObject>();
 	private TargetArea target;
-	private SpawnAreaIntruder spawnIntr;
+	private SpawnAreaIntruders spawnIntr;
 	private SpawnAreaGuards spawnGuards;
 	private ShadedArea shaded;
 	private Wall wall;
@@ -169,7 +172,7 @@ public class MapReader {
 						for (int i = 0; i < doubleSplit.length; i++) {
 							doubleSplit[i] = doubleSplit[i].trim();
 						}
-						target = new TargetArea(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
+						target = new TargetArea(new Point(Double.parseDouble(doubleSplit[0]), Double.parseDouble(doubleSplit[1])), new Point(Double.parseDouble(doubleSplit[2]), Double.parseDouble(doubleSplit[3])), new Point(Double.parseDouble(doubleSplit[4]), Double.parseDouble(doubleSplit[5])), new Point(Double.parseDouble(doubleSplit[6]), Double.parseDouble(doubleSplit[7])));
 						staticObjects.add(target);
 						break;
 						
@@ -178,7 +181,7 @@ public class MapReader {
 						for (int i = 0; i < doubleSplit.length; i++) {
 							doubleSplit[i] = doubleSplit[i].trim();
 						}
-						spawnIntr = new SpawnAreaIntruder(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
+						spawnIntr = new SpawnAreaIntruders(new Point(Double.parseDouble(doubleSplit[0]), Double.parseDouble(doubleSplit[1])), new Point(Double.parseDouble(doubleSplit[2]), Double.parseDouble(doubleSplit[3])), new Point(Double.parseDouble(doubleSplit[4]), Double.parseDouble(doubleSplit[5])), new Point(Double.parseDouble(doubleSplit[6]), Double.parseDouble(doubleSplit[7])));
 						staticObjects.add(spawnIntr);
 						break;
 						
@@ -187,7 +190,7 @@ public class MapReader {
 						for (int i = 0; i < doubleSplit.length; i++) {
 							doubleSplit[i] = doubleSplit[i].trim();
 						}
-						spawnGuards = new SpawnAreaGuards(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
+						spawnGuards = new SpawnAreaGuards(new Point(Double.parseDouble(doubleSplit[0]), Double.parseDouble(doubleSplit[1])), new Point(Double.parseDouble(doubleSplit[2]), Double.parseDouble(doubleSplit[3])), new Point(Double.parseDouble(doubleSplit[4]), Double.parseDouble(doubleSplit[5])), new Point(Double.parseDouble(doubleSplit[6]), Double.parseDouble(doubleSplit[7])));
 						staticObjects.add(spawnGuards);
 						break;
 					
@@ -196,7 +199,7 @@ public class MapReader {
 						for (int i = 0; i < doubleSplit.length; i++) {
 							doubleSplit[i] = doubleSplit[i].trim();
 						}
-						wall = new Wall(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
+						wall = new Wall(new Point(Double.parseDouble(doubleSplit[0]), Double.parseDouble(doubleSplit[1])), new Point(Double.parseDouble(doubleSplit[2]), Double.parseDouble(doubleSplit[3])), new Point(Double.parseDouble(doubleSplit[4]), Double.parseDouble(doubleSplit[5])), new Point(Double.parseDouble(doubleSplit[6]), Double.parseDouble(doubleSplit[7])));
 						staticObjects.add(wall);
 						break;
 						
@@ -205,7 +208,7 @@ public class MapReader {
 						for (int i = 0; i < doubleSplit.length; i++) {
 							doubleSplit[i] = doubleSplit[i].trim();
 						}
-						teleport = new Teleport(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]), Integer.parseInt(doubleSplit[8]), Integer.parseInt(doubleSplit[9]));
+						teleport = new Teleport(new Point(Double.parseDouble(doubleSplit[0]), Double.parseDouble(doubleSplit[1])), new Point(Double.parseDouble(doubleSplit[2]), Double.parseDouble(doubleSplit[3])), new Point(Double.parseDouble(doubleSplit[4]), Double.parseDouble(doubleSplit[5])), new Point(Double.parseDouble(doubleSplit[6]), Double.parseDouble(doubleSplit[7])), new Point(Double.parseDouble(doubleSplit[8]), Double.parseDouble(doubleSplit[9])));
 						staticObjects.add(teleport);
 						break;
 						
@@ -214,7 +217,7 @@ public class MapReader {
 						for (int i = 0; i < doubleSplit.length; i++) {
 							doubleSplit[i] = doubleSplit[i].trim();
 						}
-						shaded = new ShadedArea(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
+						shaded = new ShadedArea(new Point(Double.parseDouble(doubleSplit[0]), Double.parseDouble(doubleSplit[1])), new Point(Double.parseDouble(doubleSplit[2]), Double.parseDouble(doubleSplit[3])), new Point(Double.parseDouble(doubleSplit[4]), Double.parseDouble(doubleSplit[5])), new Point(Double.parseDouble(doubleSplit[6]), Double.parseDouble(doubleSplit[7])));
 						staticObjects.add(shaded);
 						break;
 						
@@ -223,7 +226,7 @@ public class MapReader {
 						for (int i = 0; i < doubleSplit.length; i++) {
 							doubleSplit[i] = doubleSplit[i].trim();
 						}
-						door = new Door(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
+						door = new Door(new Point(Double.parseDouble(doubleSplit[0]), Double.parseDouble(doubleSplit[1])), new Point(Double.parseDouble(doubleSplit[2]), Double.parseDouble(doubleSplit[3])), new Point(Double.parseDouble(doubleSplit[4]), Double.parseDouble(doubleSplit[5])), new Point(Double.parseDouble(doubleSplit[6]), Double.parseDouble(doubleSplit[7])));
 						staticObjects.add(door);
 						break;
 						
@@ -232,7 +235,7 @@ public class MapReader {
 						for (int i = 0; i < doubleSplit.length; i++) {
 							doubleSplit[i] = doubleSplit[i].trim();
 						}
-						window = new Window(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
+						window = new Window(new Point(Double.parseDouble(doubleSplit[0]), Double.parseDouble(doubleSplit[1])), new Point(Double.parseDouble(doubleSplit[2]), Double.parseDouble(doubleSplit[3])), new Point(Double.parseDouble(doubleSplit[4]), Double.parseDouble(doubleSplit[5])), new Point(Double.parseDouble(doubleSplit[6]), Double.parseDouble(doubleSplit[7])));
 						staticObjects.add(window);
 						break;
 						
@@ -241,7 +244,7 @@ public class MapReader {
 						for (int i = 0; i < doubleSplit.length; i++) {
 							doubleSplit[i] = doubleSplit[i].trim();
 						}
-						sentry = new SentryTower(Integer.parseInt(doubleSplit[0]), Integer.parseInt(doubleSplit[1]), Integer.parseInt(doubleSplit[2]), Integer.parseInt(doubleSplit[3]), Integer.parseInt(doubleSplit[4]), Integer.parseInt(doubleSplit[5]), Integer.parseInt(doubleSplit[6]), Integer.parseInt(doubleSplit[7]));
+						sentry = new SentryTower(new Point(Double.parseDouble(doubleSplit[0]), Double.parseDouble(doubleSplit[1])), new Point(Double.parseDouble(doubleSplit[2]), Double.parseDouble(doubleSplit[3])), new Point(Double.parseDouble(doubleSplit[4]), Double.parseDouble(doubleSplit[5])), new Point(Double.parseDouble(doubleSplit[6]), Double.parseDouble(doubleSplit[7])));
 						staticObjects.add(sentry);
 						break;
 						
