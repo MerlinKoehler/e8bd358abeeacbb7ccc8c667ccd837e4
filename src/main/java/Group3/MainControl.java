@@ -1,6 +1,7 @@
 package Group3;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +14,10 @@ import Interop.Percept.IntruderPercepts;
 import Interop.Percept.Scenario.ScenarioGuardPercepts;
 import Interop.Percept.Scenario.ScenarioIntruderPercepts;
 import Interop.Percept.Scenario.ScenarioPercepts;
+import Interop.Percept.Smell.SmellPercept;
+import Interop.Percept.Smell.SmellPerceptType;
 import Interop.Percept.Smell.SmellPercepts;
+import Interop.Percept.Sound.SoundPercept;
 import Interop.Percept.Sound.SoundPercepts;
 import Interop.Percept.Vision.FieldOfView;
 import Interop.Percept.Vision.ObjectPercept;
@@ -34,6 +38,10 @@ public class MainControl {
 	
 	MapReader readMap;
 	Storage storage;
+	PheromoneStorage pherStorage = new PheromoneStorage();
+	
+	//made this an object outside to use in the smellpercepts etc
+	Object agent;
 
 	private ScenarioPercepts scenarioPercepts = scenarioPercepts();
 
@@ -75,7 +83,7 @@ public class MainControl {
 	
 	public int doStep() {
 		// 1. Get the agent who does the next turn
-		Object agent = getAgentNextTurn();
+		agent = getAgentNextTurn();
 		AgentState state = agentStates.get(currentTurn);
 		
 		if (agent.getClass() == Guard.class) {
@@ -180,13 +188,34 @@ public class MainControl {
 	// TODO: implement a function which returns all sound perceptions of the agent in the current state.
 	// Janneke
 	private SoundPercepts soundPercepts(AgentState state) {
+		// percepttype and direction
+		//types: noise and yell
+		//only guards can yell!
+		Set<SoundPercept> sounds = new HashSet<SoundPercept>();
+		
 		return null;
 	}
 	
 	// TODO: implement a function which returns all smell perceptions of the agent in the current state.
+	// TODO: implement the way an agent drops a pheromone
 	// Janneke
 	private SmellPercepts smellPercepts(AgentState state) {
-		return null;
+		Set<SmellPercept> smells = new HashSet<SmellPercept>();
+		
+		if (agent.getClass() == Guard.class) {
+			for (int i = 0; i < pherStorage.getPheromonesGuard().size(); i++) {
+				SmellPercept smell = new SmellPercept(pherStorage.getPheromonesGuard().get(i).getContent1(), new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesGuard().get(i).getContent2()));
+				smells.add(smell);
+			}
+		}
+		else if (agent.getClass() == Intruder.class){
+			for (int i = 0; i < pherStorage.getPheromonesIntruder().size(); i++) {
+				SmellPercept smell = new SmellPercept(pherStorage.getPheromonesIntruder().get(i).getContent1(), new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesIntruder().get(i).getContent2()));
+				smells.add(smell);
+			}
+		}
+		SmellPercepts percepts = new SmellPercepts(smells);
+		return percepts;
 	}
 	
 	// TODO: implement a function which returns all area perceptions of the agent in the current state.
