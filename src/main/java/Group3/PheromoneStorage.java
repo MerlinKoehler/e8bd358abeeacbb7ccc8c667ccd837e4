@@ -29,9 +29,7 @@ public class PheromoneStorage {
 	
 	//updates this whole list - how long a pheromone has left
 	//deletes pheromones that are not smellable anymore
-	public void updatePheromones(boolean guard) {
-		
-		if (guard) {
+	public void updatePheromones() {
 			ArrayList<Triplet<SmellPerceptType, Point, Integer>> remove = new ArrayList<>();
 			
 			for (int i = 0; i < pheromonesGuard.size(); i++) {
@@ -42,9 +40,9 @@ public class PheromoneStorage {
 			}
 			
 			pheromonesGuard.removeAll(remove);
-		}
-		else {
-			ArrayList<Triplet<SmellPerceptType, Point, Integer>> remove = new ArrayList<>();
+		
+		
+			remove.clear();
 			
 			for (int i = 0; i < pheromonesIntruder.size(); i++) {
 				pheromonesIntruder.get(i).setContent3(pheromonesIntruder.get(i).getContent3()-1);
@@ -54,7 +52,6 @@ public class PheromoneStorage {
 			}
 			
 			pheromonesIntruder.removeAll(remove);
-		}
 	}
 	
 	public void addPheromone(SmellPerceptType type, Point point, Integer timeLeft, boolean guard) {

@@ -196,8 +196,8 @@ public class MainControl {
 		return null;
 	}
 	
-	// TODO: implement a function which returns all smell perceptions of the agent in the current state.
-	// TODO: implement the way an agent drops a pheromone
+	// TODO: implement the way an agent drops a pheromone - in the update state method
+	// TODO: when it updates a state, also automatically updates the pheromones (the time they're valid i mean)
 	// Janneke
 	private SmellPercepts smellPercepts(AgentState state) {
 		Set<SmellPercept> smells = new HashSet<SmellPercept>();
