@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 import Group3.StaticObjects.*;
+import Group3.StaticObjects.StaticObject;
 import Interop.Geometry.Point;
 
 public class MapReader {
