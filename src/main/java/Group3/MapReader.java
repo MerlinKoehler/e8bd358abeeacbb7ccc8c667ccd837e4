@@ -45,7 +45,6 @@ public class MapReader {
 					for (int i = 0; i < split.length; i++) {
 						split[i] = split[i].trim();
 					}
-					
 					switch(split[0]) {
 					case "gameMode": 
 						gameStorage.setGameMode(Integer.parseInt(split[1]));
@@ -253,8 +252,8 @@ public class MapReader {
 					
 					inputLine = buffReader.readLine();
 				} 
-				catch (IOException e) {
-						e.printStackTrace();
+				catch (IOException e) {	
+					e.printStackTrace();
 				}
 		}
 		

@@ -19,14 +19,14 @@ public class VisualObject {
 	StaticObject object;
 	Polygon shape;
 	
-	public VisualObject(StaticObject object) {
+	public VisualObject(StaticObject object, double scalingFactor) {
 		this.object = object;
 		this.shape = new Polygon(); 
 		this.shape.getPoints().addAll(new Double[] {
-			(double)object.getX1(), (double)object.getY1(), 
-			(double)object.getX2(), (double)object.getY2(),
-			(double)object.getX3(), (double)object.getY3(),
-			(double)object.getX4(), (double)object.getY4()
+			(double)object.getX1()*scalingFactor, (double)object.getY1()*scalingFactor, 
+			(double)object.getX2()*scalingFactor, (double)object.getY2()*scalingFactor,
+			(double)object.getX3()*scalingFactor, (double)object.getY3()*scalingFactor,
+			(double)object.getX4()*scalingFactor, (double)object.getY4()*scalingFactor
 		});
 		if(object instanceof Wall) {
 			shape.setFill(Color.PALEGREEN);
@@ -50,8 +50,8 @@ public class VisualObject {
 		this.shape.addEventHandler(MouseEvent.MOUSE_ENTERED,
                 new EventHandler<MouseEvent>() {
             public void handle(MouseEvent e) {
-            	ScrollPane scroll = new ScrollPane();
-            	scroll.setContent(new Label("here is the " + object.getClass().toString()));
+//            	ScrollPane scroll = new ScrollPane();
+//            	scroll.setContent(new Label("here is the " + object.getClass().toString()));
             	System.out.println("here is the " + object.getClass().toString());
             }
   });

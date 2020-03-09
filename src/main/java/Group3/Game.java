@@ -1,6 +1,8 @@
 package Group3;
 
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -29,7 +31,7 @@ public class Game extends Application {
 	/*
 	 * Now, can just add stuff in here to get to perform the exploration 
 	 */
-	
+	String path;
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			//example
@@ -48,23 +50,19 @@ public class Game extends Application {
 			
 			//set the scene
 	        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-			BorderPane map = new BorderPane();
-			Rectangle mapR = new Rectangle();
-			mapR.setWidth((bounds.getWidth()*4)/5);
-			mapR.setHeight((bounds.getHeight()*4)/5);
-			Wall wa = new Wall(0,0,(int)mapR.getWidth(),0,(int)mapR.getWidth(),100,0,100);
-			VisualObject w = new VisualObject(wa);
-			
-			TargetArea t = new TargetArea(20,120,70,120,70,160,20,160);
-			VisualObject ta = new VisualObject(t);
-			
-			Teleport tel = new Teleport(100,200,180,200,180,280,100,280, 300, 300);
-			VisualObject tell = new VisualObject(tel);
-			
-			mapR.setFill(Color.BLACK);
-			map.getChildren().addAll(mapR, w.getShape(), ta.getShape(), tell.getShape());
-			root.setCenter(map);
-						
+			try { 
+	            File f = new File("samplemap"); 
+	            String absolute = f.getAbsolutePath(); 
+	            this.path = absolute + ".txt";
+	        } 
+	        catch (Exception e) { 
+	            System.err.println(e.getMessage()); 
+	        } 
+			double mapBoundWidth = bounds.getWidth();
+			double mapBoundHeight = (bounds.getHeight()*9)/10;
+			Map m = new Map(path, mapBoundWidth, mapBoundHeight);
+			MapVisualization mv = new MapVisualization(m);
+			root.setCenter(mv.getPane());
 			Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
 			primaryStage.setScene(scene);
 			primaryStage.show();
