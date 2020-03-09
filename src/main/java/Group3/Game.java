@@ -2,7 +2,10 @@ package Group3;
 
 
 import java.io.File;
-
+import Group3.StaticObjects.TargetArea;
+import Group3.StaticObjects.Teleport;
+import Group3.StaticObjects.Wall;
+import Interop.Geometry.Point;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -44,7 +47,6 @@ public class Game extends Application {
 			//add things to the root
 			BorderPane root = new BorderPane();
 			root.setStyle("-fx-background-color: lightgray ;");
-			//root.getChildren().add(addLegend());
 			root.setPadding(new Insets(20,50,20,20));
 			root.setRight(addLegend());
 			
@@ -63,6 +65,7 @@ public class Game extends Application {
 			Map m = new Map(path, mapBoundWidth, mapBoundHeight);
 			MapVisualization mv = new MapVisualization(m);
 			root.setCenter(mv.getPane());
+
 			Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
 			primaryStage.setScene(scene);
 			primaryStage.show();

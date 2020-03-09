@@ -2,6 +2,7 @@ package Group3;
 
 import java.util.ArrayList;
 
+import Group3.StaticObjects.StaticObject;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

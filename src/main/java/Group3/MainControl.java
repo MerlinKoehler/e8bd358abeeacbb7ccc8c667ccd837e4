@@ -1,8 +1,11 @@
 package Group3;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import Group3.StaticObjects.*;
 import Interop.Action.Action;
 import Interop.Action.NoAction;
 import Interop.Geometry.*;
@@ -11,8 +14,15 @@ import Interop.Percept.GuardPercepts;
 import Interop.Percept.IntruderPercepts;
 import Interop.Percept.Scenario.ScenarioGuardPercepts;
 import Interop.Percept.Scenario.ScenarioIntruderPercepts;
+import Interop.Percept.Scenario.ScenarioPercepts;
+import Interop.Percept.Smell.SmellPercept;
+import Interop.Percept.Smell.SmellPerceptType;
 import Interop.Percept.Smell.SmellPercepts;
+import Interop.Percept.Sound.SoundPercept;
 import Interop.Percept.Sound.SoundPercepts;
+import Interop.Percept.Vision.FieldOfView;
+import Interop.Percept.Vision.ObjectPercept;
+import Interop.Percept.Vision.ObjectPercepts;
 import Interop.Percept.Vision.VisionPrecepts;
 
 /*
@@ -29,7 +39,18 @@ public class MainControl {
 	
 	MapReader readMap;
 	Storage storage;
+	PheromoneStorage pherStorage = new PheromoneStorage();
 	
+	//made this an object outside to use in the smellpercepts etc
+	Object agent;
+
+	private ScenarioPercepts scenarioPercepts = scenarioPercepts();
+
+	/*
+	 * TODO: Implement reading objects from the map description file (in MapReader)
+	  * No need for StaticObject and its sublcasses, we already have the ObjectPercept class!! */
+	private Set<ObjectPercept> objectPercepts;
+
 	int currentTurn = -1;
 	
 	public MainControl(String path) {
@@ -63,7 +84,7 @@ public class MainControl {
 	
 	public int doStep() {
 		// 1. Get the agent who does the next turn
-		Object agent = getAgentNextTurn();
+		agent = getAgentNextTurn();
 		AgentState state = agentStates.get(currentTurn);
 		
 		if (agent.getClass() == Guard.class) {
@@ -75,7 +96,7 @@ public class MainControl {
 		    		soundPercepts(state), 
 		    		smellPercepts(state),
 		    		areaPercepts(state),
-		    		scenarioGuardPercepts(state),
+		    		scenarioGuardPercepts(),
 		    		state.isLastActionExecuted());
 		    
 		 	// 3. Pass the perception to the agent and retrieve the action
@@ -111,7 +132,7 @@ public class MainControl {
 		    		soundPercepts(state),
 		    		smellPercepts(state),
 		    		areaPercepts(state),
-		    		scenarioIntruderPercepts(state),
+		    		scenarioIntruderPercepts(),
 		    		state.isLastActionExecuted());
 		    
 		 	// 3. Pass the perception to the agent and retrieve the action
@@ -148,51 +169,119 @@ public class MainControl {
 	}
 	
 	// TODO: implement a function which returns all vision perceptions of the agent in the current state.
+	// Oskar
+	/**
+	 Cannot tell the difference between the guard and the intruder, assume the view range is the same for both.
+	 Same for what penalty should be applied to range - it seems to be a binary choice (normal, shaded), however
+	 @see Group3.AgentState, penalty is an integer!
+
+	 disclaimer: there should probably be an Agent class that holds this information (AgentState would then be its
+	 subclass and we could get rid of the generic Object type that serves no purpose..)
+	 */
 	private VisionPrecepts visionPercepts(AgentState state) {
-		return null;
+		FieldOfView fieldOfView = new FieldOfView(
+				new Distance(storage.getViewRangeGuardNormal()),
+				Angle.fromDegrees(storage.getViewAngle()));
+
+		return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
 	}
 	
 	// TODO: implement a function which returns all sound perceptions of the agent in the current state.
+	// Janneke
 	private SoundPercepts soundPercepts(AgentState state) {
+		// percepttype and direction
+		//types: noise and yell
+		//only guards can yell!
+		Set<SoundPercept> sounds = new HashSet<SoundPercept>();
+		
 		return null;
 	}
 	
-	// TODO: implement a function which returns all smell perceptions of the agent in the current state.
+	// TODO: implement the way an agent drops a pheromone - in the update state method
+	// TODO: when it updates a state, also automatically updates the pheromones (the time they're valid i mean)
+	// Janneke
 	private SmellPercepts smellPercepts(AgentState state) {
-		return null;
+		Set<SmellPercept> smells = new HashSet<SmellPercept>();
+		
+		if (agent.getClass() == Guard.class) {
+			for (int i = 0; i < pherStorage.getPheromonesGuard().size(); i++) {
+				SmellPercept smell = new SmellPercept(pherStorage.getPheromonesGuard().get(i).getContent1(), new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesGuard().get(i).getContent2()));
+				smells.add(smell);
+			}
+		}
+		else if (agent.getClass() == Intruder.class){
+			for (int i = 0; i < pherStorage.getPheromonesIntruder().size(); i++) {
+				SmellPercept smell = new SmellPercept(pherStorage.getPheromonesIntruder().get(i).getContent1(), new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesIntruder().get(i).getContent2()));
+				smells.add(smell);
+			}
+		}
+		SmellPercepts percepts = new SmellPercepts(smells);
+		return percepts;
 	}
 	
 	// TODO: implement a function which returns all area perceptions of the agent in the current state.
+	// Oskar
 	private AreaPercepts areaPercepts(AgentState state) {
+		boolean inWindow = false;
+		boolean inDoor = false;
+		boolean inSentryTower = false;
+		boolean justTeleported = false;
+
+		for (StaticObject staticObject : staticObjects) {
+			if (staticObject instanceof Teleport){
+				if (state.getX1() == ((Teleport) staticObject).getTeleportTo().getX() &&
+						state.getY1() == ((Teleport) staticObject).getTeleportTo().getY()) justTeleported = true;
+			}
+			else if (staticObject.isInside(state.getX1(), state.getY1())) {
+				if (staticObject instanceof Window) inWindow = true;
+				else if (staticObject instanceof Door) inDoor = true;
+				else if (staticObject instanceof SentryTower) inSentryTower = true;
+			}
+		}
+
+		return new AreaPercepts(inWindow, inDoor, inSentryTower, justTeleported);
+	}
+
+	// TODO
+	private ScenarioPercepts scenarioPercepts() {
 		return null;
+	}
+
+	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
+	// Oskar
+	private ScenarioIntruderPercepts scenarioIntruderPercepts() {
+		return new ScenarioIntruderPercepts(scenarioPercepts, storage.getWinConditionIntruderRounds(),
+				storage.getMaxMoveDistanceIntruder(), storage.getMaxSprintDistanceIntruder(), storage.getSprintCoolDown()
+				);
+
 	}
 	
 	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
-	private ScenarioIntruderPercepts scenarioIntruderPercepts(AgentState state) {
-		return null;
-	}
-	
-	// TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
-	private ScenarioGuardPercepts scenarioGuardPercepts(AgentState state) {
-		return null;
+	// Oskar
+	private ScenarioGuardPercepts scenarioGuardPercepts() {
+		return new ScenarioGuardPercepts(scenarioPercepts, storage.getMaxMoveDistanceGuard());
 	}
 	
 	// TODO: implement a function which checks if an action is legal based on the current state of the agent.
+	// Victor
 	private boolean checkLegalIntruderAction(AgentState state, Interop.Action.IntruderAction action) {
 		return false;
 	}
 	
 	// TODO: implement a function which checks if an action is legal based on the current state of the agent.
+	// Victor
 	private boolean checkLegalGuardAction(AgentState state, Interop.Action.GuardAction action) {
 		return false;
 	}
 	
 	// TODO: implement a function, which updates the current game state based on the action of the agent.
+	// Merlin
 	private void updateAgentState(AgentState state, Action action) {
 		return;
 	}
 	
 	// TODO: implement a function which checks if the game is finished. Take into account the current game mode.
+	// Victor
 	private int gameFinished() {
 		return 0;
 	}
@@ -206,7 +295,7 @@ public class MainControl {
 	}
 	
 	public static void main(String[] args) {
-		MainControl gameController = new MainControl("C:\\Users\\Merlin Köhler\\Desktop\\Project 2-2\\e8bd358abeeacbb7ccc8c667ccd837e4\\samplemap.txt");
+		MainControl gameController = new MainControl(args[0]);
     }
 	
 }

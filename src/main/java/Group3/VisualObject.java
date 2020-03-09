@@ -1,5 +1,6 @@
 package Group3;
 
+import Group3.StaticObjects.*;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -23,10 +24,10 @@ public class VisualObject {
 		this.object = object;
 		this.shape = new Polygon(); 
 		this.shape.getPoints().addAll(new Double[] {
-			(double)object.getX1()*scalingFactor, (double)object.getY1()*scalingFactor, 
-			(double)object.getX2()*scalingFactor, (double)object.getY2()*scalingFactor,
-			(double)object.getX3()*scalingFactor, (double)object.getY3()*scalingFactor,
-			(double)object.getX4()*scalingFactor, (double)object.getY4()*scalingFactor
+			(double)object.getP1().getX()*scalingFactor, (double)object.getP1().getY()*scalingFactor, 
+			(double)object.getP2().getX()*scalingFactor, (double)object.getP2().getY()*scalingFactor,
+			(double)object.getP3().getX()*scalingFactor, (double)object.getP3().getY()*scalingFactor,
+			(double)object.getP4().getX()*scalingFactor, (double)object.getP4().getY()*scalingFactor
 		});
 		if(object instanceof Wall) {
 			shape.setFill(Color.PALEGREEN);
@@ -44,7 +45,7 @@ public class VisualObject {
 			shape.setFill(Color.DARKGRAY);
 		}else if(object instanceof SpawnAreaGuards) {
 			shape.setFill(Color.CORNFLOWERBLUE);
-		}else if(object instanceof SpawnAreaIntruder) {
+		}else if(object instanceof SpawnAreaIntruders) {
 			shape.setFill(Color.PLUM);
 		}
 		this.shape.addEventHandler(MouseEvent.MOUSE_ENTERED,

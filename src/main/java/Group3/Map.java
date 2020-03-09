@@ -3,6 +3,8 @@ package Group3;
 import java.util.ArrayList;
 import java.util.List;
 
+import Group3.StaticObjects.StaticObject;
+
 public class Map {
 	
 	private final double width;
