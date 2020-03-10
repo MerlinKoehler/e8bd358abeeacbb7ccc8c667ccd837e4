@@ -1,7 +1,6 @@
 package Group3;
 
 import java.util.ArrayList;
-
 import Interop.Geometry.Point;
 import Interop.Percept.Smell.SmellPerceptType;
 
@@ -9,7 +8,6 @@ public class PheromoneStorage {
 	
 	private ArrayList<Triplet<SmellPerceptType, Point, Integer>> pheromonesGuard = new ArrayList<>();
 	private ArrayList<Triplet<SmellPerceptType, Point, Integer>> pheromonesIntruder = new ArrayList<>();
-	
 	
 	public ArrayList<Triplet<SmellPerceptType, Point, Integer>> getPheromonesGuard() {
 		return pheromonesGuard;

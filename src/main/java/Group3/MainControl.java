@@ -24,6 +24,7 @@ import Interop.Percept.Vision.FieldOfView;
 import Interop.Percept.Vision.ObjectPercept;
 import Interop.Percept.Vision.ObjectPercepts;
 import Interop.Percept.Vision.VisionPrecepts;
+import Interop.Utils.Utils;
 
 /*
  * We can start the controller from here.
@@ -40,6 +41,7 @@ public class MainControl {
 	MapReader readMap;
 	Storage storage;
 	PheromoneStorage pherStorage = new PheromoneStorage();
+	SoundStorage soundStorage = new SoundStorage();
 	
 	//made this an object outside to use in the smellpercepts etc
 	Object agent;
@@ -185,26 +187,34 @@ public class MainControl {
 		return null; // shouldn't reach
 	}
 	
-	// TODO: implement a function which returns all sound perceptions of the agent in the current state.
-	// Janneke
 	private SoundPercepts soundPercepts(AgentState state) {
-		// percepttype and direction
-		//types: noise and yell
-		//only guards can yell!
 		Set<SoundPercept> sounds = new HashSet<SoundPercept>();
 		
-		return null;
+		for (int i = 0; i < sounds.size(); i++) {
+			Point point1 = new Point(state.getX1(), state.getY1());
+			Point point2 = soundStorage.getSounds().get(i).getContent2();
+			
+			//calculate angle
+			double radius = Math.atan(((point2.getY() - point1.getY()) / (point2.getX() - point1.getX())));
+			
+			Direction direction = null;
+			direction = direction.fromRadians(radius);
+			
+			SoundPercept sound = new SoundPercept(soundStorage.getSounds().get(i).getContent1(), direction);
+			
+		
+		}
+		
+		SoundPercepts percepts = new SoundPercepts(sounds);
+		return percepts;
 	}
 	
-	// TODO: implement the way an agent drops a pheromone - in the update state method
-	// TODO: when it updates a state, also automatically updates the pheromones (the time they're valid i mean)
-	// Janneke
 	private SmellPercepts smellPercepts(AgentState state) {
 		Set<SmellPercept> smells = new HashSet<SmellPercept>();
 		
 		if (agent.getClass() == Guard.class) {
 			for (int i = 0; i < pherStorage.getPheromonesGuard().size(); i++) {
-				SmellPercept smell = new SmellPercept(pherStorage.getPheromonesGuard().get(i).getContent1(), new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesGuard().get(i).getContent2()));
+				SmellPercept smell = new SmellPercept(pherStorage.getPheromonesGuard().get(i).getContent1(),new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesIntruder().get(i).getContent2()));
 				smells.add(smell);
 			}
 		}
