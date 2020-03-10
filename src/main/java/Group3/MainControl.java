@@ -167,23 +167,22 @@ public class MainControl {
 		}
 		return agentStates.get(currentTurn).getAgent();
 	}
-	
+
 	// TODO: implement a function which returns all vision perceptions of the agent in the current state.
 	// Oskar
-	/**
-	 Cannot tell the difference between the guard and the intruder, assume the view range is the same for both.
-	 Same for what penalty should be applied to range - it seems to be a binary choice (normal, shaded), however
-	 @see Group3.AgentState, penalty is an integer!
-
-	 disclaimer: there should probably be an Agent class that holds this information (AgentState would then be its
-	 subclass and we could get rid of the generic Object type that serves no purpose..)
-	 */
 	private VisionPrecepts visionPercepts(AgentState state) {
-		FieldOfView fieldOfView = new FieldOfView(
-				new Distance(storage.getViewRangeGuardNormal()),
-				Angle.fromDegrees(storage.getViewAngle()));
+		if (state.getAgent().getClass() == Intruder.class)
+			return new VisionPrecepts(new FieldOfView(
+					new Distance(storage.getViewRangeIntruderNormal()),
+					Angle.fromDegrees(storage.getViewAngle())),
+					new ObjectPercepts(objectPercepts));
+		else if (state.getAgent().getClass() == Guard.class)
+			return new VisionPrecepts(new FieldOfView(
+					new Distance(storage.getViewRangeGuardNormal()),
+					Angle.fromDegrees(storage.getViewAngle())),
+					new ObjectPercepts(objectPercepts));
 
-		return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
+		return null; // shouldn't reach
 	}
 	
 	// TODO: implement a function which returns all sound perceptions of the agent in the current state.
