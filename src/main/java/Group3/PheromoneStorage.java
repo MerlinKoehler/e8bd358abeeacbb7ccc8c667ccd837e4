@@ -6,35 +6,27 @@ import Interop.Percept.Smell.SmellPerceptType;
 
 public class PheromoneStorage {
 	
+	private ArrayList<Pheromone> pheromonesGuard = new ArrayList<>();
+	private ArrayList<Pheromone> pheromonesIntruder = new ArrayList<>();
 	
-	//contains type, location and expire time
-	private ArrayList<Triplet<SmellPerceptType, Point, Integer>> pheromonesGuard = new ArrayList<>();
-	private ArrayList<Triplet<SmellPerceptType, Point, Integer>> pheromonesIntruder = new ArrayList<>();
-	
-	public ArrayList<Triplet<SmellPerceptType, Point, Integer>> getPheromonesGuard() {
+	public ArrayList<Pheromone> getPheromonesGuard() {
 		return pheromonesGuard;
 	}
 
-	public void setPheromonesGuard(ArrayList<Triplet<SmellPerceptType, Point, Integer>> pheromones) {
-		this.pheromonesGuard = pheromones;
-	}
-	
-	public ArrayList<Triplet<SmellPerceptType, Point, Integer>> getPheromonesIntruder() {
+	public ArrayList<Pheromone> getPheromonesIntruder() {
 		return pheromonesIntruder;
 	}
 
-	public void setPheromonesIntruder(ArrayList<Triplet<SmellPerceptType, Point, Integer>> pheromonesIntruder) {
-		this.pheromonesIntruder = pheromonesIntruder;
-	}
+	
 	
 	//updates this whole list - how long a pheromone has left
 	//deletes pheromones that are not smellable anymore
 	public void updatePheromones() {
-			ArrayList<Triplet<SmellPerceptType, Point, Integer>> remove = new ArrayList<>();
+			ArrayList<Pheromone> remove = new ArrayList<>();
 			
 			for (int i = 0; i < pheromonesGuard.size(); i++) {
-				pheromonesGuard.get(i).setContent3(pheromonesGuard.get(i).getContent3()-1);
-				if (pheromonesGuard.get(i).getContent3() <= 0) {
+				pheromonesGuard.get(i).setTurnsLeft(pheromonesGuard.get(i).getTurnsLeft()-1);
+				if (pheromonesGuard.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesGuard.get(i));
 				}
 			}
@@ -44,8 +36,8 @@ public class PheromoneStorage {
 			remove.clear();
 			
 			for (int i = 0; i < pheromonesIntruder.size(); i++) {
-				pheromonesIntruder.get(i).setContent3(pheromonesIntruder.get(i).getContent3()-1);
-				if (pheromonesIntruder.get(i).getContent3() <= 0) {
+				pheromonesIntruder.get(i).setTurnsLeft(pheromonesIntruder.get(i).getTurnsLeft()-1);
+				if (pheromonesIntruder.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesIntruder.get(i));
 				}
 			}
@@ -54,13 +46,12 @@ public class PheromoneStorage {
 	}
 	
 	public void addPheromone(SmellPerceptType type, Point point, Integer timeLeft, boolean guard) {
+		Pheromone pheromone = new Pheromone(type, point, timeLeft);
 		if (guard) {
-			Triplet<SmellPerceptType, Point, Integer> triplet = new Triplet<SmellPerceptType, Point, Integer>(type, point, timeLeft);
-			pheromonesGuard.add(triplet);
+			pheromonesGuard.add(pheromone);
 		}
 		else {
-			Triplet<SmellPerceptType, Point, Integer> triplet = new Triplet<SmellPerceptType, Point, Integer>(type, point, timeLeft);
-			pheromonesIntruder.add(triplet);
+			pheromonesIntruder.add(pheromone);
 		}
 	}
 

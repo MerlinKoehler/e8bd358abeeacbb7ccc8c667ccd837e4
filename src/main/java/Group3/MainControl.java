@@ -3,14 +3,20 @@ package Group3;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-import Group3.StaticObjects.*;
+import Group3.StaticObjects.Door;
+import Group3.StaticObjects.SentryTower;
+import Group3.StaticObjects.StaticObject;
+import Group3.StaticObjects.Teleport;
+import Group3.StaticObjects.Window;
 import Interop.Action.Action;
 import Interop.Action.NoAction;
-import Interop.Geometry.*;
+import Interop.Geometry.Angle;
+import Interop.Geometry.Direction;
+import Interop.Geometry.Distance;
+import Interop.Geometry.Point;
 import Interop.Percept.AreaPercepts;
 import Interop.Percept.GuardPercepts;
 import Interop.Percept.IntruderPercepts;
@@ -18,7 +24,6 @@ import Interop.Percept.Scenario.ScenarioGuardPercepts;
 import Interop.Percept.Scenario.ScenarioIntruderPercepts;
 import Interop.Percept.Scenario.ScenarioPercepts;
 import Interop.Percept.Smell.SmellPercept;
-import Interop.Percept.Smell.SmellPerceptType;
 import Interop.Percept.Smell.SmellPercepts;
 import Interop.Percept.Sound.SoundPercept;
 import Interop.Percept.Sound.SoundPerceptType;
@@ -27,7 +32,6 @@ import Interop.Percept.Vision.FieldOfView;
 import Interop.Percept.Vision.ObjectPercept;
 import Interop.Percept.Vision.ObjectPercepts;
 import Interop.Percept.Vision.VisionPrecepts;
-import Interop.Utils.Utils;
 
 /*
  * We can start the controller from here.
@@ -195,12 +199,12 @@ public class MainControl {
 		
 		for (int i = 0; i < sounds.size(); i++) {
 			Point point1 = new Point(state.getX1(), state.getY1());
-			Point point2 = soundStorage.getSounds().get(i).getContent2();
+			Point point2 = soundStorage.getSounds().get(i).getLocation();
 			
 			Distance distance = new Distance(point1, point2);
 			
-			double radius = soundStorage.getSounds().get(i).getContent4();
-			SoundPerceptType type = soundStorage.getSounds().get(i).getContent1();
+			double radius = soundStorage.getSounds().get(i).getRadius();
+			SoundPerceptType type = soundStorage.getSounds().get(i).getType();
 			
 			if (radius >= distance.getValue()) {
 				double degrees = (10 * Math.PI) / 180;
@@ -212,7 +216,7 @@ public class MainControl {
 				Direction direction = null;
 				direction = direction.fromRadians(rad);
 				
-				SoundPercept sound = new SoundPercept(soundStorage.getSounds().get(i).getContent1(), direction);
+				SoundPercept sound = new SoundPercept(soundStorage.getSounds().get(i).getType(), direction);
 				sounds.add(sound);
 			}
 		}
@@ -228,18 +232,18 @@ public class MainControl {
 		
 		if (agent.getClass() == Guard.class) {
 			for (int i = 0; i < pherStorage.getPheromonesGuard().size(); i++) {
-				Distance distance = new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesIntruder().get(i).getContent2());
-				if (distance.getValue() <= (pherStorage.getPheromonesGuard().get(i).getContent3()/storage.getPheromoneExpireRounds()) * storage.getRadiusPheromone()){
-					SmellPercept smell = new SmellPercept(pherStorage.getPheromonesGuard().get(i).getContent1(), distance);
+				Distance distance = new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesIntruder().get(i).getLocation());
+				if (distance.getValue() <= (pherStorage.getPheromonesGuard().get(i).getTurnsLeft()/storage.getPheromoneExpireRounds()) * storage.getRadiusPheromone()){
+					SmellPercept smell = new SmellPercept(pherStorage.getPheromonesGuard().get(i).getType(), distance);
 					smells.add(smell);
 				}
 			}
 		}
 		else if (agent.getClass() == Intruder.class){
 			for (int i = 0; i < pherStorage.getPheromonesIntruder().size(); i++) {
-				Distance distance = new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesIntruder().get(i).getContent2());
-				if (distance.getValue() <= (pherStorage.getPheromonesIntruder().get(i).getContent3())/storage.getPheromoneExpireRounds() * storage.getRadiusPheromone()) {
-					SmellPercept smell = new SmellPercept(pherStorage.getPheromonesIntruder().get(i).getContent1(), distance);
+				Distance distance = new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesIntruder().get(i).getLocation());
+				if (distance.getValue() <= (pherStorage.getPheromonesIntruder().get(i).getTurnsLeft())/storage.getPheromoneExpireRounds() * storage.getRadiusPheromone()) {
+					SmellPercept smell = new SmellPercept(pherStorage.getPheromonesIntruder().get(i).getType(), distance);
 					smells.add(smell);
 				}
 			}
