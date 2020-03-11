@@ -306,7 +306,32 @@ public class MainControl {
 	// TODO: implement a function, which updates the current game state based on the action of the agent.
 	// Merlin
 	private void updateAgentState(AgentState state, Action action) {
-		return;
+		switch(action.getClass().getName()) {
+		case "Interop.Action.DropPheromone":
+			state.setPenalty(storage.getPheromoneCoolDown());
+			break;
+		case "Interop.Action.Move":
+			
+			break;
+		case "Interop.Action.NoAction":
+			break;
+		case "Interop.Action.Rotate":
+			Interop.Action.Rotate rotate = (Interop.Action.Rotate)action;
+			if(rotate.getAngle().getDegrees() <= storage.getMaxRotationAngle()) {
+				state.setTargetDirection(Direction.fromDegrees(state.getTargetDirection().getDegrees() +  rotate.getAngle().getDegrees()));
+			}
+			else {
+				state.setLastActionExecuted(false);
+			}
+			break;
+		case "Interop.Action.Sprint":
+			state.setPenalty(storage.getSprintCoolDown());
+			break;
+		case "Interop.Action.Yell":
+			break;
+		default:
+			state.setLastActionExecuted(false);
+		}
 	}
 	
 	// TODO: implement a function which checks if the game is finished. Take into account the current game mode.
