@@ -6,6 +6,8 @@ import Interop.Percept.Smell.SmellPerceptType;
 
 public class PheromoneStorage {
 	
+	
+	//contains type, location and expire time
 	private ArrayList<Triplet<SmellPerceptType, Point, Integer>> pheromonesGuard = new ArrayList<>();
 	private ArrayList<Triplet<SmellPerceptType, Point, Integer>> pheromonesIntruder = new ArrayList<>();
 	

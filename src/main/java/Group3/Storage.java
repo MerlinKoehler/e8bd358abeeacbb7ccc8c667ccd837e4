@@ -33,6 +33,7 @@ public class Storage {
 	private double maxMoveSoundRadius;
 	private double windowSoundRadius;
 	private double doorSoundRadius;
+	private double pheromoneExpireRounds;
 	
 	public int getGameMode() {
 		return gameMode;
@@ -233,6 +234,12 @@ public class Storage {
 	}
 	public void setWidth(double width) {
 		this.width = width;
+	}
+	public double getPheromoneExpireRounds() {
+		return pheromoneExpireRounds;
+	}
+	public void setPheromoneExpireRounds(double pheromoneExpireRounds) {
+		this.pheromoneExpireRounds = pheromoneExpireRounds;
 	}
 
 }

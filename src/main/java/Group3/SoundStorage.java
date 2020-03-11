@@ -7,23 +7,24 @@ import Interop.Percept.Sound.SoundPerceptType;
 
 public class SoundStorage {
 
-	private ArrayList<Triplet<SoundPerceptType, Point, Integer>> sounds = new ArrayList<>();
+	// quartet contains: type, coordinates, time left, radius
+	private ArrayList<Quartet<SoundPerceptType, Point, Integer, Double>> sounds = new ArrayList<>();
 	
-	public ArrayList<Triplet<SoundPerceptType, Point, Integer>> getSounds() {
+	public ArrayList<Quartet<SoundPerceptType, Point, Integer, Double>> getSounds() {
 		return sounds;
 	}
 
-	public void setSounds(ArrayList<Triplet<SoundPerceptType, Point, Integer>> sounds) {
+	public void setSounds(ArrayList<Quartet<SoundPerceptType, Point, Integer, Double>> sounds) {
 		this.sounds = sounds;
 	}
 	
-	public void addSound(SoundPerceptType type, Point point, Integer timeLeft, boolean guard) {
-			Triplet<SoundPerceptType, Point, Integer> triplet = new Triplet<SoundPerceptType, Point, Integer>(type, point, timeLeft);
-			sounds.add(triplet);
+	public void addSound(SoundPerceptType type, Point point, Integer timeLeft, Double radius) {
+			Quartet<SoundPerceptType, Point, Integer, Double> quartet = new Quartet<SoundPerceptType, Point, Integer, Double>(type, point, timeLeft, radius);
+			sounds.add(quartet);
 	}
 	
 	public void updateSounds() {
-		ArrayList<Triplet<SoundPerceptType, Point, Integer>> remove = new ArrayList<>();
+		ArrayList<Quartet<SoundPerceptType, Point, Integer, Double>> remove = new ArrayList<>();
 		
 		for (int i = 0; i < sounds.size(); i++) {
 			sounds.get(i).setContent3(sounds.get(i).getContent3()-1);
