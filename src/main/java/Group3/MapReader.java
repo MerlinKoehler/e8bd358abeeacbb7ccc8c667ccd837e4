@@ -275,4 +275,8 @@ public class MapReader {
 	public ArrayList<StaticObject> getStaticObjects() {
 		return staticObjects;
 	}
+
+	public TargetArea getTarget() {
+		return target;
+	}
 }

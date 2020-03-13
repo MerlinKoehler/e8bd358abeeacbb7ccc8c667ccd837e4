@@ -2,6 +2,7 @@ package Group3;
 
 import Interop.Action.Action;
 import Interop.Geometry.Direction;
+import Interop.Geometry.Point;
 
 public class AgentState {
 	
@@ -12,11 +13,15 @@ public class AgentState {
 	private Object agent;
 	private int penalty;
 	private Action lastAction;
+	private int inTarget;
+	private Point point;
+
 	
 	public AgentState(int x1, int y1, Direction targetDirection, Object agent) {
 		this.x1 = x1;
 		this.y1 = y1;
 		this.targetDirection = targetDirection;
+		this.point = new Point(x1,y1);
 	}
 
 	public int getX1() {
@@ -70,4 +75,17 @@ public class AgentState {
 	public void setLastAction(Action lastAction) {
 		this.lastAction = lastAction;
 	}
+
+	public int getInTarget(){
+		return inTarget;
+	}
+
+	public void addInTarget(double a){
+		this.inTarget += a;
+	}
+
+	public Point getPoint(){
+		return this.point;
+	}
+
 }
