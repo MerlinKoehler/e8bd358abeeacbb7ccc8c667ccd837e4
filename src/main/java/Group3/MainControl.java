@@ -17,6 +17,9 @@ import Interop.Geometry.Angle;
 import Interop.Geometry.Direction;
 import Interop.Geometry.Distance;
 import Interop.Geometry.Point;
+import Group3.StaticObjects.*;
+import Interop.Action.*;
+import Interop.Geometry.*;
 import Interop.Percept.AreaPercepts;
 import Interop.Percept.GuardPercepts;
 import Interop.Percept.IntruderPercepts;
@@ -24,6 +27,7 @@ import Interop.Percept.Scenario.ScenarioGuardPercepts;
 import Interop.Percept.Scenario.ScenarioIntruderPercepts;
 import Interop.Percept.Scenario.ScenarioPercepts;
 import Interop.Percept.Smell.SmellPercept;
+import Interop.Percept.Smell.SmellPerceptType;
 import Interop.Percept.Smell.SmellPercepts;
 import Interop.Percept.Sound.SoundPercept;
 import Interop.Percept.Sound.SoundPerceptType;
@@ -32,6 +36,7 @@ import Interop.Percept.Vision.FieldOfView;
 import Interop.Percept.Vision.ObjectPercept;
 import Interop.Percept.Vision.ObjectPercepts;
 import Interop.Percept.Vision.VisionPrecepts;
+import Interop.Utils.Utils;
 
 /*
  * We can start the controller from here.
@@ -44,7 +49,10 @@ public class MainControl {
 
 	List<Interop.Agent.Intruder> intruders;
 	List<Interop.Agent.Guard> guards;
-	
+
+	ArrayList<Integer> targetZoneCount;
+	double capturedIntruderCount=0;
+
 	MapReader readMap;
 	Storage storage;
 	PheromoneStorage pherStorage = new PheromoneStorage();
@@ -86,6 +94,10 @@ public class MainControl {
 		{ 
 		    AgentState state = new AgentState(0, 0, Direction.fromDegrees(0), guard);
 		    agentStates.add(state);
+		}
+		//Initialize counters for Intruders in target zone
+		for(int i=0; i<intruders.size(); i++){
+			targetZoneCount.set(i,0);
 		}
 	}
 	
@@ -134,7 +146,8 @@ public class MainControl {
 		else if (agent.getClass() == Intruder.class) {
 		    System.out.println("This is a Intruder");
 		    Intruder intruder = (Intruder)agent;
-		    
+		    updateIntarget(state);
+
 		    // 2. Calculate the perception of the agent
 		    IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
 		    		visionPercepts(state),
@@ -193,19 +206,155 @@ public class MainControl {
 
 		return null; // shouldn't reach
 	}
-	
+
+	public boolean checkCollision(Point startPoint, Direction direction, Distance distance){
+		double agentRadius = 0.5;
+		Point endPoint = new Point(distance.getValue()*Math.cos(direction.getRadians())+startPoint.getX(), distance.getValue()*Math.sin(direction.getRadians())+startPoint.getY());
+
+		Point point1 = new Point(agentRadius*Math.cos(direction.getRadians()+(Math.PI/2))+startPoint.getX(), agentRadius*Math.sin(direction.getRadians()+(Math.PI/2))+startPoint.getY());
+		Point point2 = new Point(agentRadius*Math.cos(direction.getRadians()-(Math.PI/2))+startPoint.getX(), agentRadius*Math.sin(direction.getRadians()-(Math.PI/2))+startPoint.getY());
+
+		Point point3 = new Point(agentRadius*Math.cos(direction.getRadians()+(Math.PI/2))+endPoint.getX(), agentRadius*Math.sin(direction.getRadians()+(Math.PI/2))+endPoint.getY());
+		Point point4 = new Point(agentRadius*Math.cos(direction.getRadians()-(Math.PI/2))+endPoint.getX(), agentRadius*Math.sin(direction.getRadians()-(Math.PI/2))+endPoint.getY());
+
+		ArrayList<Point> rectangle = new ArrayList<>();
+		rectangle.add(point1);
+		rectangle.add(point2);
+		rectangle.add(point3);
+		rectangle.add(point4);
+
+		ArrayList<StaticObject> statObj = readMap.getStaticObjects();
+
+
+		for(int i=0; i<statObj.size(); i++){
+
+			//for each static object check if any of its edge intersects w one of the 2 rectangle's side edge
+
+			//point1 point3 -> edge 1
+			//obj
+			//p1p2
+			//p1p3
+			//p2p4
+			//p3p4
+
+			if(segmentIntersect(point1, point3, statObj.get(i).getP1(), statObj.get(i).getP2())){
+				return true;
+			}
+			if(segmentIntersect(point1, point3, statObj.get(i).getP1(), statObj.get(i).getP3())){
+				return true;
+			}
+			if(segmentIntersect(point1, point3, statObj.get(i).getP2(), statObj.get(i).getP4())){
+				return true;
+			}
+			if(segmentIntersect(point1, point3, statObj.get(i).getP3(), statObj.get(i).getP4())){
+				return true;
+			}
+
+			//point2 point4 -> edge 2
+			//obj
+			//p1p2
+			//p1p3
+			//p2p4
+			//p3p4
+			if(segmentIntersect(point2, point4, statObj.get(i).getP1(), statObj.get(i).getP2())){
+				return true;
+			}
+			if(segmentIntersect(point2, point4, statObj.get(i).getP1(), statObj.get(i).getP3())){
+				return true;
+			}
+			if(segmentIntersect(point2, point4, statObj.get(i).getP2(), statObj.get(i).getP4())){
+				return true;
+			}
+			if(segmentIntersect(point2, point4, statObj.get(i).getP3(), statObj.get(i).getP4())){
+				return true;
+			}
+
+			//check if endPos circle collides with any static obj
+
+			if(circleIntersect(statObj.get(i).getP1(), statObj.get(i).getP2(), endPoint)){
+				return true;
+			}
+			if(circleIntersect(statObj.get(i).getP1(), statObj.get(i).getP3(), endPoint)){
+				return true;
+			}
+			if(circleIntersect(statObj.get(i).getP2(), statObj.get(i).getP4(), endPoint)){
+				return true;
+			}
+			if(circleIntersect(statObj.get(i).getP3(), statObj.get(i).getP4(), endPoint)){
+				return true;
+			}
+
+		}
+
+		for(int i=0; i<agentStates.size(); i++){
+		    if(!(agentStates.get(i).getX1() == startPoint.getX() && agentStates.get(i).getY1() == startPoint.getY())){
+
+		        //check if collision with other agents is going to happen on the way to the endpoint
+		        if(circleIntersect(point1, point3, new Point(agentStates.get(i).getX1(), agentStates.get(i).getY1()))){
+		            return true;
+                }
+		        if(circleIntersect(point2, point4, new Point(agentStates.get(i).getX1(), agentStates.get(i).getY1()))){
+		            return true;
+                }
+
+		        //check if endpoint would collide with any other agent
+		        double eucl = Math.sqrt(Math.pow((endPoint.getX()-agentStates.get(i).getX1()),2)+Math.pow((endPoint.getY()-agentStates.get(i).getY1()),2));
+		        if(eucl <= 2*agentRadius){
+		            return true;
+                }
+            }
+		}
+
+		return false;
+	}
+
+	static boolean circleIntersect(Point a, Point b, Point c){
+		double agentRadius = 0.5;
+		double euclAB = Math.sqrt(Math.pow((b.getX()-a.getX()),2)+Math.pow((b.getY()-a.getY()),2));
+		//direction vector
+		double Dx = (b.getX()-a.getX())/euclAB;
+		double Dy = (b.getY()-a.getY())/euclAB;
+
+		//compute e coordinates
+		double t = Dx*(c.getX()-a.getX())+Dy*(c.getY()-a.getY());
+
+		Point e = new Point(t*Dx+a.getX(),t*Dy+a.getY());
+
+		//dist between E and C
+		double euclEC = Math.sqrt(Math.pow((e.getX()-c.getX()),2)+Math.pow((e.getY()-c.getY()),2));
+
+		if(euclEC <= agentRadius){
+			return true;
+		}else return false;
+	}
+
+	static boolean segmentIntersect(Point p1, Point p2, Point p3, Point p4){
+		boolean abc = counterClockwise(p1,p2,p3);
+		boolean abd = counterClockwise(p1,p2,p4);
+		boolean cda = counterClockwise(p3,p4,p1);
+		boolean cdb = counterClockwise(p3,p4,p2);
+
+		return ((abc != abd) && (cda != cdb));
+	}
+
+	static boolean counterClockwise(Point p1, Point p2, Point p3){
+		return((p3.getY()-p1.getY())*(p2.getX()-p1.getX()) > (p2.getY()-p1.getY())*(p3.getX()-p1.getX()));
+	}
+
+
+
 	private SoundPercepts soundPercepts(AgentState state) {
 		Set<SoundPercept> sounds = new HashSet<SoundPercept>();
 		
 		for (int i = 0; i < sounds.size(); i++) {
 			Point point1 = new Point(state.getX1(), state.getY1());
 			Point point2 = soundStorage.getSounds().get(i).getLocation();
-			
+
 			Distance distance = new Distance(point1, point2);
-			
+
 			double radius = soundStorage.getSounds().get(i).getRadius();
 			SoundPerceptType type = soundStorage.getSounds().get(i).getType();
-			
+
 			if (radius >= distance.getValue()) {
 				double degrees = (10 * Math.PI) / 180;
 			
@@ -215,7 +364,7 @@ public class MainControl {
 			
 				Direction direction = null;
 				direction = direction.fromRadians(rad);
-				
+
 				SoundPercept sound = new SoundPercept(soundStorage.getSounds().get(i).getType(), direction);
 				sounds.add(sound);
 			}
@@ -224,8 +373,9 @@ public class MainControl {
 		SoundPercepts percepts = new SoundPercepts(sounds);
 		return percepts;
 	}
-	
-	
+
+
+
 	//pheromone expire rounds is not defined yet
 	private SmellPercepts smellPercepts(AgentState state) {
 		Set<SmellPercept> smells = new HashSet<SmellPercept>();
@@ -298,15 +448,99 @@ public class MainControl {
 	// TODO: implement a function which checks if an action is legal based on the current state of the agent.
 	// Victor
 	private boolean checkLegalIntruderAction(AgentState state, Interop.Action.IntruderAction action) {
-		return false;
+		if(action.getClass().getName().equals("Move")){
+			if(((Move) action).getDistance().getValue() > storage.getMaxMoveDistanceIntruder().getValue()){
+				return false;
+			}
+			if(checkCollision(state.getPoint(), state.getTargetDirection(), ((Move) action).getDistance())) {
+				return false;
+			}
+			if(state.getPenalty() != 0){//if penalty can't do any action until penalty removed (=0)
+				return false;
+			}
+		}
+
+		if(action.getClass().getName().equals("Sprint")){
+			if(((Sprint)action).getDistance().getValue() > storage.getMaxSprintDistanceIntruder().getValue()){
+				return false;
+			}
+			if(state.getPenalty() != 0){
+				return false;
+			}
+			if(checkCollision(state.getPoint(), state.getTargetDirection(), ((Sprint) action).getDistance())){
+				return false;
+			}
+		}
+
+		if(action.getClass().getName().equals("Rotate")){
+			if(Math.abs(((Rotate)action).getAngle().getRadians()) > storage.getMaxRotationAngle()){//maxRotationAngle in radians or degrees ?
+				return false;
+			}
+			if(state.getPenalty() != 0){
+				return false;
+			}
+		}
+
+		if(action.getClass().getName().equals("DropPheromone")){
+			if(state.getPenalty() != 0){
+				return false;
+			}
+		}
+
+		if(action.getClass().getName().equals("Yell")){
+			return false;
+		}
+
+		if(action.getClass().getName().equals("NoAction")){
+			return true;
+		}
+		return true;
 	}
-	
 	// TODO: implement a function which checks if an action is legal based on the current state of the agent.
 	// Victor
 	private boolean checkLegalGuardAction(AgentState state, Interop.Action.GuardAction action) {
-		return false;
+		if (action.getClass().getName().equals("Move")) {
+			if (((Move) action).getDistance().getValue() > storage.getMaxMoveDistanceIntruder().getValue()) {
+				return false;
+			}
+			if (checkCollision(state.getPoint(), state.getTargetDirection(), ((Move) action).getDistance())) {
+				return false;
+			}
+			if (state.getPenalty() != 0) {//if penalty can't do any action until penalty removed (=0)
+				return false;
+			}
+		}
+
+		if (action.getClass().getName().equals("Sprint")) {
+			return false;
+		}
+
+		if (action.getClass().getName().equals("Rotate")) {
+			if (Math.abs(((Rotate) action).getAngle().getRadians()) > storage.getMaxRotationAngle()) {//maxRotationAngle in radians or degrees ?
+				return false;
+			}
+			if (state.getPenalty() != 0) {
+				return false;
+			}
+		}
+
+		if (action.getClass().getName().equals("DropPheromone")) {
+			if (state.getPenalty() != 0) {//if penalty can't do any action until penalty removed (=0)
+				return false;
+			}
+		}
+
+		if (action.getClass().getName().equals("Yell")) {
+			if (state.getPenalty() != 0) {
+				return false;
+			}
+		}
+
+		if (action.getClass().getName().equals("NoAction")) {
+			return true;
+		}
+		return true;
 	}
-	
 	// TODO: implement a function, which updates the current game state based on the action of the agent.
 	// Merlin
 	private void updateAgentState(AgentState state, Action action) {
@@ -341,6 +575,52 @@ public class MainControl {
 	// TODO: implement a function which checks if the game is finished. Take into account the current game mode.
 	// Victor
 	private int gameFinished() {
+		if(storage.getGameMode()==0){ //game mode 0, all intruders have to be captured
+			for(int i=0; i<agentStates.size(); i++){
+				if(agentStates.get(i).getAgent().getClass() == Intruder.class){
+					if(agentStates.get(i).getInTarget() == storage.getWinConditionIntruderRounds());
+					return 1;//intruder win
+				}
+			}
+			for(int i=0; i<agentStates.size(); i++){
+				if(agentStates.get(i).getAgent().getClass() == Guard.class) {
+					for(int j=0; j<agentStates.size(); j++){
+						if(agentStates.get(i).getAgent().getClass() == Intruder.class){
+							if (visionPercepts(agentStates.get(i)).getFieldOfView().isInView(agentStates.get(j).getPoint()) && (agentStates.get(i).getPoint().getDistance(agentStates.get(j).getPoint()).getValue() < storage.getCaptureDistance())) {
+								intruders.remove(j);
+								agentStates.remove(j);
+								capturedIntruderCount++;
+								if(capturedIntruderCount == (storage.getNumIntruders())){ //if all intruders captured guards win
+									return 2;//guard win
+								}
+							}
+						}
+					}
+				}
+			}
+
+		}else if(storage.getGameMode()==1){  //game mode 1, 1 intruder has to be captured
+			for(int i=0; i<agentStates.size(); i++){
+				if(agentStates.get(i).getAgent().getClass() == Intruder.class){
+					if(agentStates.get(i).getInTarget() == storage.getWinConditionIntruderRounds());
+					return 1;//intruder win
+				}
+			}
+			for(int i=0; i<agentStates.size(); i++){
+				if(agentStates.get(i).getAgent().getClass() == Guard.class) {
+					for(int j=0; j<agentStates.size(); j++){
+						if(agentStates.get(i).getAgent().getClass() == Intruder.class){
+							if (visionPercepts(agentStates.get(i)).getFieldOfView().isInView(agentStates.get(j).getPoint()) && (agentStates.get(i).getPoint().getDistance(agentStates.get(j).getPoint()).getValue() < storage.getCaptureDistance())) {
+								intruders.remove(j);
+								agentStates.remove(j);
+								capturedIntruderCount++;
+								return 2;//guard win
+							}
+						}
+					}
+				}
+			}
+		}
 		return 0;
 	}
 	
@@ -351,7 +631,17 @@ public class MainControl {
 	public ArrayList<AgentState> getAgentStates() {
 		return agentStates;
 	}
-	
+
+	public void updateIntarget(AgentState state){
+
+		if(readMap.getTarget().isInside(state.getX1(),state.getY1())){
+			state.addInTarget(1);
+		}
+	}
+
+
+
+
 	public static void main(String[] args) {
 		MainControl gameController = new MainControl(args[0]);
     }
