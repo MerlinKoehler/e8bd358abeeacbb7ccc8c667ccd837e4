@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.sun.tools.sjavac.comp.SmartFileManager;
+
 import Group3.StaticObjects.Door;
 import Group3.StaticObjects.SentryTower;
 import Group3.StaticObjects.StaticObject;
@@ -87,12 +89,12 @@ public class MainControl {
 		
 		for (Interop.Agent.Intruder intruder : intruders) 
 		{ 
-		    AgentState state = new AgentState(0, 0, Direction.fromDegrees(0), intruder);
+		    AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), intruder);
 		    agentStates.add(state);
 		}
 		for (Interop.Agent.Guard guard : guards) 
 		{ 
-		    AgentState state = new AgentState(0, 0, Direction.fromDegrees(0), guard);
+		    AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), guard);
 		    agentStates.add(state);
 		}
 		//Initialize counters for Intruders in target zone
@@ -287,18 +289,18 @@ public class MainControl {
 		}
 
 		for(int i=0; i<agentStates.size(); i++){
-		    if(!(agentStates.get(i).getX1() == startPoint.getX() && agentStates.get(i).getY1() == startPoint.getY())){
+		    if(!(agentStates.get(i).getCurrentPosition().getX() == startPoint.getX() && agentStates.get(i).getCurrentPosition().getY() == startPoint.getY())){
 
 		        //check if collision with other agents is going to happen on the way to the endpoint
-		        if(circleIntersect(point1, point3, new Point(agentStates.get(i).getX1(), agentStates.get(i).getY1()))){
+		        if(circleIntersect(point1, point3, agentStates.get(i).getCurrentPosition())){
 		            return true;
                 }
-		        if(circleIntersect(point2, point4, new Point(agentStates.get(i).getX1(), agentStates.get(i).getY1()))){
+		        if(circleIntersect(point2, point4, agentStates.get(i).getCurrentPosition())){
 		            return true;
                 }
 
 		        //check if endpoint would collide with any other agent
-		        double eucl = Math.sqrt(Math.pow((endPoint.getX()-agentStates.get(i).getX1()),2)+Math.pow((endPoint.getY()-agentStates.get(i).getY1()),2));
+		        double eucl = Math.sqrt(Math.pow((endPoint.getX()-agentStates.get(i).getCurrentPosition().getX()),2)+Math.pow((endPoint.getY()-agentStates.get(i).getCurrentPosition().getY()),2));
 		        if(eucl <= 2*agentRadius){
 		            return true;
                 }
@@ -347,7 +349,7 @@ public class MainControl {
 		Set<SoundPercept> sounds = new HashSet<SoundPercept>();
 		
 		for (int i = 0; i < sounds.size(); i++) {
-			Point point1 = new Point(state.getX1(), state.getY1());
+			Point point1 = state.getCurrentPosition();
 			Point point2 = soundStorage.getSounds().get(i).getLocation();
 
 			Distance distance = new Distance(point1, point2);
@@ -382,7 +384,7 @@ public class MainControl {
 		
 		if (agent.getClass() == Guard.class) {
 			for (int i = 0; i < pherStorage.getPheromonesGuard().size(); i++) {
-				Distance distance = new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesIntruder().get(i).getLocation());
+				Distance distance = new Distance(state.getCurrentPosition(), pherStorage.getPheromonesIntruder().get(i).getLocation());
 				if (distance.getValue() <= (pherStorage.getPheromonesGuard().get(i).getTurnsLeft()/storage.getPheromoneExpireRounds()) * storage.getRadiusPheromone()){
 					SmellPercept smell = new SmellPercept(pherStorage.getPheromonesGuard().get(i).getType(), distance);
 					smells.add(smell);
@@ -391,7 +393,7 @@ public class MainControl {
 		}
 		else if (agent.getClass() == Intruder.class){
 			for (int i = 0; i < pherStorage.getPheromonesIntruder().size(); i++) {
-				Distance distance = new Distance(new Point(state.getX1(), state.getY1()), pherStorage.getPheromonesIntruder().get(i).getLocation());
+				Distance distance = new Distance(state.getCurrentPosition(), pherStorage.getPheromonesIntruder().get(i).getLocation());
 				if (distance.getValue() <= (pherStorage.getPheromonesIntruder().get(i).getTurnsLeft())/storage.getPheromoneExpireRounds() * storage.getRadiusPheromone()) {
 					SmellPercept smell = new SmellPercept(pherStorage.getPheromonesIntruder().get(i).getType(), distance);
 					smells.add(smell);
@@ -412,10 +414,10 @@ public class MainControl {
 
 		for (StaticObject staticObject : staticObjects) {
 			if (staticObject instanceof Teleport){
-				if (state.getX1() == ((Teleport) staticObject).getTeleportTo().getX() &&
-						state.getY1() == ((Teleport) staticObject).getTeleportTo().getY()) justTeleported = true;
+				if (state.getCurrentPosition().getX() == ((Teleport) staticObject).getTeleportTo().getX() &&
+						state.getCurrentPosition().getY() == ((Teleport) staticObject).getTeleportTo().getY()) justTeleported = true;
 			}
-			else if (staticObject.isInside(state.getX1(), state.getY1())) {
+			else if (staticObject.isInside(state.getCurrentPosition().getX(), state.getCurrentPosition().getY())) {
 				if (staticObject instanceof Window) inWindow = true;
 				else if (staticObject instanceof Door) inDoor = true;
 				else if (staticObject instanceof SentryTower) inSentryTower = true;
@@ -452,7 +454,7 @@ public class MainControl {
 			if(((Move) action).getDistance().getValue() > storage.getMaxMoveDistanceIntruder().getValue()){
 				return false;
 			}
-			if(checkCollision(state.getPoint(), state.getTargetDirection(), ((Move) action).getDistance())) {
+			if(checkCollision(state.getCurrentPosition(), state.getTargetDirection(), ((Move) action).getDistance())) {
 				return false;
 			}
 			if(state.getPenalty() != 0){//if penalty can't do any action until penalty removed (=0)
@@ -467,7 +469,7 @@ public class MainControl {
 			if(state.getPenalty() != 0){
 				return false;
 			}
-			if(checkCollision(state.getPoint(), state.getTargetDirection(), ((Sprint) action).getDistance())){
+			if(checkCollision(state.getCurrentPosition(), state.getTargetDirection(), ((Sprint) action).getDistance())){
 				return false;
 			}
 		}
@@ -503,7 +505,7 @@ public class MainControl {
 			if (((Move) action).getDistance().getValue() > storage.getMaxMoveDistanceIntruder().getValue()) {
 				return false;
 			}
-			if (checkCollision(state.getPoint(), state.getTargetDirection(), ((Move) action).getDistance())) {
+			if (checkCollision(state.getCurrentPosition(), state.getTargetDirection(), ((Move) action).getDistance())) {
 				return false;
 			}
 			if (state.getPenalty() != 0) {//if penalty can't do any action until penalty removed (=0)
@@ -544,28 +546,50 @@ public class MainControl {
 	// TODO: implement a function, which updates the current game state based on the action of the agent.
 	// Merlin
 	private void updateAgentState(AgentState state, Action action) {
+		
+		
 		switch(action.getClass().getName()) {
 		case "Interop.Action.DropPheromone":
 			state.setPenalty(storage.getPheromoneCoolDown());
+			Interop.Action.DropPheromone actPheromone = (Interop.Action.DropPheromone)action;
+			// TODO: Set correct pheromone cooldown
+			pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5*agentStates.size(), (agent.getClass() == Guard.class));
+			state.setLastAction(actPheromone);
 			break;
-		case "Interop.Action.Move":
-			
+		case "Interop.Action.Move": {
+			Interop.Action.Move actMove = (Interop.Action.Move)action;
+			soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actMove.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
+			state.setCurrentPosition(new Point(actMove.getDistance().getValue()*Math.cos(state.getTargetDirection().getRadians())+state.getCurrentPosition().getX(), actMove.getDistance().getValue()*Math.sin(state.getTargetDirection().getRadians())+state.getCurrentPosition().getY()));
+			state.setPenalty(storage.getSprintCoolDown());
+			state.setLastAction(actMove);
 			break;
+		}
 		case "Interop.Action.NoAction":
+			Interop.Action.NoAction actNo = (Interop.Action.NoAction)action;
+			state.setLastAction(actNo);
 			break;
 		case "Interop.Action.Rotate":
-			Interop.Action.Rotate rotate = (Interop.Action.Rotate)action;
-			if(rotate.getAngle().getDegrees() <= storage.getMaxRotationAngle()) {
-				state.setTargetDirection(Direction.fromDegrees(state.getTargetDirection().getDegrees() +  rotate.getAngle().getDegrees()));
+			Interop.Action.Rotate actRotate = (Interop.Action.Rotate)action;
+			if(actRotate.getAngle().getDegrees() <= storage.getMaxRotationAngle()) {
+				state.setTargetDirection(Direction.fromDegrees(state.getTargetDirection().getDegrees() +  actRotate.getAngle().getDegrees()));
 			}
 			else {
 				state.setLastActionExecuted(false);
 			}
+			state.setLastAction(actRotate);
 			break;
-		case "Interop.Action.Sprint":
+		case "Interop.Action.Sprint": {
+			Interop.Action.Sprint actSprint = (Interop.Action.Sprint)action;
+			soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actSprint.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
+			state.setCurrentPosition(new Point(actSprint.getDistance().getValue()*Math.cos(state.getTargetDirection().getRadians())+state.getCurrentPosition().getX(), actSprint.getDistance().getValue()*Math.sin(state.getTargetDirection().getRadians())+state.getCurrentPosition().getY()));
 			state.setPenalty(storage.getSprintCoolDown());
+			state.setLastAction(actSprint);
 			break;
+		}
 		case "Interop.Action.Yell":
+			Interop.Action.Yell actYell = (Interop.Action.Yell)action;
+			soundStorage.addSound(SoundPerceptType.Yell, state.getCurrentPosition(), agentStates.size(), storage.getYellSoundRadius());
+			state.setLastAction(actYell);
 			break;
 		default:
 			state.setLastActionExecuted(false);
@@ -586,7 +610,7 @@ public class MainControl {
 				if(agentStates.get(i).getAgent().getClass() == Guard.class) {
 					for(int j=0; j<agentStates.size(); j++){
 						if(agentStates.get(i).getAgent().getClass() == Intruder.class){
-							if (visionPercepts(agentStates.get(i)).getFieldOfView().isInView(agentStates.get(j).getPoint()) && (agentStates.get(i).getPoint().getDistance(agentStates.get(j).getPoint()).getValue() < storage.getCaptureDistance())) {
+							if (visionPercepts(agentStates.get(i)).getFieldOfView().isInView(agentStates.get(j).getCurrentPosition()) && (agentStates.get(i).getCurrentPosition().getDistance(agentStates.get(j).getCurrentPosition()).getValue() < storage.getCaptureDistance())) {
 								intruders.remove(j);
 								agentStates.remove(j);
 								capturedIntruderCount++;
@@ -610,7 +634,7 @@ public class MainControl {
 				if(agentStates.get(i).getAgent().getClass() == Guard.class) {
 					for(int j=0; j<agentStates.size(); j++){
 						if(agentStates.get(i).getAgent().getClass() == Intruder.class){
-							if (visionPercepts(agentStates.get(i)).getFieldOfView().isInView(agentStates.get(j).getPoint()) && (agentStates.get(i).getPoint().getDistance(agentStates.get(j).getPoint()).getValue() < storage.getCaptureDistance())) {
+							if (visionPercepts(agentStates.get(i)).getFieldOfView().isInView(agentStates.get(j).getCurrentPosition()) && (agentStates.get(i).getCurrentPosition().getDistance(agentStates.get(j).getCurrentPosition()).getValue() < storage.getCaptureDistance())) {
 								intruders.remove(j);
 								agentStates.remove(j);
 								capturedIntruderCount++;
@@ -633,8 +657,7 @@ public class MainControl {
 	}
 
 	public void updateIntarget(AgentState state){
-
-		if(readMap.getTarget().isInside(state.getX1(),state.getY1())){
+		if(readMap.getTarget().isInside(state.getCurrentPosition().getX(), state.getCurrentPosition().getY())){
 			state.addInTarget(1);
 		}
 	}
