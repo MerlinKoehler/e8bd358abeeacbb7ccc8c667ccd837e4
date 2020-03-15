@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-
-import com.sun.tools.sjavac.comp.SmartFileManager;
-
 import Group3.StaticObjects.Door;
 import Group3.StaticObjects.SentryTower;
 import Group3.StaticObjects.StaticObject;
@@ -19,9 +16,7 @@ import Interop.Geometry.Angle;
 import Interop.Geometry.Direction;
 import Interop.Geometry.Distance;
 import Interop.Geometry.Point;
-import Group3.StaticObjects.*;
 import Interop.Action.*;
-import Interop.Geometry.*;
 import Interop.Percept.AreaPercepts;
 import Interop.Percept.GuardPercepts;
 import Interop.Percept.IntruderPercepts;
@@ -29,7 +24,6 @@ import Interop.Percept.Scenario.ScenarioGuardPercepts;
 import Interop.Percept.Scenario.ScenarioIntruderPercepts;
 import Interop.Percept.Scenario.ScenarioPercepts;
 import Interop.Percept.Smell.SmellPercept;
-import Interop.Percept.Smell.SmellPerceptType;
 import Interop.Percept.Smell.SmellPercepts;
 import Interop.Percept.Sound.SoundPercept;
 import Interop.Percept.Sound.SoundPerceptType;
