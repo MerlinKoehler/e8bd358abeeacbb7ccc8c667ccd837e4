@@ -18,6 +18,7 @@ public class AgentState {
 	public AgentState(Point positon, Direction targetDirection, Object agent) {
 		setCurrentPosition(positon);
 		this.targetDirection = targetDirection;
+		this.agent = agent;
 	}
 
 	public boolean isLastActionExecuted() {

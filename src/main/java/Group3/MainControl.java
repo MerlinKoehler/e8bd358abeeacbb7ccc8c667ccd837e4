@@ -90,16 +90,18 @@ public class MainControl {
 		for (Interop.Agent.Intruder intruder : intruders) 
 		{ 
 		    AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), intruder);
-		    agentStates.add(state);
+		    agentStates.add(state); 
 		}
 		for (Interop.Agent.Guard guard : guards) 
 		{ 
 		    AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), guard);
 		    agentStates.add(state);
 		}
+		
+		targetZoneCount = new ArrayList<Integer>();
 		//Initialize counters for Intruders in target zone
 		for(int i=0; i<intruders.size(); i++){
-			targetZoneCount.set(i,0);
+			targetZoneCount.add(0);
 		}
 	}
 	
@@ -667,6 +669,9 @@ public class MainControl {
 
 	public static void main(String[] args) {
 		MainControl gameController = new MainControl(args[0]);
+		for(int i = 0; i < 100; i++) {
+			gameController.doStep();
+		}
     }
 	
 }
