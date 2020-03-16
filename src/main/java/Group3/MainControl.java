@@ -9,9 +9,7 @@ import Interop.Geometry.Point;
 import Interop.Percept.AreaPercepts;
 import Interop.Percept.GuardPercepts;
 import Interop.Percept.IntruderPercepts;
-import Interop.Percept.Scenario.ScenarioGuardPercepts;
-import Interop.Percept.Scenario.ScenarioIntruderPercepts;
-import Interop.Percept.Scenario.ScenarioPercepts;
+import Interop.Percept.Scenario.*;
 import Interop.Percept.Smell.SmellPercept;
 import Interop.Percept.Smell.SmellPercepts;
 import Interop.Percept.Sound.SoundPercept;
@@ -48,7 +46,7 @@ public class MainControl {
     //made this an object outside to use in the smellpercepts etc
     Object agent;
     int currentTurn = -1;
-    private ScenarioPercepts scenarioPercepts = scenarioPercepts();
+    private ScenarioPercepts scenarioPercepts;
     /*
      * TODO: Implement reading objects from the map description file (in MapReader)
      * No need for StaticObject and its sublcasses, we already have the ObjectPercept class!! */
@@ -58,6 +56,7 @@ public class MainControl {
         // Read map file and settings
         readMap = new MapReader(path);
         storage = readMap.getStorage();
+        scenarioPercepts = scenarioPercepts();
         staticObjects = readMap.getStaticObjects();
 
         // Initialize Guards and Intruders:
@@ -235,8 +234,9 @@ public class MainControl {
                     state.getTargetDirection().getDegrees() + storage.getViewAngle() / 2);
 
         for (int i = 0; i < storage.getViewRays(); i++) {
-            if (state.getTargetDirection().getDegrees() - i < 0)
+            if (rayDirection.getDegrees() - i < 0)
                 rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - i + 360);
+
             else
                 rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - i);
 
@@ -252,8 +252,10 @@ public class MainControl {
                         new Point(staticObject.getP2().getX(), staticObject.getP2().getY()));
 
                 Point pointOfIntersect = intersects(rayCoefficients, segmentCoefficients);
-                if (pointOfIntersect == null)
-                    objectPercepts.add(new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
+                if (pointOfIntersect == null) {
+                    //objectPercepts.add(
+                    //        new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
+                }
                 else
                     switch (staticObject.getClass().getName()) {
                             /*
@@ -293,8 +295,12 @@ public class MainControl {
      * @return 'a' and 'b' coefficients
      */
     private double[] computeLineCoefficients(Point A, Point B) {
+        if (A.getX() - B.getX() == 0)
+            return new double[]{A.getX(), Integer.MAX_VALUE};
+
         double a = (A.getY() - B.getY()) / (A.getX() - B.getX());
         double b = (A.getX() * B.getY() - B.getX() * A.getY()) / (A.getX() - B.getX());
+
         return new double[]{a, b};
     }
 
@@ -306,6 +312,12 @@ public class MainControl {
      * @return Point of intersection
      */
     private Point intersects(double[] coef1, double[] coef2) {
+        if (coef1[1] == Integer.MAX_VALUE && coef2[1] == Integer.MAX_VALUE)
+            return new Point(coef1[0], coef2[0] * coef1[0] + coef2[1]);
+        if (coef1[1] == Integer.MAX_VALUE)
+            return new Point(coef1[0], coef2[0] * coef1[0] + coef2[1]);
+        if (coef2[1] == Integer.MAX_VALUE)
+            return new Point(coef2[0], coef1[0] * coef2[0] + coef1[1]);
         if (coef1[0] * coef2[1] - coef2[0] * coef1[1] == 0) {
             System.out.println("Given lines do not intersect!");
             return null;
@@ -497,7 +509,13 @@ public class MainControl {
 
     // TODO
     private ScenarioPercepts scenarioPercepts() {
-        return null;
+        System.out.println(storage.getCaptureDistance());
+        return new ScenarioPercepts(
+                GameMode.CaptureOneIntruder,
+                new Distance(storage.getCaptureDistance()),
+                Angle.fromDegrees(storage.getMaxRotationAngle()),
+                new SlowDownModifiers(storage.getSlowDownModifierWindow(), storage.getSlowDownModifierDoor(), storage.getSlowDownModifierSentryTower()),
+                new Distance(storage.getRadiusPheromone()), storage.getPheromoneCoolDown());
     }
 
     // TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
