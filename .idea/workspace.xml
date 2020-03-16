@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="869c7e1c-225c-4856-b8fb-aaf522d3f77f" name="Default Changelist" comment="">
+    <list default="true" id="869c7e1c-225c-4856-b8fb-aaf522d3f77f" name="Default Changelist" comment="Fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,8 +20,8 @@
       <file leaf-file-name="MainControl.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainControl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="508" column="11" lean-forward="true" selection-start-line="508" selection-start-column="11" selection-end-line="508" selection-end-column="11" />
+            <state relative-caret-position="1715">
+              <caret line="536" selection-start-line="536" selection-end-line="536" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#17468#17482#0" expanded="true" />
@@ -208,6 +207,14 @@
       <option name="presentableId" value="Default" />
       <updated>1584278748401</updated>
     </task>
+    <task id="LOCAL-00001" summary="Fix">
+      <created>1584370065904</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1584370065904</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -245,6 +252,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.gitignore">
@@ -614,8 +625,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainControl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="508" column="11" lean-forward="true" selection-start-line="508" selection-start-column="11" selection-end-line="508" selection-end-column="11" />
+        <state relative-caret-position="1715">
+          <caret line="536" selection-start-line="536" selection-end-line="536" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#17468#17482#0" expanded="true" />

@@ -253,6 +253,9 @@ public class MainControl {
 
                 Point pointOfIntersect = intersects(rayCoefficients, segmentCoefficients);
                 if (pointOfIntersect == null) {
+                    /*
+                    TODO: handle EmptySpace
+                     */
                     //objectPercepts.add(
                     //        new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
                 }
@@ -507,7 +510,6 @@ public class MainControl {
         return new AreaPercepts(inWindow, inDoor, inSentryTower, justTeleported);
     }
 
-    // TODO
     private ScenarioPercepts scenarioPercepts() {
         System.out.println(storage.getCaptureDistance());
         return new ScenarioPercepts(
@@ -518,7 +520,6 @@ public class MainControl {
                 new Distance(storage.getRadiusPheromone()), storage.getPheromoneCoolDown());
     }
 
-    // TODO: implement a function which returns all intruder scenario perceptions of the agent in the current state.
     // Oskar
     private ScenarioIntruderPercepts scenarioIntruderPercepts() {
         return new ScenarioIntruderPercepts(scenarioPercepts, storage.getWinConditionIntruderRounds(),
