@@ -22,6 +22,6 @@ public class MapVisualization {
 			VisualObject obj = new VisualObject(so, this.map.getScalingFactor());
 			this.pane.getChildren().add(obj.getShape());
 		}
-	}	
+	}
 	public BorderPane getPane() {	return this.pane; 	}
 }
