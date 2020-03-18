@@ -18,8 +18,8 @@ public class SoundStorage {
 	}
 	
 	public void addSound(SoundPerceptType type, Point point, Integer timeLeft, Double radius) {
-			Sound quartet = new Sound(type, point, timeLeft, radius);
-			sounds.add(quartet);
+			Sound sound = new Sound(type, point, timeLeft, radius);
+			sounds.add(sound);
 	}
 	
 	public void updateSounds() {
