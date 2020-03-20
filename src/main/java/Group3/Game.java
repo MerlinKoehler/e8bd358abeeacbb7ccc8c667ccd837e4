@@ -62,13 +62,17 @@ public class Game extends Application {
 	        } 
 			double mapBoundWidth = bounds.getWidth();
 			double mapBoundHeight = (bounds.getHeight()*9)/10;
-			Map m = new Map(path, mapBoundWidth, mapBoundHeight);
-			MapVisualization mv = new MapVisualization(m);
-			root.setCenter(mv.getPane());
-
+			MainControl gameController = new MainControl(this.path);
+	        gameController.setHeightBound(mapBoundHeight);
+	        gameController.setWidthBound(mapBoundWidth);
+	        gameController.createVisualMap(path);
+			root.setCenter(gameController.getMapPane());
 			Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			for (int i = 0; i < 100; i++) {
+	            gameController.doStep();
+	        }
 			
 		} catch (Exception e) {
 			System.out.println("Exception in creating GUI" + e.getMessage());

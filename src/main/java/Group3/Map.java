@@ -7,9 +7,9 @@ import Group3.StaticObjects.StaticObject;
 
 public class Map {
 	
-	private final double width;
-	private final double height;
-	private final double scalingFactor;
+	static double width;
+	static double height;
+	final double scalingFactor;
 	//initial coordinates of the objects
 	private ArrayList<StaticObject> initialStaticObjects;
 
