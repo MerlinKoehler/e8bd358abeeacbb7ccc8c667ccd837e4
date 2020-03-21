@@ -18,7 +18,6 @@ import Interop.Percept.Sound.SoundPercepts;
 import Interop.Percept.Vision.*;
 import javafx.scene.layout.BorderPane;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -48,16 +47,15 @@ public class MainControl {
     //made this an object outside to use in the smellpercepts etc
     Object agent;
     int currentTurn = -1;
+    //for the visualisation
+    double widthBound;
+    double heightBound;
     private ScenarioPercepts scenarioPercepts;
-    
-  //for the visualisation
-  	double widthBound;
-  	double heightBound;
-  	private MapVisualization mapVisualization;
-  	private BorderPane mapV;
-  	private Map map;
-  	private String path;
-  	//ArrayList<VisualAgent> visualAgents; 
+    private MapVisualization mapVisualization;
+    private BorderPane mapV;
+    private Map map;
+    private String path;
+    //ArrayList<VisualAgent> visualAgents;
 
     /*
      * TODO: Implement reading objects from the map description file (in MapReader)
@@ -65,7 +63,7 @@ public class MainControl {
 
     public MainControl(String path) {
 
-    	this.path = path;
+        this.path = path;
         // Read map file and settings
         readMap = new MapReader(path);
         storage = readMap.getStorage();
@@ -81,11 +79,11 @@ public class MainControl {
         agentStates = new ArrayList<AgentState>();
 
         for (Interop.Agent.Intruder intruder : intruders) {
-            AgentState state = new AgentState(new Point(500, 300), Direction.fromDegrees(0), intruder);
+            AgentState state = new AgentState(new Point(10, 10), Direction.fromDegrees(0), intruder);
             agentStates.add(state);
         }
         for (Interop.Agent.Guard guard : guards) {
-            AgentState state = new AgentState(new Point(1000, 500), Direction.fromDegrees(0), guard);
+            AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), guard);
             agentStates.add(state);
         }
 
@@ -155,7 +153,7 @@ public class MainControl {
             // 3. Pass the perception to the agent and retrieve the action
             //Interop.Action.GuardAction action = guard.getAction(percept);
             Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
-            
+
             // 4. Check if the agent is allowed to make a move
             boolean legalAction = checkLegalGuardAction(state, action);
 
@@ -260,59 +258,106 @@ public class MainControl {
                     range * Math.sin(rayDirection.getRadians()),
                     range * Math.cos(rayDirection.getRadians()));
             double[] rayCoefficients = computeLineCoefficients(rayOrigin, rayEnd);
+            Point pointOfIntersection = null;
 
-            double[] segmentCoefficients;
+            label:
             for (StaticObject staticObject : staticObjects) {
-                segmentCoefficients = computeLineCoefficients(
-                        new Point(staticObject.getP1().getX(), staticObject.getP1().getY()),
-                        new Point(staticObject.getP2().getX(), staticObject.getP2().getY()));
+                ArrayList<Point> validIntersectionPoints = new ArrayList<>();
 
-                Point pointOfIntersect = intersects(rayCoefficients, segmentCoefficients);
-                if (pointOfIntersect == null) {
+                Point pointOfIntersectionWithSegment1 = intersects(rayCoefficients,
+                        computeLineCoefficients(
+                                new Point(staticObject.getP1().getX(), staticObject.getP1().getY()),
+                                new Point(staticObject.getP2().getX(), staticObject.getP2().getY())
+                        )
+                );
+                if (pointOfIntersectionWithSegment1 != null)
+                    validIntersectionPoints.add(pointOfIntersectionWithSegment1);
 
-                    /*
-                    TODO: handle EmptySpace
-                     */
-                    //objectPercepts.add(
-                    //        new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
+                Point pointOfIntersectionWithSegment2 = intersects(rayCoefficients,
+                        computeLineCoefficients(
+                                new Point(staticObject.getP2().getX(), staticObject.getP2().getY()),
+                                new Point(staticObject.getP3().getX(), staticObject.getP3().getY())
+                        )
+                );
+                if (pointOfIntersectionWithSegment2 != null)
+                    validIntersectionPoints.add(pointOfIntersectionWithSegment2);
+
+                Point pointOfIntersectionWithSegment3 = intersects(rayCoefficients,
+                        computeLineCoefficients(
+                                new Point(staticObject.getP3().getX(), staticObject.getP3().getY()),
+                                new Point(staticObject.getP4().getX(), staticObject.getP4().getY())
+                        )
+                );
+                if (pointOfIntersectionWithSegment3 != null)
+                    validIntersectionPoints.add(pointOfIntersectionWithSegment3);
+
+                Point pointOfIntersectionWithSegment4 = intersects(rayCoefficients,
+                        computeLineCoefficients(
+                                new Point(staticObject.getP4().getX(), staticObject.getP4().getY()),
+                                new Point(staticObject.getP1().getX(), staticObject.getP1().getY())
+                        )
+                );
+                if (pointOfIntersectionWithSegment4 != null)
+                    validIntersectionPoints.add(pointOfIntersectionWithSegment4);
+
+                /* Consider only the segment that is the closest to the agent (rayOrigin) */
+                double minDistance = Double.MAX_VALUE;
+                for (Point intersectionPoint : validIntersectionPoints) {
+                    if (rayOrigin.getDistance(intersectionPoint).getValue() < minDistance) {
+                        minDistance = rayOrigin.getDistance(intersectionPoint).getValue();
+                        pointOfIntersection = intersectionPoint;
+                    }
                 }
-                else {
 
-                    switch (staticObject.getClass().getName()) {
-                            /*
-                            Guard and Intruder do not exist as staticObjects,
-                            TODO: iterate through guards[] and intruders[] instead
+                if (pointOfIntersection == null ||
+                        ((rayOrigin.getX() < rayEnd.getX()) && (pointOfIntersection.getX() < rayOrigin.getX() || pointOfIntersection.getX() > rayEnd.getX())) ||
+                        ((rayOrigin.getX() > rayEnd.getX()) && (pointOfIntersection.getX() > rayOrigin.getX() || pointOfIntersection.getX() < rayEnd.getX())) ||
+                        ((rayOrigin.getY() < rayEnd.getY()) && (pointOfIntersection.getY() < rayOrigin.getY() || pointOfIntersection.getY() > rayEnd.getY())) ||
+                        ((rayOrigin.getY() > rayEnd.getY()) && (pointOfIntersection.getY() > rayOrigin.getY() || pointOfIntersection.getY() < rayEnd.getY())))
+                    continue;
 
-                        case "Guard":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Guard, pointOfIntersect));
-                        case "Intruder":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Intruder, pointOfIntersect));
-                            */
-                        case "Group3.StaticObjects.Door":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Door, pointOfIntersect));
-                        case "Group3.StaticObjects.Wall":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Wall, pointOfIntersect));
-                        case "Group3.StaticObjects.Window":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Window, pointOfIntersect));
-                        case "Group3.StaticObjects.Teleport":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Teleport, pointOfIntersect));
-                        case "Group3.StaticObjects.SentryTower":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.SentryTower, pointOfIntersect));
-                        case "Group3.StaticObjects.ShadedArea":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.ShadedArea, pointOfIntersect));
-                        case "Group3.StaticObjects.TargetArea":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.TargetArea, pointOfIntersect));
-                    }
-                    }
+                switch (staticObject.getClass().getName()) {
+                    /*
+                    Guard and Intruder do not exist as staticObjects,
+                    TODO: iterate through guards[] and intruders[] instead
+                    case "Guard":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Guard, pointOfIntersect));
+                    case "Intruder":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Intruder, pointOfIntersect));
+                    */
+                    case "Group3.StaticObjects.Door":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Door, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.Wall":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Wall, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.Window":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Window, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.Teleport":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Teleport, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.SentryTower":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.SentryTower, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.ShadedArea":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.ShadedArea, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.TargetArea":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.TargetArea, pointOfIntersection));
+                        break label;
+
+
+                }
+            }
+            if (pointOfIntersection == null ||
+                    ((rayOrigin.getX() < rayEnd.getX()) && (pointOfIntersection.getX() < rayOrigin.getX() || pointOfIntersection.getX() > rayEnd.getX())) ||
+                    ((rayOrigin.getX() > rayEnd.getX()) && (pointOfIntersection.getX() > rayOrigin.getX() || pointOfIntersection.getX() < rayEnd.getX())) ||
+                    ((rayOrigin.getY() < rayEnd.getY()) && (pointOfIntersection.getY() < rayOrigin.getY() || pointOfIntersection.getY() > rayEnd.getY())) ||
+                    ((rayOrigin.getY() > rayEnd.getY()) && (pointOfIntersection.getY() > rayOrigin.getY() || pointOfIntersection.getY() < rayEnd.getY()))) {
+                objectPercepts.add(new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
             }
         }
-
-
-        for (ObjectPercept o : objectPercepts) {
-            System.out.println("o: " + o.getType());
-        }
-
-
         return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
     }
 
@@ -704,7 +749,7 @@ public class MainControl {
                 Interop.Action.Yell actYell = (Interop.Action.Yell) action;
                 soundStorage.addSound(SoundPerceptType.Yell, state.getCurrentPosition(), agentStates.size(), storage.getYellSoundRadius());
                 state.setLastAction(actYell);
-                this.mapV.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
+                this.mapV.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size() - 1).getShape());
                 break;
             default:
                 state.setLastActionExecuted(false);
@@ -776,22 +821,38 @@ public class MainControl {
             state.addInTarget(1);
         }
     }
-    
-    public MapVisualization getMapVisualization() { return this.mapVisualization; }
-	public void setMap(Map map) {
-		this.mapVisualization = new MapVisualization(map);
-	}
-	public void setWidthBound(double wB) {	this.widthBound = wB;	}
-	public void setHeightBound(double hb) {	this.heightBound = hb;	}
-	public void createVisualMap(String path) {
-		// visualisation of the map
-		this.map = new Map(path, this.widthBound, this.heightBound);
-		this.mapVisualization = new MapVisualization(this.map);
-		this.mapVisualization.addVisualAgents(agentStates);
-		this.mapV = this.mapVisualization.getPane();
-	}
-	public Map getMap() {	return this.map;}
-	public BorderPane getMapPane() {	return this.mapV;	}
+
+    public MapVisualization getMapVisualization() {
+        return this.mapVisualization;
+    }
+
+    public void setWidthBound(double wB) {
+        this.widthBound = wB;
+    }
+
+    public void setHeightBound(double hb) {
+        this.heightBound = hb;
+    }
+
+    public void createVisualMap(String path) {
+        // visualisation of the map
+        this.map = new Map(path, this.widthBound, this.heightBound);
+        this.mapVisualization = new MapVisualization(this.map);
+        this.mapVisualization.addVisualAgents(agentStates);
+        this.mapV = this.mapVisualization.getPane();
+    }
+
+    public Map getMap() {
+        return this.map;
+    }
+
+    public void setMap(Map map) {
+        this.mapVisualization = new MapVisualization(map);
+    }
+
+    public BorderPane getMapPane() {
+        return this.mapV;
+    }
 //	public void addVisualAgents() {
 //		this.visualAgents = new ArrayList<>();
 //		for (AgentState state : agentStates) 
