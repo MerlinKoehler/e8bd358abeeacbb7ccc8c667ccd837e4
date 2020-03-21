@@ -34,7 +34,6 @@ public class Guard implements Interop.Agent.Guard {
 		
 		//to have a rule based exploration agent, have some hardcoded rules
 		//coverage needs to be as big as possible
-	
 		
 		//process area - highest priority
 		if (area.isInDoor()) {
