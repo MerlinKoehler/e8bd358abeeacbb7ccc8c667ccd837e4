@@ -81,11 +81,11 @@ public class MainControl {
         agentStates = new ArrayList<AgentState>();
 
         for (Interop.Agent.Intruder intruder : intruders) {
-            AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), intruder);
+            AgentState state = new AgentState(new Point(500, 300), Direction.fromDegrees(0), intruder);
             agentStates.add(state);
         }
         for (Interop.Agent.Guard guard : guards) {
-            AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), guard);
+            AgentState state = new AgentState(new Point(1000, 500), Direction.fromDegrees(0), guard);
             agentStates.add(state);
         }
 
@@ -141,7 +141,7 @@ public class MainControl {
         agent = getAgentNextTurn();
         AgentState state = agentStates.get(currentTurn);
         if (agent.getClass() == Guard.class) {
-            System.out.println("This is a Guard");
+            //System.out.println("This is a Guard");
             Guard guard = (Guard) agent;
 
             // 2. Calculate the perception of the agent
@@ -163,7 +163,7 @@ public class MainControl {
             if (legalAction) {
                 updateAgentState(state, action);
                 state.setLastAction(action);
-                this.mapVisualization.setAgentPosition(currentTurn, state.getCurrentPosition());
+                //this.mapVisualization.setAgentPosition(currentTurn, state.getCurrentPosition());
             } else {
                 state.setLastAction(new NoAction());
             }
@@ -175,7 +175,7 @@ public class MainControl {
             // 2 = guards win
             return (gameFinished());
         } else if (agent.getClass() == Intruder.class) {
-            System.out.println("This is a Intruder");
+            //System.out.println("This is a Intruder");
             Intruder intruder = (Intruder) agent;
             updateIntarget(state);
 
@@ -198,7 +198,7 @@ public class MainControl {
             // 6. Update the game state according to the action.
             if (legalAction) {
                 updateAgentState(state, action);
-                this.mapVisualization.setAgentPosition(currentTurn, state.getCurrentPosition());
+                //this.mapVisualization.setAgentPosition(currentTurn, state.getCurrentPosition());
                 state.setLastAction(action);
             } else {
                 state.setLastAction(new NoAction());
@@ -269,39 +269,49 @@ public class MainControl {
 
                 Point pointOfIntersect = intersects(rayCoefficients, segmentCoefficients);
                 if (pointOfIntersect == null) {
+
                     /*
                     TODO: handle EmptySpace
                      */
                     //objectPercepts.add(
                     //        new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
                 }
-                else
+                else {
+
                     switch (staticObject.getClass().getName()) {
                             /*
                             Guard and Intruder do not exist as staticObjects,
                             TODO: iterate through guards[] and intruders[] instead
-                             */
+
                         case "Guard":
                             objectPercepts.add(new ObjectPercept(ObjectPerceptType.Guard, pointOfIntersect));
                         case "Intruder":
                             objectPercepts.add(new ObjectPercept(ObjectPerceptType.Intruder, pointOfIntersect));
-                        case "Door":
+                            */
+                        case "Group3.StaticObjects.Door":
                             objectPercepts.add(new ObjectPercept(ObjectPerceptType.Door, pointOfIntersect));
-                        case "Wall":
+                        case "Group3.StaticObjects.Wall":
                             objectPercepts.add(new ObjectPercept(ObjectPerceptType.Wall, pointOfIntersect));
-                        case "Window":
+                        case "Group3.StaticObjects.Window":
                             objectPercepts.add(new ObjectPercept(ObjectPerceptType.Window, pointOfIntersect));
-                        case "Teleport":
+                        case "Group3.StaticObjects.Teleport":
                             objectPercepts.add(new ObjectPercept(ObjectPerceptType.Teleport, pointOfIntersect));
-                        case "SentryTower":
+                        case "Group3.StaticObjects.SentryTower":
                             objectPercepts.add(new ObjectPercept(ObjectPerceptType.SentryTower, pointOfIntersect));
-                        case "ShadedArea":
+                        case "Group3.StaticObjects.ShadedArea":
                             objectPercepts.add(new ObjectPercept(ObjectPerceptType.ShadedArea, pointOfIntersect));
-                        case "TargetArea":
+                        case "Group3.StaticObjects.TargetArea":
                             objectPercepts.add(new ObjectPercept(ObjectPerceptType.TargetArea, pointOfIntersect));
+                    }
                     }
             }
         }
+
+
+        for (ObjectPercept o : objectPercepts) {
+            System.out.println("o: " + o.getType());
+        }
+
 
         return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
     }
@@ -338,7 +348,7 @@ public class MainControl {
         if (coef2[1] == Integer.MAX_VALUE)
             return new Point(coef2[0], coef1[0] * coef2[0] + coef1[1]);
         if (coef1[0] * coef2[1] - coef2[0] * coef1[1] == 0) {
-            System.out.println("Given lines do not intersect!");
+            //System.out.println("Given lines do not intersect!");
             return null;
         }
 
