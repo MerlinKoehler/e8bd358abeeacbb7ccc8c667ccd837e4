@@ -520,7 +520,7 @@ public class MainControl {
     private SoundPercepts soundPercepts(AgentState state) {
         Set<SoundPercept> sounds = new HashSet<SoundPercept>();
 
-        for (int i = 0; i < sounds.size(); i++) {
+        for (int i = 0; i < soundStorage.getSounds().size(); i++) {
             Point point1 = state.getCurrentPosition();
             Point point2 = soundStorage.getSounds().get(i).getLocation();
 
