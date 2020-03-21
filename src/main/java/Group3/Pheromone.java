@@ -21,8 +21,7 @@ public class Pheromone {
 		this.scalingFactor = scalingFactor;
 		this.radius = 5;
 
-		this.shape = new Circle();
-		this.shape.setRadius(scalingFactor*this.radius);
+		this.shape = new Circle(scalingFactor*this.radius);
 		switch(type) {
 			case Pheromone1: this.shape.setFill(Color.KHAKI);
 			case Pheromone2: this.shape.setFill(Color.YELLOW);

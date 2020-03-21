@@ -27,9 +27,11 @@ public class SoundStorage {
 		
 		for (int i = 0; i < sounds.size(); i++) {
 			sounds.get(i).setTurnsLeft(sounds.get(i).getTurnsLeft()-1);
+			sounds.get(i).updateShape();
 			if (sounds.get(i).getTurnsLeft() <= 0) {
 				remove.add(sounds.get(i));
 			}
+
 		}
 		
 		sounds.removeAll(remove);

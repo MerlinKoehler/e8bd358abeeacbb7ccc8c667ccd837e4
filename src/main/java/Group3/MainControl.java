@@ -694,6 +694,7 @@ public class MainControl {
                 Interop.Action.Yell actYell = (Interop.Action.Yell) action;
                 soundStorage.addSound(SoundPerceptType.Yell, state.getCurrentPosition(), agentStates.size(), storage.getYellSoundRadius());
                 state.setLastAction(actYell);
+                this.mapV.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
                 break;
             default:
                 state.setLastActionExecuted(false);
