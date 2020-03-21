@@ -1,5 +1,7 @@
 package Group3;
 
+import java.util.ArrayList;
+
 import Interop.Action.GuardAction;
 import Interop.Action.Move;
 import Interop.Action.NoAction;
@@ -24,9 +26,15 @@ public class ExplorationAgentGuard implements Interop.Agent.Guard{
  * An exploration class, using the methods in the Guard interface.
  */
 	
+	ArrayList<Tile> gridmap = CreateGrid.createGrid();
+	
+// create something that checks whether you have already visited a 'tile'
 	
 	public GuardAction getAction(GuardPercepts percepts) {
 		
+		
+		
+		/*
 		//get the percepts
 		boolean executed = percepts.wasLastActionExecuted();
 		AreaPercepts area = percepts.getAreaPercepts();
@@ -102,6 +110,7 @@ public class ExplorationAgentGuard implements Interop.Agent.Guard{
 			}
 		}
 		
-		return new Move(scenario.getMaxMoveDistanceGuard());
+		return new Move(scenario.getMaxMoveDistanceGuard());*/
+		return null;
 	}
 }

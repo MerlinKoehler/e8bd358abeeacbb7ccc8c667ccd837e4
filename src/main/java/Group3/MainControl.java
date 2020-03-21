@@ -41,7 +41,7 @@ public class MainControl {
     double capturedIntruderCount = 0;
 
     MapReader readMap;
-    Storage storage;
+    public static Storage storage;
     PheromoneStorage pherStorage = new PheromoneStorage();
     SoundStorage soundStorage = new SoundStorage();
 
