@@ -77,7 +77,6 @@ public class Game extends Application {
 		} catch (Exception e) {
 			System.out.println("Exception in creating GUI" + e.getMessage());
 		}
-		
 	}
 	
 	public GridPane addLegend() {
