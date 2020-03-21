@@ -53,7 +53,8 @@ public class VisualObject {
             public void handle(MouseEvent e) {
 //            	ScrollPane scroll = new ScrollPane();
 //            	scroll.setContent(new Label("here is the " + object.getClass().toString()));
-            	System.out.println("here is the " + object.getClass().toString());
+            	System.out.println("here is the " + object.getClass().toString() + " at " +
+						object.getP1() + ", " + object.getP2() + ", " + object.getP3() + ", " + object.getP4());
             }
   });
 	}
