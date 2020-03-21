@@ -262,8 +262,6 @@ public class MainControl {
 
             label:
             for (StaticObject staticObject : staticObjects) {
-                System.out.println("hhe");
-                //System.out.println(staticObject.getClass());
                 ArrayList<Point> validIntersectionPoints = new ArrayList<>();
 
                 Point pointOfIntersectionWithSegment1 = intersects(rayCoefficients,
@@ -360,17 +358,6 @@ public class MainControl {
                 objectPercepts.add(new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
             }
         }
-
-
-        int i = 0;
-        for (ObjectPercept o : objectPercepts) {
-            if (true) {
-                i++;
-                System.out.println("o" + i + ": " + o.getType() + "\n");
-            }
-        }
-
-
         return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
     }
 
