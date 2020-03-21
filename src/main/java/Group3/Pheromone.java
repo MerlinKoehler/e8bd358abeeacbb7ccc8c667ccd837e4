@@ -11,14 +11,18 @@ public class Pheromone {
 	private int turnsLeft;
 	private Point location;
 	private Circle shape;
+	double scalingFactor;
+	int radius;
 
-	public Pheromone(SmellPerceptType type, Point location, int turnsLeft) {
+	public Pheromone(SmellPerceptType type, Point location, int turnsLeft, double scalingFactor) {
 		this.type = type;
 		this.turnsLeft = turnsLeft;
 		this.location = location;
+		this.scalingFactor = scalingFactor;
+		this.radius = 5;
 
 		this.shape = new Circle();
-		this.shape.setRadius(5);
+		this.shape.setRadius(scalingFactor*this.radius);
 		switch(type) {
 			case Pheromone1: this.shape.setFill(Color.KHAKI);
 			case Pheromone2: this.shape.setFill(Color.YELLOW);
@@ -56,6 +60,13 @@ public class Pheromone {
 
 	public Circle getShape(){
 		return this.shape;
+	}
+
+	public void updateShape() {
+		if (getTurnsLeft() > 0) {
+			this.radius = this.radius - this.radius / getTurnsLeft();
+			this.shape.setRadius(this.radius);
+		}
 	}
 	
 }
