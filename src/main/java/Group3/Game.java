@@ -46,9 +46,12 @@ public class Game extends Application {
 	        });
 			//add things to the root
 			BorderPane root = new BorderPane();
+			VBox rightBox = new VBox();
+			rightBox.setPadding(new Insets(20,20,20,20));
+			rightBox.setSpacing(50);
+			rightBox.getChildren().add(addLegend());
 			root.setStyle("-fx-background-color: lightgray ;");
 			root.setPadding(new Insets(20,50,20,20));
-			root.setRight(addLegend());
 			
 			//set the scene
 	        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
@@ -66,13 +69,16 @@ public class Game extends Application {
 	        gameController.setHeightBound(mapBoundHeight);
 	        gameController.setWidthBound(mapBoundWidth);
 	        gameController.createVisualMap(path);
+			Button moveAgent = new Button("move");
+			moveAgent.setOnAction(e -> {
+				gameController.doStep();
+			});
+			rightBox.getChildren().add(moveAgent);
+			root.setRight(rightBox);
 			root.setCenter(gameController.getMapPane());
 			Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			for (int i = 0; i < 100; i++) {
-	            gameController.doStep();
-	        }
 			
 		} catch (Exception e) {
 			System.out.println("Exception in creating GUI" + e.getMessage());

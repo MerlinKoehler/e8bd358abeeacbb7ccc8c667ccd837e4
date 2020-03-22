@@ -48,14 +48,6 @@ public class VisualObject {
 		}else if(object instanceof SpawnAreaIntruders) {
 			shape.setFill(Color.PLUM);
 		}
-		this.shape.addEventHandler(MouseEvent.MOUSE_ENTERED,
-                new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent e) {
-//            	ScrollPane scroll = new ScrollPane();
-//            	scroll.setContent(new Label("here is the " + object.getClass().toString()));
-            	System.out.println("here is the " + object.getClass().toString());
-            }
-  });
 	}
 	public Polygon getShape(){	return  this.shape;	}
 }

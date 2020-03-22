@@ -25,11 +25,12 @@ public class MapVisualization {
 			VisualObject obj = new VisualObject(so, this.map.getScalingFactor());
 			this.pane.getChildren().add(obj.getShape());
 		}
+		addVisualAgents();
 	}
 	public BorderPane getPane() {	return this.pane; 	}
-	public void addVisualAgents(ArrayList<AgentState> states) {
+	public void addVisualAgents() {
 		this.visualAgents = new ArrayList<VisualAgent>();
-		for(AgentState s : states) {
+		for(AgentState s : this.map.getAgents()) {
 			VisualAgent agent = new VisualAgent(s, this.map.scalingFactor);
 			visualAgents.add(agent);
 			this.pane.getChildren().add(agent.getShape());

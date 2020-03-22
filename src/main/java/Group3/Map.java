@@ -12,8 +12,7 @@ public class Map {
 	final double scalingFactor;
 	//initial coordinates of the objects
 	private ArrayList<StaticObject> initialStaticObjects;
-
-
+	private ArrayList<AgentState> agents;
 	public String path;
 	
 	public Map(String path, double screenWidth, double screenHeight) {
@@ -26,6 +25,7 @@ public class Map {
 		
 		//for scaling the map in the visualisation
 		this.initialStaticObjects = mr.getStaticObjects();
+		this.agents = new ArrayList<AgentState>();
 	}
 
 	public double getWidth() {	return this.width; }
@@ -44,5 +44,9 @@ public class Map {
 	}
 	public double getScalingFactor() {	return this.scalingFactor;	}
 	public ArrayList<StaticObject> getAllObjects() {	return this.initialStaticObjects;}
+	public void addAgents(ArrayList<AgentState> agents) {	
+		this.agents = agents;
+	}
+	public ArrayList<AgentState> getAgents(){	return this.agents;	}
 	
 }

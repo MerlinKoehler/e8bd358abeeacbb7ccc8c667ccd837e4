@@ -54,7 +54,7 @@ public class MainControl {
   	double widthBound;
   	double heightBound;
   	private MapVisualization mapVisualization;
-  	private BorderPane mapV;
+  	private BorderPane mapPane;
   	private Map map;
   	private String path;
   	//ArrayList<VisualAgent> visualAgents; 
@@ -88,7 +88,7 @@ public class MainControl {
             AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), guard);
             agentStates.add(state);
         }
-
+        
         targetZoneCount = new ArrayList<Integer>();
         //Initialize counters for Intruders in target zone
         for (int i = 0; i < intruders.size(); i++) {
@@ -155,7 +155,7 @@ public class MainControl {
             // 3. Pass the perception to the agent and retrieve the action
             //Interop.Action.GuardAction action = guard.getAction(percept);
             Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
-            
+          
             // 4. Check if the agent is allowed to make a move
             boolean legalAction = checkLegalGuardAction(state, action);
 
@@ -163,7 +163,9 @@ public class MainControl {
             if (legalAction) {
                 updateAgentState(state, action);
                 state.setLastAction(action);
-                this.mapVisualization.setAgentPosition(currentTurn, state.getCurrentPosition());
+                if(this.mapVisualization != null) {
+                	this.mapVisualization.getAgent(currentTurn).setPosition(state.getCurrentPosition());
+                }
             } else {
                 state.setLastAction(new NoAction());
             }
@@ -198,8 +200,10 @@ public class MainControl {
             // 6. Update the game state according to the action.
             if (legalAction) {
                 updateAgentState(state, action);
-                this.mapVisualization.setAgentPosition(currentTurn, state.getCurrentPosition());
                 state.setLastAction(action);
+                if(this.mapVisualization != null) {
+                	this.mapVisualization.getAgent(currentTurn).setPosition(state.getCurrentPosition());
+                }
             } else {
                 state.setLastAction(new NoAction());
             }
@@ -658,7 +662,7 @@ public class MainControl {
                 // TODO: Set correct pheromone cooldown
                 pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getScalingFactor());
                 state.setLastAction(actPheromone);
-                this.mapV.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
+                this.mapPane.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
                 break;
 
             case "Interop.Action.Move": {
@@ -694,7 +698,7 @@ public class MainControl {
                 Interop.Action.Yell actYell = (Interop.Action.Yell) action;
                 soundStorage.addSound(SoundPerceptType.Yell, state.getCurrentPosition(), agentStates.size(), storage.getYellSoundRadius());
                 state.setLastAction(actYell);
-                this.mapV.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
+                this.mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
                 break;
             default:
                 state.setLastActionExecuted(false);
@@ -776,12 +780,13 @@ public class MainControl {
 	public void createVisualMap(String path) {
 		// visualisation of the map
 		this.map = new Map(path, this.widthBound, this.heightBound);
+		this.map.addAgents(this.agentStates);
 		this.mapVisualization = new MapVisualization(this.map);
-		this.mapVisualization.addVisualAgents(agentStates);
-		this.mapV = this.mapVisualization.getPane();
+		//this.mapVisualization.addVisualAgents(agentStates);
+		this.mapPane = this.mapVisualization.getPane();
 	}
 	public Map getMap() {	return this.map;}
-	public BorderPane getMapPane() {	return this.mapV;	}
+	public BorderPane getMapPane() {	return this.mapPane;	}
 //	public void addVisualAgents() {
 //		this.visualAgents = new ArrayList<>();
 //		for (AgentState state : agentStates) 

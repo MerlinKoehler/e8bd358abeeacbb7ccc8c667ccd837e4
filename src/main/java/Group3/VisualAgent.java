@@ -27,8 +27,8 @@ public class VisualAgent{
 //		this.arrow = new Line(p.getX(), p.getY(), p2.getX(), p2.getY());
 //		this.arrow.setStrokeWidth(2);
 //		this.arrow.setStroke(Color.WHITE);
-		this.shape.setCenterX(p.getX());
-		this.shape.setCenterY(p.getY());
+		this.shape.setCenterX(this.agent.getCurrentPosition().getX() * this.scalingFactor);
+		this.shape.setCenterY(this.agent.getCurrentPosition().getY() * this.scalingFactor);
 		//add check condition for checking if there is already an object
 		if(agent.getAgent().getClass() == Guard.class) {
 			this.shape.setFill(Color.BLUE);
