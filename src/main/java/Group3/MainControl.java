@@ -83,7 +83,7 @@ public class MainControl {
             agentStates.add(state);
         }
         for (Interop.Agent.Guard guard : guards) {
-            AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), guard);
+            AgentState state = new AgentState(new Point(12, 12), Direction.fromDegrees(0), guard);
             agentStates.add(state);
         }
 
@@ -157,6 +157,9 @@ public class MainControl {
             // 4. Check if the agent is allowed to make a move
             boolean legalAction = checkLegalGuardAction(state, action);
 
+            if (state.getPenalty() > 0) 
+    			state.setPenalty(state.getPenalty() - 1);
+            
             // 6. Update the game state according to the action.
             if (legalAction) {
                 updateAgentState(state, action);
@@ -188,11 +191,14 @@ public class MainControl {
 
             // 3. Pass the perception to the agent and retrieve the action
             //Interop.Action.IntruderAction action = intruder.getAction(percept);
-            Interop.Action.IntruderAction action = new Interop.Action.Move(new Distance(2));
+            Interop.Action.IntruderAction action = new Interop.Action.Sprint(new Distance(2));
 
             // 4. Check if the agent is allowed to make a move
             boolean legalAction = checkLegalIntruderAction(state, action);
 
+            if (state.getPenalty() > 0) 
+    			state.setPenalty(state.getPenalty() - 1);
+            
             // 6. Update the game state according to the action.
             if (legalAction) {
                 updateAgentState(state, action);
@@ -703,58 +709,71 @@ public class MainControl {
 
     // TODO: implement a function, which updates the current game state based on the action of the agent.
     // Merlin
-    private void updateAgentState(AgentState state, Action action) {
+	private void updateAgentState(AgentState state, Action action) {
+		switch (action.getClass().getName()) {
+		case "Interop.Action.DropPheromone":
+			state.setPenalty(storage.getPheromoneCoolDown());
+			Interop.Action.DropPheromone actPheromone = (Interop.Action.DropPheromone) action;
+			// TODO: Set correct pheromone cooldown
+			pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(),
+					(agent.getClass() == Guard.class), this.map.getScalingFactor());
+			state.setLastAction(actPheromone);
+			this.mapV.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
+			break;
 
-
-        switch (action.getClass().getName()) {
-            case "Interop.Action.DropPheromone":
-                state.setPenalty(storage.getPheromoneCoolDown());
-                Interop.Action.DropPheromone actPheromone = (Interop.Action.DropPheromone) action;
-                // TODO: Set correct pheromone cooldown
-                pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getScalingFactor());
-                state.setLastAction(actPheromone);
-                this.mapV.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
-                break;
-
-            case "Interop.Action.Move": {
-                Interop.Action.Move actMove = (Interop.Action.Move) action;
-                soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actMove.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
-                state.setCurrentPosition(new Point(actMove.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actMove.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
-                state.setPenalty(storage.getSprintCoolDown());
-                state.setLastAction(actMove);
-                break;
-            }
-            case "Interop.Action.NoAction":
-                Interop.Action.NoAction actNo = (Interop.Action.NoAction) action;
-                state.setLastAction(actNo);
-                break;
-            case "Interop.Action.Rotate":
-                Interop.Action.Rotate actRotate = (Interop.Action.Rotate) action;
-                if (actRotate.getAngle().getDegrees() <= storage.getMaxRotationAngle()) {
-                    state.setTargetDirection(Direction.fromDegrees(state.getTargetDirection().getDegrees() + actRotate.getAngle().getDegrees()));
-                } else {
-                    state.setLastActionExecuted(false);
-                }
-                state.setLastAction(actRotate);
-                break;
-            case "Interop.Action.Sprint": {
-                Interop.Action.Sprint actSprint = (Interop.Action.Sprint) action;
-                soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actSprint.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
-                state.setCurrentPosition(new Point(actSprint.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actSprint.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
-                state.setPenalty(storage.getSprintCoolDown());
-                state.setLastAction(actSprint);
-                break;
-            }
-            case "Interop.Action.Yell":
-                Interop.Action.Yell actYell = (Interop.Action.Yell) action;
-                soundStorage.addSound(SoundPerceptType.Yell, state.getCurrentPosition(), agentStates.size(), storage.getYellSoundRadius());
-                state.setLastAction(actYell);
-                this.mapV.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size() - 1).getShape());
-                break;
-            default:
-                state.setLastActionExecuted(false);
-        }
-    }
+		case "Interop.Action.Move": {
+			Interop.Action.Move actMove = (Interop.Action.Move) action;
+			soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(),
+					(actMove.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue())
+							* storage.getMaxMoveSoundRadius());
+			state.setCurrentPosition(new Point(
+					actMove.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians())
+							+ state.getCurrentPosition().getX(),
+					actMove.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians())
+							+ state.getCurrentPosition().getY()));
+			state.setPenalty(storage.getSprintCoolDown());
+			state.setLastAction(actMove);
+			break;
+		}
+		case "Interop.Action.NoAction":
+			Interop.Action.NoAction actNo = (Interop.Action.NoAction) action;
+			state.setLastAction(actNo);
+			break;
+		case "Interop.Action.Rotate":
+			Interop.Action.Rotate actRotate = (Interop.Action.Rotate) action;
+			if (actRotate.getAngle().getDegrees() <= storage.getMaxRotationAngle()) {
+				state.setTargetDirection(Direction
+						.fromDegrees(state.getTargetDirection().getDegrees() + actRotate.getAngle().getDegrees()));
+			} else {
+				state.setLastActionExecuted(false);
+			}
+			state.setLastAction(actRotate);
+			break;
+		case "Interop.Action.Sprint": {
+			Interop.Action.Sprint actSprint = (Interop.Action.Sprint) action;
+			soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(),
+					(actSprint.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue())
+							* storage.getMaxMoveSoundRadius());
+			state.setCurrentPosition(new Point(
+					actSprint.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians())
+							+ state.getCurrentPosition().getX(),
+					actSprint.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians())
+							+ state.getCurrentPosition().getY()));
+			state.setPenalty(storage.getSprintCoolDown());
+			state.setLastAction(actSprint);
+			break;
+		}
+		case "Interop.Action.Yell":
+			Interop.Action.Yell actYell = (Interop.Action.Yell) action;
+			soundStorage.addSound(SoundPerceptType.Yell, state.getCurrentPosition(), agentStates.size(),
+					storage.getYellSoundRadius());
+			state.setLastAction(actYell);
+			this.mapV.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size() - 1).getShape());
+			break;
+		default:
+			state.setLastActionExecuted(false);
+		}
+	}
 
     // TODO: implement a function which checks if the game is finished. Take into account the current game mode.
     // Victor
