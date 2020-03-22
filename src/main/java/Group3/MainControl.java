@@ -752,6 +752,15 @@ public class MainControl {
     // TODO: implement a function, which updates the current game state based on the action of the agent.
     // Merlin
     private void updateAgentState(AgentState state, Action action) {
+    	
+    	StaticObject a = inAreaType(state);
+		if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Window")) {
+			soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), storage.getWindowSoundRadius());
+		}
+		if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Door")) {
+			soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), storage.getDoorSoundRadius());
+		}
+    	
         switch (action.getClass().getName()) {
             case "Interop.Action.DropPheromone":
                 state.setPenalty(storage.getPheromoneCoolDown());
@@ -768,6 +777,20 @@ public class MainControl {
                 state.setCurrentPosition(new Point(actMove.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actMove.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
                 state.setPenalty(storage.getSprintCoolDown());
                 state.setLastAction(actMove);
+                
+                StaticObject area = inAreaType(state);
+    			if(area != null && area.getClass().getName().equals("Group3.StaticObjects.Teleport") && !state.isTeleported()) {
+    				Teleport teleport = (Teleport)area;
+    				state.setCurrentPosition(teleport.getTeleportTo());
+    				state.setTeleported(true);
+    			}
+    			if(area == null) {
+    				state.setTeleported(false);
+    			}
+    			else if(!area.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
+    				state.setTeleported(false);
+    			}
+                
                 break;
             }
             case "Interop.Action.NoAction":
@@ -789,6 +812,20 @@ public class MainControl {
                 state.setCurrentPosition(new Point(actSprint.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actSprint.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
                 state.setPenalty(storage.getSprintCoolDown());
                 state.setLastAction(actSprint);
+                
+                StaticObject area = inAreaType(state);
+    			if(area != null && area.getClass().getName().equals("Group3.StaticObjects.Teleport") && !state.isTeleported()) {
+    				Teleport teleport = (Teleport)area;
+    				state.setCurrentPosition(teleport.getTeleportTo());
+    				state.setTeleported(true);
+    			}
+    			if(area == null) {
+    				state.setTeleported(false);
+    			}
+    			else if(!area.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
+    				state.setTeleported(false);
+    			}
+                
                 break;
             }
             case "Interop.Action.Yell":
@@ -801,6 +838,54 @@ public class MainControl {
                 state.setLastActionExecuted(false);
         }
     }
+    
+	private StaticObject inAreaType(AgentState state) {
+		for(StaticObject obj : staticObjects) {
+			if(obj.getClass().getName().equals("Group3.StaticObjects.ShadedArea")) {
+				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+				if(inArea(state.getCurrentPosition(), area)) return obj;
+			}
+			if(obj.getClass().getName().equals("Group3.StaticObjects.SentryTower")) {
+				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+				if(inArea(state.getCurrentPosition(), area)) return obj;
+			}
+			if(obj.getClass().getName().equals("Group3.StaticObjects.Door")) {
+				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+				if(inArea(state.getCurrentPosition(), area)) return obj;
+			}
+			if(obj.getClass().getName().equals("Group3.StaticObjects.Window")) {
+				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+				if(inArea(state.getCurrentPosition(), area)) return obj;
+			}
+			if(obj.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
+				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+				if(inArea(state.getCurrentPosition(), area)) return obj;
+			}
+		}
+		return null;
+	}
+	
+	private boolean inArea(Point point, Point[] area) {
+		double xmax = Integer.MIN_VALUE;
+		double xmin = Integer.MAX_VALUE;
+		double ymax = Integer.MIN_VALUE;
+		double ymin = Integer.MAX_VALUE;
+		
+		for(Point p : area) {
+			double x = p.getX();
+			double y = p.getY();
+			if(x < xmin) xmin = x;
+			else if(x > xmax) xmax = x;
+			if(y < ymin) ymin = y;
+			else if(y > ymax) ymax = y;
+		}
+		
+		if((point.getX() >= xmin) &&(point.getX() <= xmax))
+			if((point.getY() >= ymin) &&(point.getY() <= ymax))
+				return true;
+		
+		return false;
+	}
 
     // TODO: implement a function which checks if the game is finished. Take into account the current game mode.
     // Victor

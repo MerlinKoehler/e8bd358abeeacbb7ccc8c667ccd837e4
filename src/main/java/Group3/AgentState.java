@@ -13,6 +13,7 @@ public class AgentState {
 	private int penalty;
 	private Action lastAction;
 	private int inTarget;
+	private boolean teleported = false;
 
 	
 	public AgentState(Point positon, Direction targetDirection, Object agent) {
@@ -71,6 +72,14 @@ public class AgentState {
 
 	public void setCurrentPosition(Point currentPosition) {
 		this.currentPosition = currentPosition;
+	}
+
+	public boolean isTeleported() {
+		return teleported;
+	}
+
+	public void setTeleported(boolean teleported) {
+		this.teleported = teleported;
 	}
 
 }
