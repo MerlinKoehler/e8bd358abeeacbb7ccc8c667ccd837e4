@@ -26,8 +26,9 @@ public class VisualObject {
 		this.shape.getPoints().addAll(new Double[] {
 			(double)object.getP1().getX()*scalingFactor, (double)object.getP1().getY()*scalingFactor, 
 			(double)object.getP2().getX()*scalingFactor, (double)object.getP2().getY()*scalingFactor,
-			(double)object.getP3().getX()*scalingFactor, (double)object.getP3().getY()*scalingFactor,
-			(double)object.getP4().getX()*scalingFactor, (double)object.getP4().getY()*scalingFactor
+			(double)object.getP4().getX()*scalingFactor, (double)object.getP4().getY()*scalingFactor,
+			(double)object.getP3().getX()*scalingFactor, (double)object.getP3().getY()*scalingFactor
+			
 		});
 		if(object instanceof Wall) {
 			shape.setFill(Color.PALEGREEN);
