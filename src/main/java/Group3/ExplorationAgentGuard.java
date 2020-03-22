@@ -22,13 +22,14 @@ import Interop.Percept.Vision.ObjectPercepts;
 import Interop.Percept.Vision.VisionPrecepts;
 
 public class ExplorationAgentGuard implements Interop.Agent.Guard{
-/*
- * An exploration class, using the methods in the Guard interface.
- */
+	/*
+	 * An exploration class, using the methods in the Guard interface.
+	 */
 	
-	ArrayList<Tile> gridmap = CreateGrid.createGrid();
+	GridMapStorage map = new GridMapStorage();
 	
-// create something that checks whether you have already visited a 'tile'
+	// create something that checks whether you have already visited a 'tile'
+	// need to update whether you already visited this 
 	
 	public GuardAction getAction(GuardPercepts percepts) {
 		

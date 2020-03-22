@@ -10,7 +10,7 @@ public class ExplorationAgentIntruder implements Interop.Agent.Intruder {
  * An exploration agent, using the interface of an intruder.
  */
 	
-	ArrayList<Tile> gridmap = CreateGrid.createGrid();
+	GridMapStorage map = new GridMapStorage();
 	
 	public IntruderAction getAction(IntruderPercepts percepts) {
 		
