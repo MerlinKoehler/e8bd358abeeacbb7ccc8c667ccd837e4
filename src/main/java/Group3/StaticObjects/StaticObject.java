@@ -2,19 +2,67 @@ package Group3.StaticObjects;
 
 import Interop.Geometry.Point;
 
+import java.util.ArrayList;
+
 public class StaticObject {
 
-	private Point p1;
-	private Point p2;
-	private Point p3;
-	private Point p4;
+	private Point p1;//upper left
+	private Point p2;//upper right
+	private Point p3;//bottom left
+	private Point p4;//bottom right
    
-	public StaticObject(Point upperleft, Point upperright, Point bottomleft, Point bottomright) {
-		this.p1 = upperleft;
-		this.p2 = upperright;
-		this.p3 = bottomleft;
-		this.p4 = bottomright;
+	public StaticObject(Point a, Point b, Point c, Point d) {
+
+		ArrayList<Point> points = new ArrayList<>();
+		points.add(a);
+		points.add(b);
+		points.add(c);
+		points.add(d);
+
+		ArrayList<Point> left = new ArrayList<>();
+		ArrayList<Point> right = new ArrayList<>();
+
+		for(int i=0; i<points.size(); i++){
+			for(int j=0; j<points.size(); j++){
+				if(i!=j){
+					if(points.get(i).getX() < points.get(j).getX()) {
+						if(!left.contains(points.get(i))){
+							left.add(points.get(i));
+						}
+					}else if(points.get(i).getX() > points.get(j).getX()){
+						if(!right.contains(points.get(i))){
+							right.add(points.get(i));
+						}
+					}
+				}
+			}
+		}
+
+		if(left.get(0).getY() > left.get(1).getY()) {
+			this.p1 = left.get(1);
+			this.p3 = left.get(0);
+		}else {
+			this.p1 = left.get(0);
+			this.p3 = left.get(1);
+		}
+
+		if(right.get(0).getY() > right.get(1).getY()) {
+			this.p2 = right.get(1);
+			this.p4 = right.get(0);
+		}else {
+			this.p2 = right.get(0);
+			this.p4 = right.get(1);
+		}
+
+		/*
+		p1 = upperleft;
+		p2 = upperright;
+		p3 = bottomleft;
+		p4 = bottomright;
+		*/
 	}
+
+
 	
     /**
      * @param x

@@ -97,6 +97,16 @@ public class MainControl {
         }
     }
 
+    public MainControl(){
+        this.path = "C:\\Users\\victo\\OneDrive\\Documents\\GitHub\\Project2.2\\e8bd358abeeacbb7ccc8c667ccd837e4\\samplemap.txt";
+        // Read map file and settings
+        readMap = new MapReader(path);
+        storage = readMap.getStorage();
+        scenarioPercepts = scenarioPercepts();
+        staticObjects = readMap.getStaticObjects();
+        agentStates = new ArrayList<AgentState>();
+    }
+
     static boolean circleIntersect(Point a, Point b, Point c) {
         double agentRadius = 0.5;
         double euclAB = Math.sqrt(Math.pow((b.getX() - a.getX()), 2) + Math.pow((b.getY() - a.getY()), 2));
@@ -132,10 +142,12 @@ public class MainControl {
 
     public static void main(String[] args) {
         MainControl gameController = new MainControl(args[0]);
+
         for (int i = 0; i < 100; i++) {
             gameController.doStep();
         }
     }
+
 
     public int doStep() {
         // 1. Get the agent who does the next turn
@@ -420,11 +432,20 @@ public class MainControl {
         double agentRadius = 0.5;
         Point endPoint = new Point(distance.getValue() * Math.cos(direction.getRadians()) + startPoint.getX(), distance.getValue() * Math.sin(direction.getRadians()) + startPoint.getY());
 
+        System.out.println("endpoint  "+endPoint.toString());
+
         Point point1 = new Point(agentRadius * Math.cos(direction.getRadians() + (Math.PI / 2)) + startPoint.getX(), agentRadius * Math.sin(direction.getRadians() + (Math.PI / 2)) + startPoint.getY());
         Point point2 = new Point(agentRadius * Math.cos(direction.getRadians() - (Math.PI / 2)) + startPoint.getX(), agentRadius * Math.sin(direction.getRadians() - (Math.PI / 2)) + startPoint.getY());
 
+        System.out.println("p1  "+point1.toString());
+        System.out.println("p2  "+point2.toString());
+
         Point point3 = new Point(agentRadius * Math.cos(direction.getRadians() + (Math.PI / 2)) + endPoint.getX(), agentRadius * Math.sin(direction.getRadians() + (Math.PI / 2)) + endPoint.getY());
         Point point4 = new Point(agentRadius * Math.cos(direction.getRadians() - (Math.PI / 2)) + endPoint.getX(), agentRadius * Math.sin(direction.getRadians() - (Math.PI / 2)) + endPoint.getY());
+
+        System.out.println("p3  "+point3.toString());
+        System.out.println("p4  "+point4.toString());
+
 
         ArrayList<Point> rectangle = new ArrayList<>();
         rectangle.add(point1);
@@ -447,15 +468,19 @@ public class MainControl {
             //p3p4
 
             if (segmentIntersect(point1, point3, statObj.get(i).getP1(), statObj.get(i).getP2())) {
+                System.out.println(statObj.get(i).toString());
                 return true;
             }
             if (segmentIntersect(point1, point3, statObj.get(i).getP1(), statObj.get(i).getP3())) {
+                System.out.println(statObj.get(i).toString());
                 return true;
             }
             if (segmentIntersect(point1, point3, statObj.get(i).getP2(), statObj.get(i).getP4())) {
+                System.out.println(statObj.get(i).toString());
                 return true;
             }
             if (segmentIntersect(point1, point3, statObj.get(i).getP3(), statObj.get(i).getP4())) {
+                System.out.println(statObj.get(i).toString());
                 return true;
             }
 
@@ -466,30 +491,40 @@ public class MainControl {
             //p2p4
             //p3p4
             if (segmentIntersect(point2, point4, statObj.get(i).getP1(), statObj.get(i).getP2())) {
+                System.out.println(statObj.get(i).toString() + "  504");
                 return true;
             }
             if (segmentIntersect(point2, point4, statObj.get(i).getP1(), statObj.get(i).getP3())) {
+                System.out.println(statObj.get(i).toString()+ "  508");
                 return true;
             }
             if (segmentIntersect(point2, point4, statObj.get(i).getP2(), statObj.get(i).getP4())) {
+                System.out.println(statObj.get(i).toString()+ "  512");
                 return true;
             }
             if (segmentIntersect(point2, point4, statObj.get(i).getP3(), statObj.get(i).getP4())) {
+                System.out.println(statObj.get(i).toString()+ "  516");
                 return true;
             }
 
             //check if endPos circle collides with any static obj
 
             if (circleIntersect(statObj.get(i).getP1(), statObj.get(i).getP2(), endPoint)) {
+                System.out.println(statObj.get(i).toString()+ "  523,circle");
                 return true;
             }
             if (circleIntersect(statObj.get(i).getP1(), statObj.get(i).getP3(), endPoint)) {
+                System.out.println(statObj.get(i).toString()+ "  527,circle");
+                System.out.println(statObj.get(i).getP1().toString());
+                System.out.println(statObj.get(i).getP3().toString());
                 return true;
             }
             if (circleIntersect(statObj.get(i).getP2(), statObj.get(i).getP4(), endPoint)) {
+                System.out.println(statObj.get(i).toString()+ "  531,circle");
                 return true;
             }
             if (circleIntersect(statObj.get(i).getP3(), statObj.get(i).getP4(), endPoint)) {
+                System.out.println(statObj.get(i).toString()+ "  535,circle");
                 return true;
             }
 
@@ -619,7 +654,7 @@ public class MainControl {
     // TODO: implement a function which checks if an action is legal based on the current state of the agent.
     // Victor
     private boolean checkLegalIntruderAction(AgentState state, Interop.Action.IntruderAction action) {
-        if (action.getClass().getName().equals("Move")) {
+        if (action.getClass().getName().equals("Interop.Action.Move")) {
             if (((Move) action).getDistance().getValue() > storage.getMaxMoveDistanceIntruder().getValue()) {
                 return false;
             }
@@ -631,7 +666,7 @@ public class MainControl {
             }
         }
 
-        if (action.getClass().getName().equals("Sprint")) {
+        if (action.getClass().getName().equals("Interop.Action.Sprint")) {
             if (((Sprint) action).getDistance().getValue() > storage.getMaxSprintDistanceIntruder().getValue()) {
                 return false;
             }
@@ -643,7 +678,7 @@ public class MainControl {
             }
         }
 
-        if (action.getClass().getName().equals("Rotate")) {
+        if (action.getClass().getName().equals("Interop.Action.Rotate")) {
             if (Math.abs(((Rotate) action).getAngle().getRadians()) > storage.getMaxRotationAngle()) {//maxRotationAngle in radians or degrees ?
                 return false;
             }
@@ -652,17 +687,17 @@ public class MainControl {
             }
         }
 
-        if (action.getClass().getName().equals("DropPheromone")) {
+        if (action.getClass().getName().equals("Interop.Action.DropPheromone")) {
             if (state.getPenalty() != 0) {
                 return false;
             }
         }
 
-        if (action.getClass().getName().equals("Yell")) {
+        if (action.getClass().getName().equals("Interop.Action.Yell")) {
             return false;
         }
 
-        if (action.getClass().getName().equals("NoAction")) {
+        if (action.getClass().getName().equals("Interop.Action.NoAction")) {
             return true;
         }
         return true;
@@ -671,7 +706,7 @@ public class MainControl {
     // TODO: implement a function which checks if an action is legal based on the current state of the agent.
     // Victor
     private boolean checkLegalGuardAction(AgentState state, Interop.Action.GuardAction action) {
-        if (action.getClass().getName().equals("Move")) {
+        if (action.getClass().getName().equals("Interop.Action.Move")) {
             if (((Move) action).getDistance().getValue() > storage.getMaxMoveDistanceIntruder().getValue()) {
                 return false;
             }
@@ -683,11 +718,11 @@ public class MainControl {
             }
         }
 
-        if (action.getClass().getName().equals("Sprint")) {
+        if (action.getClass().getName().equals("Interop.Action.Sprint")) {
             return false;
         }
 
-        if (action.getClass().getName().equals("Rotate")) {
+        if (action.getClass().getName().equals("Interop.Action.Rotate")) {
             if (Math.abs(((Rotate) action).getAngle().getRadians()) > storage.getMaxRotationAngle()) {//maxRotationAngle in radians or degrees ?
                 return false;
             }
@@ -696,19 +731,19 @@ public class MainControl {
             }
         }
 
-        if (action.getClass().getName().equals("DropPheromone")) {
+        if (action.getClass().getName().equals("Interop.Action.DropPheromone")) {
             if (state.getPenalty() != 0) {//if penalty can't do any action until penalty removed (=0)
                 return false;
             }
         }
 
-        if (action.getClass().getName().equals("Yell")) {
+        if (action.getClass().getName().equals("Interop.Action.Yell")) {
             if (state.getPenalty() != 0) {
                 return false;
             }
         }
 
-        if (action.getClass().getName().equals("NoAction")) {
+        if (action.getClass().getName().equals("Interop.Action.NoAction")) {
             return true;
         }
         return true;
