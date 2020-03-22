@@ -18,7 +18,6 @@ import Interop.Percept.Sound.SoundPercepts;
 import Interop.Percept.Vision.*;
 import javafx.scene.layout.BorderPane;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,23 +40,25 @@ public class MainControl {
     double capturedIntruderCount = 0;
 
     MapReader readMap;
-    Storage storage;
+    public static Storage storage;
     PheromoneStorage pherStorage = new PheromoneStorage();
     SoundStorage soundStorage = new SoundStorage();
 
     //made this an object outside to use in the smellpercepts etc
     Object agent;
     int currentTurn = -1;
+    //for the visualisation
+    double widthBound;
+    double heightBound;
     private ScenarioPercepts scenarioPercepts;
     
   //for the visualisation
-  	double widthBound;
-  	double heightBound;
   	private MapVisualization mapVisualization;
   	private BorderPane mapPane;
   	private Map map;
   	private String path;
   	//ArrayList<VisualAgent> visualAgents; 
+
 
     /*
      * TODO: Implement reading objects from the map description file (in MapReader)
@@ -65,7 +66,7 @@ public class MainControl {
 
     public MainControl(String path) {
 
-    	this.path = path;
+        this.path = path;
         // Read map file and settings
         readMap = new MapReader(path);
         storage = readMap.getStorage();
@@ -81,11 +82,11 @@ public class MainControl {
         agentStates = new ArrayList<AgentState>();
 
         for (Interop.Agent.Intruder intruder : intruders) {
-            AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), intruder);
+            AgentState state = new AgentState(new Point(10, 10), Direction.fromDegrees(0), intruder);
             agentStates.add(state);
         }
         for (Interop.Agent.Guard guard : guards) {
-            AgentState state = new AgentState(new Point(0, 0), Direction.fromDegrees(0), guard);
+            AgentState state = new AgentState(new Point(12, 12), Direction.fromDegrees(0), guard);
             agentStates.add(state);
         }
         
@@ -141,7 +142,7 @@ public class MainControl {
         agent = getAgentNextTurn();
         AgentState state = agentStates.get(currentTurn);
         if (agent.getClass() == Guard.class) {
-            System.out.println("This is a Guard");
+            //System.out.println("This is a Guard");
             Guard guard = (Guard) agent;
 
             // 2. Calculate the perception of the agent
@@ -155,10 +156,13 @@ public class MainControl {
             // 3. Pass the perception to the agent and retrieve the action
             //Interop.Action.GuardAction action = guard.getAction(percept);
             Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
-          
+
             // 4. Check if the agent is allowed to make a move
             boolean legalAction = checkLegalGuardAction(state, action);
 
+            if (state.getPenalty() > 0) 
+    			state.setPenalty(state.getPenalty() - 1);
+            
             // 6. Update the game state according to the action.
             if (legalAction) {
                 updateAgentState(state, action);
@@ -177,7 +181,7 @@ public class MainControl {
             // 2 = guards win
             return (gameFinished());
         } else if (agent.getClass() == Intruder.class) {
-            System.out.println("This is a Intruder");
+            //System.out.println("This is a Intruder");
             Intruder intruder = (Intruder) agent;
             updateIntarget(state);
 
@@ -192,11 +196,14 @@ public class MainControl {
 
             // 3. Pass the perception to the agent and retrieve the action
             //Interop.Action.IntruderAction action = intruder.getAction(percept);
-            Interop.Action.IntruderAction action = new Interop.Action.Move(new Distance(2));
+            Interop.Action.IntruderAction action = new Interop.Action.Sprint(new Distance(2));
 
             // 4. Check if the agent is allowed to make a move
             boolean legalAction = checkLegalIntruderAction(state, action);
 
+            if (state.getPenalty() > 0) 
+    			state.setPenalty(state.getPenalty() - 1);
+            
             // 6. Update the game state according to the action.
             if (legalAction) {
                 updateAgentState(state, action);
@@ -264,49 +271,106 @@ public class MainControl {
                     range * Math.sin(rayDirection.getRadians()),
                     range * Math.cos(rayDirection.getRadians()));
             double[] rayCoefficients = computeLineCoefficients(rayOrigin, rayEnd);
+            Point pointOfIntersection = null;
 
-            double[] segmentCoefficients;
+            label:
             for (StaticObject staticObject : staticObjects) {
-                segmentCoefficients = computeLineCoefficients(
-                        new Point(staticObject.getP1().getX(), staticObject.getP1().getY()),
-                        new Point(staticObject.getP2().getX(), staticObject.getP2().getY()));
+                ArrayList<Point> validIntersectionPoints = new ArrayList<>();
 
-                Point pointOfIntersect = intersects(rayCoefficients, segmentCoefficients);
-                if (pointOfIntersect == null) {
-                    /*
-                    TODO: handle EmptySpace
-                     */
-                    //objectPercepts.add(
-                    //        new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
-                }
-                else
-                    switch (staticObject.getClass().getName()) {
-                            /*
-                            Guard and Intruder do not exist as staticObjects,
-                            TODO: iterate through guards[] and intruders[] instead
-                             */
-                        case "Guard":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Guard, pointOfIntersect));
-                        case "Intruder":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Intruder, pointOfIntersect));
-                        case "Door":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Door, pointOfIntersect));
-                        case "Wall":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Wall, pointOfIntersect));
-                        case "Window":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Window, pointOfIntersect));
-                        case "Teleport":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.Teleport, pointOfIntersect));
-                        case "SentryTower":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.SentryTower, pointOfIntersect));
-                        case "ShadedArea":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.ShadedArea, pointOfIntersect));
-                        case "TargetArea":
-                            objectPercepts.add(new ObjectPercept(ObjectPerceptType.TargetArea, pointOfIntersect));
+                Point pointOfIntersectionWithSegment1 = intersects(rayCoefficients,
+                        computeLineCoefficients(
+                                new Point(staticObject.getP1().getX(), staticObject.getP1().getY()),
+                                new Point(staticObject.getP2().getX(), staticObject.getP2().getY())
+                        )
+                );
+                if (pointOfIntersectionWithSegment1 != null)
+                    validIntersectionPoints.add(pointOfIntersectionWithSegment1);
+
+                Point pointOfIntersectionWithSegment2 = intersects(rayCoefficients,
+                        computeLineCoefficients(
+                                new Point(staticObject.getP2().getX(), staticObject.getP2().getY()),
+                                new Point(staticObject.getP3().getX(), staticObject.getP3().getY())
+                        )
+                );
+                if (pointOfIntersectionWithSegment2 != null)
+                    validIntersectionPoints.add(pointOfIntersectionWithSegment2);
+
+                Point pointOfIntersectionWithSegment3 = intersects(rayCoefficients,
+                        computeLineCoefficients(
+                                new Point(staticObject.getP3().getX(), staticObject.getP3().getY()),
+                                new Point(staticObject.getP4().getX(), staticObject.getP4().getY())
+                        )
+                );
+                if (pointOfIntersectionWithSegment3 != null)
+                    validIntersectionPoints.add(pointOfIntersectionWithSegment3);
+
+                Point pointOfIntersectionWithSegment4 = intersects(rayCoefficients,
+                        computeLineCoefficients(
+                                new Point(staticObject.getP4().getX(), staticObject.getP4().getY()),
+                                new Point(staticObject.getP1().getX(), staticObject.getP1().getY())
+                        )
+                );
+                if (pointOfIntersectionWithSegment4 != null)
+                    validIntersectionPoints.add(pointOfIntersectionWithSegment4);
+
+                /* Consider only the segment that is the closest to the agent (rayOrigin) */
+                double minDistance = Double.MAX_VALUE;
+                for (Point intersectionPoint : validIntersectionPoints) {
+                    if (rayOrigin.getDistance(intersectionPoint).getValue() < minDistance) {
+                        minDistance = rayOrigin.getDistance(intersectionPoint).getValue();
+                        pointOfIntersection = intersectionPoint;
                     }
+                }
+
+                if (pointOfIntersection == null ||
+                        ((rayOrigin.getX() < rayEnd.getX()) && (pointOfIntersection.getX() < rayOrigin.getX() || pointOfIntersection.getX() > rayEnd.getX())) ||
+                        ((rayOrigin.getX() > rayEnd.getX()) && (pointOfIntersection.getX() > rayOrigin.getX() || pointOfIntersection.getX() < rayEnd.getX())) ||
+                        ((rayOrigin.getY() < rayEnd.getY()) && (pointOfIntersection.getY() < rayOrigin.getY() || pointOfIntersection.getY() > rayEnd.getY())) ||
+                        ((rayOrigin.getY() > rayEnd.getY()) && (pointOfIntersection.getY() > rayOrigin.getY() || pointOfIntersection.getY() < rayEnd.getY())))
+                    continue;
+
+                switch (staticObject.getClass().getName()) {
+                    /*
+                    Guard and Intruder do not exist as staticObjects,
+                    TODO: iterate through guards[] and intruders[] instead
+                    case "Guard":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Guard, pointOfIntersect));
+                    case "Intruder":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Intruder, pointOfIntersect));
+                    */
+                    case "Group3.StaticObjects.Door":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Door, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.Wall":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Wall, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.Window":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Window, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.Teleport":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Teleport, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.SentryTower":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.SentryTower, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.ShadedArea":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.ShadedArea, pointOfIntersection));
+                        break label;
+                    case "Group3.StaticObjects.TargetArea":
+                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.TargetArea, pointOfIntersection));
+                        break label;
+
+
+                }
+            }
+            if (pointOfIntersection == null ||
+                    ((rayOrigin.getX() < rayEnd.getX()) && (pointOfIntersection.getX() < rayOrigin.getX() || pointOfIntersection.getX() > rayEnd.getX())) ||
+                    ((rayOrigin.getX() > rayEnd.getX()) && (pointOfIntersection.getX() > rayOrigin.getX() || pointOfIntersection.getX() < rayEnd.getX())) ||
+                    ((rayOrigin.getY() < rayEnd.getY()) && (pointOfIntersection.getY() < rayOrigin.getY() || pointOfIntersection.getY() > rayEnd.getY())) ||
+                    ((rayOrigin.getY() > rayEnd.getY()) && (pointOfIntersection.getY() > rayOrigin.getY() || pointOfIntersection.getY() < rayEnd.getY()))) {
+                objectPercepts.add(new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
             }
         }
-
         return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
     }
 
@@ -342,7 +406,7 @@ public class MainControl {
         if (coef2[1] == Integer.MAX_VALUE)
             return new Point(coef2[0], coef1[0] * coef2[0] + coef1[1]);
         if (coef1[0] * coef2[1] - coef2[0] * coef1[1] == 0) {
-            System.out.println("Given lines do not intersect!");
+            //System.out.println("Given lines do not intersect!");
             return null;
         }
 
@@ -456,7 +520,7 @@ public class MainControl {
     private SoundPercepts soundPercepts(AgentState state) {
         Set<SoundPercept> sounds = new HashSet<SoundPercept>();
 
-        for (int i = 0; i < sounds.size(); i++) {
+        for (int i = 0; i < soundStorage.getSounds().size(); i++) {
             Point point1 = state.getCurrentPosition();
             Point point2 = soundStorage.getSounds().get(i).getLocation();
 
@@ -653,8 +717,6 @@ public class MainControl {
     // TODO: implement a function, which updates the current game state based on the action of the agent.
     // Merlin
     private void updateAgentState(AgentState state, Action action) {
-
-
         switch (action.getClass().getName()) {
             case "Interop.Action.DropPheromone":
                 state.setPenalty(storage.getPheromoneCoolDown());
@@ -787,6 +849,7 @@ public class MainControl {
 	}
 	public Map getMap() {	return this.map;}
 	public BorderPane getMapPane() {	return this.mapPane;	}
+
 //	public void addVisualAgents() {
 //		this.visualAgents = new ArrayList<>();
 //		for (AgentState state : agentStates) 

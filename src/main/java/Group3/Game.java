@@ -2,6 +2,8 @@ package Group3;
 
 
 import java.io.File;
+import java.util.Arrays;
+
 import Group3.StaticObjects.TargetArea;
 import Group3.StaticObjects.Teleport;
 import Group3.StaticObjects.Wall;
@@ -81,9 +83,8 @@ public class Game extends Application {
 			primaryStage.show();
 			
 		} catch (Exception e) {
-			System.out.println("Exception in creating GUI" + e.getMessage());
+			System.out.println("Exception in creating GUI" + Arrays.toString(e.getStackTrace()));
 		}
-		
 	}
 	
 	public GridPane addLegend() {

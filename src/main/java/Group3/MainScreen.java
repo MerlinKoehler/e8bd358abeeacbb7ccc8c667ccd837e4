@@ -63,61 +63,7 @@ public class MainScreen extends Application {
         enterGame.setMaxSize(200, 10);
         enterGame.setFont(Font.font(null, FontWeight.BOLD, 30));
         
-        Button credits = new Button();
-        credits.setStyle("-fx-background-color: white");
-        credits.setAlignment(Pos.CENTER);
-        credits.setText("Credits");
-        credits.addEventHandler(MouseEvent.MOUSE_ENTERED,
-                new EventHandler<MouseEvent>() {
-                  public void handle(MouseEvent e) {
-                   credits.setStyle("-fx-background-color: lightblue");
-                  }
-        });
-        credits.addEventHandler(MouseEvent.MOUSE_EXITED,
-                new EventHandler<MouseEvent>() {
-                  public void handle(MouseEvent e) {
-                   credits.setStyle("-fx-background-color: white");
-                  }
-        });
-        
-        credits.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-               //goes to a screen with all the credits of our group
-            }
-        });
-        credits.setMaxSize(150, 75);
-        credits.setFont(Font.font(null, FontWeight.BOLD, 25));
-        
-        
-        //idk if we need it, but in case we want to change things
-        Button settings = new Button();
-        
-        settings.addEventHandler(MouseEvent.MOUSE_ENTERED,
-                new EventHandler<MouseEvent>() {
-                  public void handle(MouseEvent e) {
-                   settings.setStyle("-fx-background-color: lightblue");
-                  }
-        });
-        settings.addEventHandler(MouseEvent.MOUSE_EXITED,
-                new EventHandler<MouseEvent>() {
-                  public void handle(MouseEvent e) {
-                   settings.setStyle("-fx-background-color: white");
-                  }
-        });
-        
-        settings.setStyle("-fx-background-color: white");
-        settings.setAlignment(Pos.CENTER);
-        settings.setText("Rules");
-        settings.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-               //goes to a screen with all the different settings we have
-            }
-        });
-        settings.setMaxSize(150, 75);
-        settings.setFont(Font.font(null, FontWeight.BOLD, 25));
-        
-        
-        
+   
         //add all the components to make one single screen
         VBox vert = new VBox();
         vert.setAlignment(Pos.CENTER);
@@ -126,7 +72,7 @@ public class MainScreen extends Application {
         hor.setSpacing(125);
         hor.setAlignment(Pos.CENTER);
         
-        hor.getChildren().addAll(settings, credits);
+        hor.getChildren().addAll();
         vert.getChildren().addAll(title, hor, enterGame); 
         
         StackPane root = new StackPane();
