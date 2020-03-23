@@ -34,7 +34,7 @@ public class MapVisualization {
 			VisualAgent agent = new VisualAgent(s, this.map.scalingFactor);
 			visualAgents.add(agent);
 			this.pane.getChildren().add(agent.getShape());
-			//this.pane.getChildren().add(agent.getDirection());
+			this.pane.getChildren().add(agent.getDirection());
 		}
 	}
 	public VisualAgent getAgent(int i) {
@@ -54,7 +54,4 @@ public class MapVisualization {
 		this.visualAgents.get(turn).setPosition(new Point(p.getX() * this.map.scalingFactor,	
 				p.getY() * this.map.scalingFactor));
 	}
-	//	public void setAgentPosition(int i, Point p, Direction d) {
-//		this.visualAgents.get(i).getShape()
-//	}
 }

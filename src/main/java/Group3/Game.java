@@ -39,13 +39,6 @@ public class Game extends Application {
 	String path;
 	public void start(Stage primaryStage) throws Exception {
 		try {
-			//example
-			Button randomButton = new Button("test");
-			randomButton.setOnAction(new EventHandler<ActionEvent>() {
-	            public void handle(ActionEvent event) {
-	            	System.out.println("you are in the gui screen :) ");
-	            }
-	        });
 			//add things to the root
 			BorderPane root = new BorderPane();
 			VBox rightBox = new VBox();

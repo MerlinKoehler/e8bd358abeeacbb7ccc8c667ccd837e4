@@ -150,99 +150,100 @@ public class MainControl {
 
 
     public int doStep() {
-        // 1. Get the agent who does the next turn
-        agent = getAgentNextTurn();
-        AgentState state = agentStates.get(currentTurn);
-        if (agent.getClass() == Guard.class) {
-            //System.out.println("This is a Guard");
-            Guard guard = (Guard) agent;
+    	// 1. Get the agent who does the next turn
+    	agent = getAgentNextTurn();
+    	AgentState state = agentStates.get(currentTurn);
+    	if (agent.getClass() == Guard.class) {
+    		//System.out.println("This is a Guard");
+    		Guard guard = (Guard) agent;
 
-            // 2. Calculate the perception of the agent
-            GuardPercepts percept = new GuardPercepts(visionPercepts(state),
-                    soundPercepts(state),
-                    smellPercepts(state),
-                    areaPercepts(state),
-                    scenarioGuardPercepts(),
-                    state.isLastActionExecuted());
+    		// 2. Calculate the perception of the agent
+    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+    				soundPercepts(state),
+    				smellPercepts(state),
+    				areaPercepts(state),
+    				scenarioGuardPercepts(),
+    				state.isLastActionExecuted());
 
-            // 3. Pass the perception to the agent and retrieve the action
-            //Interop.Action.GuardAction action = guard.getAction(percept);
-            Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
+    		// 3. Pass the perception to the agent and retrieve the action
+    		//Interop.Action.GuardAction action = guard.getAction(percept);
+    		Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
 
-            // 4. Check if the agent is allowed to make a move
-            boolean legalAction = checkLegalGuardAction(state, action);
+    		// 4. Check if the agent is allowed to make a move
+    		boolean legalAction = checkLegalGuardAction(state, action);
 
-            if (state.getPenalty() > 0) 
+    		if (state.getPenalty() > 0) 
     			state.setPenalty(state.getPenalty() - 1);
-            
-            // 6. Update the game state according to the action.
-            if (legalAction) {
-                updateAgentState(state, action);
-                state.setLastAction(action);
-                if(this.mapVisualization != null) {
-                	this.mapVisualization.getAgent(currentTurn).setPosition(state.getCurrentPosition());
-                }
-            } else {
-                state.setLastAction(new NoAction());
-            }
-            state.setLastActionExecuted(legalAction);
+    		// 6. Update the game state according to the action.
+    		if (legalAction) {
+    			updateAgentState(state, action);
+    			state.setLastAction(action);
+    			if(this.mapVisualization != null) {
+    				this.mapVisualization.getAgent(currentTurn).setPosition(state.getCurrentPosition());
+    				this.mapVisualization.getAgent(currentTurn).setDirection(state.getTargetDirection());
+    			}
+    		} else {
+    			state.setLastAction(new NoAction());
+    		}
+    		state.setLastActionExecuted(legalAction);
 
-            // 7. Check the win / fininsh conditions
-            // 0 = not finished
-            // 1 = intruders win
-            // 2 = guards win
-            return (gameFinished());
-        } else if (agent.getClass() == Intruder.class) {
-            //System.out.println("This is a Intruder");
-            Intruder intruder = (Intruder) agent;
-            updateIntarget(state);
+    		// 7. Check the win / fininsh conditions
+    		// 0 = not finished
+    		// 1 = intruders win
+    		// 2 = guards win
+    		return (gameFinished());
+    	} else if (agent.getClass() == Intruder.class) {
+    		//System.out.println("This is a Intruder");
+    		Intruder intruder = (Intruder) agent;
+    		updateIntarget(state);
 
-            // 2. Calculate the perception of the agent
-            IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
-                    visionPercepts(state),
-                    soundPercepts(state),
-                    smellPercepts(state),
-                    areaPercepts(state),
-                    scenarioIntruderPercepts(),
-                    state.isLastActionExecuted());
+    		// 2. Calculate the perception of the agent
+    		IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
+    				visionPercepts(state),
+    				soundPercepts(state),
+    				smellPercepts(state),
+    				areaPercepts(state),
+    				scenarioIntruderPercepts(),
+    				state.isLastActionExecuted());
 
-            // 3. Pass the perception to the agent and retrieve the action
-            //Interop.Action.IntruderAction action = intruder.getAction(percept);
-            Interop.Action.IntruderAction action = new Interop.Action.Sprint(new Distance(2));
+    		// 3. Pass the perception to the agent and retrieve the action
+    		//Interop.Action.IntruderAction action = intruder.getAction(percept);
+    		Interop.Action.IntruderAction action = new Interop.Action.Sprint(new Distance(2));
 
-            // 4. Check if the agent is allowed to make a move
-            boolean legalAction = checkLegalIntruderAction(state, action);
+    		// 4. Check if the agent is allowed to make a move
+    		boolean legalAction = checkLegalIntruderAction(state, action);
 
-            if (state.getPenalty() > 0) 
+    		if (state.getPenalty() > 0) 
     			state.setPenalty(state.getPenalty() - 1);
-            
-            // 6. Update the game state according to the action.
-            if (legalAction) {
-                updateAgentState(state, action);
-                state.setLastAction(action);
-                if(this.mapVisualization != null) {
-                	this.mapVisualization.getAgent(currentTurn).setPosition(state.getCurrentPosition());
-                }
-            } else {
-                state.setLastAction(new NoAction());
-            }
-            state.setLastActionExecuted(legalAction);
 
-            // 7. Check the win / fininsh conditions
-            // 0 = not finished
-            // 1 = intruders win
-            // 2 = guards win
-            return (gameFinished());
-        }
-        return -1;
+    		// 6. Update the game state according to the action.
+    		if (legalAction) {
+    			updateAgentState(state, action);
+    			state.setLastAction(action);
+    			if(this.mapVisualization != null) {
+    				this.mapVisualization.getAgent(currentTurn).setPosition(state.getCurrentPosition());
+    				this.mapVisualization.getAgent(currentTurn).setDirection(state.getTargetDirection());
+    			}
+    		} else {
+    			state.setLastAction(new NoAction());
+    		}
+    		state.setLastActionExecuted(legalAction);
+
+    		// 7. Check the win / fininsh conditions
+    		// 0 = not finished
+    		// 1 = intruders win
+    		// 2 = guards win
+    		return (gameFinished());
+    	}
+    	return -1;
     }
 
     private Object getAgentNextTurn() {
-        currentTurn++;
-        if (currentTurn >= agentStates.size()) {
-            currentTurn = 0;
-        }
-        return agentStates.get(currentTurn).getAgent();
+    	currentTurn++;
+    	if (currentTurn >= agentStates.size()) {
+    		currentTurn = 0;
+    	}
+    	return agentStates.get(currentTurn).getAgent();
     }
 
     // Oskar
