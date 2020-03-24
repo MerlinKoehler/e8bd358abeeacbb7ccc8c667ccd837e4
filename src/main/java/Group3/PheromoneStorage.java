@@ -8,6 +8,7 @@ public class PheromoneStorage {
 	
 	private ArrayList<Pheromone> pheromonesGuard = new ArrayList<>();
 	private ArrayList<Pheromone> pheromonesIntruder = new ArrayList<>();
+	private ArrayList<Pheromone> pheromones = new ArrayList<>();
 	
 	public ArrayList<Pheromone> getPheromonesGuard() {
 		return pheromonesGuard;
@@ -16,6 +17,8 @@ public class PheromoneStorage {
 	public ArrayList<Pheromone> getPheromonesIntruder() {
 		return pheromonesIntruder;
 	}
+
+	public ArrayList<Pheromone> getPheromones() { return pheromones; }
 	
 	//updates this whole list - how long a pheromone has left
 	//deletes pheromones that are not smellable anymore
@@ -44,17 +47,18 @@ public class PheromoneStorage {
 			
 			pheromonesIntruder.removeAll(remove);
 	}
+	public void addPheromone(SmellPerceptType type, Point point, Integer timeLeft, boolean guard, double radiusScaled) {
+		Pheromone pheromone = new Pheromone(type, point, timeLeft, radiusScaled);
 
-	public void addPheromone(SmellPerceptType type, Point point, Integer timeLeft, boolean guard, double scalingFactor) {
-		Pheromone pheromone = new Pheromone(type, point, timeLeft, scalingFactor);
 		if (guard) {
 			pheromonesGuard.add(pheromone);
 		}
 		else {
 			pheromonesIntruder.add(pheromone);
 		}
+		pheromones.add(pheromone);
 	}
-	
+
 	public Pheromone getLast(String s) {
 		if(s.equals(Guard.class.getName()) && pheromonesGuard.size() > 0) {
 			return pheromonesGuard.get(pheromonesGuard.size()-1);
@@ -63,6 +67,9 @@ public class PheromoneStorage {
 			return pheromonesIntruder.get(pheromonesIntruder.size()-1);
 		}
 		return null;
+	}
+	public ArrayList<Pheromone> getAll() {
+		return this.pheromones;
 	}
 
 }

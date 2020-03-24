@@ -51,13 +51,13 @@ public class MainControl {
     double widthBound;
     double heightBound;
     private ScenarioPercepts scenarioPercepts;
-    
-  //for the visualisation
-  	private MapVisualization mapVisualization;
-  	private BorderPane mapPane;
-  	private Map map;
-  	private String path;
-  	//ArrayList<VisualAgent> visualAgents; 
+
+    //for the visualisation
+    private MapVisualization mapVisualization;
+    private BorderPane mapPane;
+    private Map map;
+    private String path;
+    //ArrayList<VisualAgent> visualAgents;
 
 
     /*
@@ -89,7 +89,7 @@ public class MainControl {
             AgentState state = new AgentState(new Point(12, 12), Direction.fromDegrees(0), guard);
             agentStates.add(state);
         }
-        
+
         targetZoneCount = new ArrayList<Integer>();
         //Initialize counters for Intruders in target zone
         for (int i = 0; i < intruders.size(); i++) {
@@ -109,16 +109,17 @@ public class MainControl {
 
     static boolean circleIntersect(Point a, Point b, Point c) {
         double agentRadius = 0.5;
-        double euclAB = Math.sqrt(Math.pow((b.getX() - a.getX()), 2) + Math.pow((b.getY() - a.getY()), 2));
-        //direction vector
-        double Dx = (b.getX() - a.getX()) / euclAB;
-        double Dy = (b.getY() - a.getY()) / euclAB;
 
-        //compute e coordinates
-        double t = Dx * (c.getX() - a.getX()) + Dy * (c.getY() - a.getY());
 
-        Point e = new Point(t * Dx + a.getX(), t * Dy + a.getY());
+        Point vectorAB = new Point (b.getX()-a.getX(), b.getY()-a.getY());
+        Point vectorAC = new Point(c.getX()-a.getX(), c.getY()-a.getY());
 
+
+        double dotProductABAC = vectorAB.getX()*vectorAC.getX() + vectorAB.getY()*vectorAC.getY();
+        double magnitudeAB = Math.sqrt(Math.pow((b.getX() - a.getX()), 2) + Math.pow((b.getY() - a.getY()), 2));
+
+        //closest point of Ab to C, projection of AC onto AB
+        Point e = new Point(a.getX()+(dotProductABAC/(Math.pow(magnitudeAB,2)))*vectorAB.getX(), a.getY()+(dotProductABAC/(Math.pow(magnitudeAB,2)))*vectorAB.getY());
         //dist between E and C
         double euclEC = Math.sqrt(Math.pow((e.getX() - c.getX()), 2) + Math.pow((e.getY() - c.getY()), 2));
 
@@ -141,11 +142,127 @@ public class MainControl {
     }
 
     public static void main(String[] args) {
+        //args[0] = "C:\\Users\\victo\\OneDrive\\Documents\\GitHub\\Project2.2\\e8bd358abeeacbb7ccc8c667ccd837e4\\samplemap.txt";
         MainControl gameController = new MainControl(args[0]);
 
         for (int i = 0; i < 100; i++) {
             gameController.doStep();
         }
+    }
+
+    public boolean checkCollision(Point startPoint, Direction direction, Distance distance) {
+        double agentRadius = 0.5;
+        Point endPoint = new Point(distance.getValue() * Math.cos(direction.getRadians()) + startPoint.getX(), distance.getValue() * Math.sin(direction.getRadians()) + startPoint.getY());
+
+
+        Point point1 = new Point(agentRadius * Math.cos(direction.getRadians() + (Math.PI / 2)) + startPoint.getX(), agentRadius * Math.sin(direction.getRadians() + (Math.PI / 2)) + startPoint.getY());
+        Point point2 = new Point(agentRadius * Math.cos(direction.getRadians() - (Math.PI / 2)) + startPoint.getX(), agentRadius * Math.sin(direction.getRadians() - (Math.PI / 2)) + startPoint.getY());
+
+        Point point3 = new Point(agentRadius * Math.cos(direction.getRadians() + (Math.PI / 2)) + endPoint.getX(), agentRadius * Math.sin(direction.getRadians() + (Math.PI / 2)) + endPoint.getY());
+        Point point4 = new Point(agentRadius * Math.cos(direction.getRadians() - (Math.PI / 2)) + endPoint.getX(), agentRadius * Math.sin(direction.getRadians() - (Math.PI / 2)) + endPoint.getY());
+
+
+
+        ArrayList<Point> rectangle = new ArrayList<>();
+        rectangle.add(point1);
+        rectangle.add(point2);
+        rectangle.add(point3);
+        rectangle.add(point4);
+
+        ArrayList<StaticObject> statObj = new ArrayList<>();
+        for(int i=0;i<staticObjects.size(); i++){
+            if(staticObjects.get(i).getClass().getName().equals("Group3.StaticObjects.Wall")){
+                statObj.add(staticObjects.get(i));
+            }
+        }
+
+
+
+
+        for (int i = 0; i < statObj.size(); i++) {
+
+            //for each wall check if any of its edge intersects w one of the 2 rectangle's side edge
+
+            //point1 point3 -> edge 1
+            //obj
+            //p1p2 top edge
+            //p1p3 left edge
+            //p2p4 right edge
+            //p3p4 bottom edge
+
+            if (segmentIntersect(point1, point3, statObj.get(i).getP1(), statObj.get(i).getP2())) {
+                System.out.println(statObj.get(i).toString());
+                return true;
+            }
+            if (segmentIntersect(point1, point3, statObj.get(i).getP1(), statObj.get(i).getP3())) {
+                System.out.println(statObj.get(i).toString());
+                return true;
+            }
+            if (segmentIntersect(point1, point3, statObj.get(i).getP2(), statObj.get(i).getP4())) {
+                System.out.println(statObj.get(i).toString());
+                return true;
+            }
+            if (segmentIntersect(point1, point3, statObj.get(i).getP3(), statObj.get(i).getP4())) {
+                System.out.println(statObj.get(i).toString());
+                return true;
+            }
+
+            //point2 point4 -> edge 2
+            //obj
+            //p1p2 top edge
+            //p1p3 left edge
+            //p2p4 right edge
+            //p3p4 bottom edge
+            if (segmentIntersect(point2, point4, statObj.get(i).getP1(), statObj.get(i).getP2())) {
+                return true;
+            }
+            if (segmentIntersect(point2, point4, statObj.get(i).getP1(), statObj.get(i).getP3())) {
+                return true;
+            }
+            if (segmentIntersect(point2, point4, statObj.get(i).getP2(), statObj.get(i).getP4())) {
+                return true;
+            }
+            if (segmentIntersect(point2, point4, statObj.get(i).getP3(), statObj.get(i).getP4())) {
+                return true;
+            }
+
+            //check if endPos circle collides with any wall
+
+            if (circleIntersect(statObj.get(i).getP1(), statObj.get(i).getP2(), endPoint)) {
+                return true;
+            }
+            if (circleIntersect(statObj.get(i).getP1(), statObj.get(i).getP3(), endPoint)) {
+                return true;
+            }
+            if (circleIntersect(statObj.get(i).getP2(), statObj.get(i).getP4(), endPoint)) {
+                return true;
+            }
+            if (circleIntersect(statObj.get(i).getP3(), statObj.get(i).getP4(), endPoint)) {
+                return true;
+            }
+
+        }
+
+        for (int i = 0; i < agentStates.size(); i++) {
+            if (!(agentStates.get(i).getCurrentPosition().getX() == startPoint.getX() && agentStates.get(i).getCurrentPosition().getY() == startPoint.getY())) {
+
+                //check if collision with other agents is going to happen on the way to the endpoint
+                if (circleIntersect(point1, point3, agentStates.get(i).getCurrentPosition())) {
+                    return true;
+                }
+                if (circleIntersect(point2, point4, agentStates.get(i).getCurrentPosition())) {
+                    return true;
+                }
+
+                //check if endpoint would collide with any other agent
+                double eucl = Math.sqrt(Math.pow((endPoint.getX() - agentStates.get(i).getCurrentPosition().getX()), 2) + Math.pow((endPoint.getY() - agentStates.get(i).getCurrentPosition().getY()), 2));
+                if (eucl <= 2 * agentRadius) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 
@@ -158,12 +275,12 @@ public class MainControl {
     		Guard guard = (Guard) agent;
 
     		// 2. Calculate the perception of the agent
-//    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
-//    				soundPercepts(state),
-//    				smellPercepts(state),
-//    				areaPercepts(state),
-//    				scenarioGuardPercepts(),
-//    				state.isLastActionExecuted());
+    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+    				soundPercepts(state),
+    				smellPercepts(state),
+    				areaPercepts(state),
+    				scenarioGuardPercepts(),
+    				state.isLastActionExecuted());
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
@@ -198,13 +315,13 @@ public class MainControl {
     		updateIntarget(state);
 
     		// 2. Calculate the perception of the agent
-//    		IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
-//    				visionPercepts(state),
-//    				soundPercepts(state),
-//    				smellPercepts(state),
-//    				areaPercepts(state),
-//    				scenarioIntruderPercepts(),
-//    				state.isLastActionExecuted());
+    		IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
+    				visionPercepts(state),
+    				soundPercepts(state),
+    				smellPercepts(state),
+    				areaPercepts(state),
+    				scenarioIntruderPercepts(),
+    				state.isLastActionExecuted());
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.IntruderAction action = intruder.getAction(percept);
@@ -240,11 +357,11 @@ public class MainControl {
     }
 
     private Object getAgentNextTurn() {
-    	currentTurn++;
-    	if (currentTurn >= agentStates.size()) {
-    		currentTurn = 0;
-    	}
-    	return agentStates.get(currentTurn).getAgent();
+        currentTurn++;
+        if (currentTurn >= agentStates.size()) {
+            currentTurn = 0;
+        }
+        return agentStates.get(currentTurn).getAgent();
     }
 
     // Oskar
@@ -430,129 +547,7 @@ public class MainControl {
     }
 
 
-    public boolean checkCollision(Point startPoint, Direction direction, Distance distance) {
-        double agentRadius = 0.5;
-        Point endPoint = new Point(distance.getValue() * Math.cos(direction.getRadians()) + startPoint.getX(), distance.getValue() * Math.sin(direction.getRadians()) + startPoint.getY());
 
-        System.out.println("endpoint  "+endPoint.toString());
-
-        Point point1 = new Point(agentRadius * Math.cos(direction.getRadians() + (Math.PI / 2)) + startPoint.getX(), agentRadius * Math.sin(direction.getRadians() + (Math.PI / 2)) + startPoint.getY());
-        Point point2 = new Point(agentRadius * Math.cos(direction.getRadians() - (Math.PI / 2)) + startPoint.getX(), agentRadius * Math.sin(direction.getRadians() - (Math.PI / 2)) + startPoint.getY());
-
-        System.out.println("p1  "+point1.toString());
-        System.out.println("p2  "+point2.toString());
-
-        Point point3 = new Point(agentRadius * Math.cos(direction.getRadians() + (Math.PI / 2)) + endPoint.getX(), agentRadius * Math.sin(direction.getRadians() + (Math.PI / 2)) + endPoint.getY());
-        Point point4 = new Point(agentRadius * Math.cos(direction.getRadians() - (Math.PI / 2)) + endPoint.getX(), agentRadius * Math.sin(direction.getRadians() - (Math.PI / 2)) + endPoint.getY());
-
-        System.out.println("p3  "+point3.toString());
-        System.out.println("p4  "+point4.toString());
-
-
-        ArrayList<Point> rectangle = new ArrayList<>();
-        rectangle.add(point1);
-        rectangle.add(point2);
-        rectangle.add(point3);
-        rectangle.add(point4);
-
-        ArrayList<StaticObject> statObj = readMap.getStaticObjects();
-
-
-        for (int i = 0; i < statObj.size(); i++) {
-
-            //for each static object check if any of its edge intersects w one of the 2 rectangle's side edge
-
-            //point1 point3 -> edge 1
-            //obj
-            //p1p2
-            //p1p3
-            //p2p4
-            //p3p4
-
-            if (segmentIntersect(point1, point3, statObj.get(i).getP1(), statObj.get(i).getP2())) {
-                System.out.println(statObj.get(i).toString());
-                return true;
-            }
-            if (segmentIntersect(point1, point3, statObj.get(i).getP1(), statObj.get(i).getP3())) {
-                System.out.println(statObj.get(i).toString());
-                return true;
-            }
-            if (segmentIntersect(point1, point3, statObj.get(i).getP2(), statObj.get(i).getP4())) {
-                System.out.println(statObj.get(i).toString());
-                return true;
-            }
-            if (segmentIntersect(point1, point3, statObj.get(i).getP3(), statObj.get(i).getP4())) {
-                System.out.println(statObj.get(i).toString());
-                return true;
-            }
-
-            //point2 point4 -> edge 2
-            //obj
-            //p1p2
-            //p1p3
-            //p2p4
-            //p3p4
-            if (segmentIntersect(point2, point4, statObj.get(i).getP1(), statObj.get(i).getP2())) {
-                System.out.println(statObj.get(i).toString() + "  504");
-                return true;
-            }
-            if (segmentIntersect(point2, point4, statObj.get(i).getP1(), statObj.get(i).getP3())) {
-                System.out.println(statObj.get(i).toString()+ "  508");
-                return true;
-            }
-            if (segmentIntersect(point2, point4, statObj.get(i).getP2(), statObj.get(i).getP4())) {
-                System.out.println(statObj.get(i).toString()+ "  512");
-                return true;
-            }
-            if (segmentIntersect(point2, point4, statObj.get(i).getP3(), statObj.get(i).getP4())) {
-                System.out.println(statObj.get(i).toString()+ "  516");
-                return true;
-            }
-
-            //check if endPos circle collides with any static obj
-
-            if (circleIntersect(statObj.get(i).getP1(), statObj.get(i).getP2(), endPoint)) {
-                System.out.println(statObj.get(i).toString()+ "  523,circle");
-                return true;
-            }
-            if (circleIntersect(statObj.get(i).getP1(), statObj.get(i).getP3(), endPoint)) {
-                System.out.println(statObj.get(i).toString()+ "  527,circle");
-                System.out.println(statObj.get(i).getP1().toString());
-                System.out.println(statObj.get(i).getP3().toString());
-                return true;
-            }
-            if (circleIntersect(statObj.get(i).getP2(), statObj.get(i).getP4(), endPoint)) {
-                System.out.println(statObj.get(i).toString()+ "  531,circle");
-                return true;
-            }
-            if (circleIntersect(statObj.get(i).getP3(), statObj.get(i).getP4(), endPoint)) {
-                System.out.println(statObj.get(i).toString()+ "  535,circle");
-                return true;
-            }
-
-        }
-
-        for (int i = 0; i < agentStates.size(); i++) {
-            if (!(agentStates.get(i).getCurrentPosition().getX() == startPoint.getX() && agentStates.get(i).getCurrentPosition().getY() == startPoint.getY())) {
-
-                //check if collision with other agents is going to happen on the way to the endpoint
-                if (circleIntersect(point1, point3, agentStates.get(i).getCurrentPosition())) {
-                    return true;
-                }
-                if (circleIntersect(point2, point4, agentStates.get(i).getCurrentPosition())) {
-                    return true;
-                }
-
-                //check if endpoint would collide with any other agent
-                double eucl = Math.sqrt(Math.pow((endPoint.getX() - agentStates.get(i).getCurrentPosition().getX()), 2) + Math.pow((endPoint.getY() - agentStates.get(i).getCurrentPosition().getY()), 2));
-                if (eucl <= 2 * agentRadius) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
 
     private SoundPercepts soundPercepts(AgentState state) {
         Set<SoundPercept> sounds = new HashSet<SoundPercept>();
@@ -754,15 +749,15 @@ public class MainControl {
     // TODO: implement a function, which updates the current game state based on the action of the agent.
     // Merlin
     private void updateAgentState(AgentState state, Action action) {
-    	
-    	StaticObject a = inAreaType(state);
-		if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Window")) {
-			soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), storage.getWindowSoundRadius());
-		}
-		if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Door")) {
-			soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), storage.getDoorSoundRadius());
-		}
-    	
+
+        StaticObject a = inAreaType(state);
+        if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Window")) {
+            soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), storage.getWindowSoundRadius());
+        }
+        if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Door")) {
+            soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), storage.getDoorSoundRadius());
+        }
+
         switch (action.getClass().getName()) {
             case "Interop.Action.DropPheromone":
                 state.setPenalty(storage.getPheromoneCoolDown());
@@ -777,26 +772,27 @@ public class MainControl {
                 }
                 break;
 
+
             case "Interop.Action.Move": {
                 Interop.Action.Move actMove = (Interop.Action.Move) action;
                 soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actMove.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
                 state.setCurrentPosition(new Point(actMove.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actMove.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
                 state.setPenalty(storage.getSprintCoolDown());
                 state.setLastAction(actMove);
-                
+
                 StaticObject area = inAreaType(state);
-    			if(area != null && area.getClass().getName().equals("Group3.StaticObjects.Teleport") && !state.isTeleported()) {
-    				Teleport teleport = (Teleport)area;
-    				state.setCurrentPosition(teleport.getTeleportTo());
-    				state.setTeleported(true);
-    			}
-    			if(area == null) {
-    				state.setTeleported(false);
-    			}
-    			else if(!area.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
-    				state.setTeleported(false);
-    			}
-                
+                if(area != null && area.getClass().getName().equals("Group3.StaticObjects.Teleport") && !state.isTeleported()) {
+                    Teleport teleport = (Teleport)area;
+                    state.setCurrentPosition(teleport.getTeleportTo());
+                    state.setTeleported(true);
+                }
+                if(area == null) {
+                    state.setTeleported(false);
+                }
+                else if(!area.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
+                    state.setTeleported(false);
+                }
+
                 break;
             }
             case "Interop.Action.NoAction":
@@ -818,20 +814,20 @@ public class MainControl {
                 state.setCurrentPosition(new Point(actSprint.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actSprint.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
                 state.setPenalty(storage.getSprintCoolDown());
                 state.setLastAction(actSprint);
-                
+
                 StaticObject area = inAreaType(state);
-    			if(area != null && area.getClass().getName().equals("Group3.StaticObjects.Teleport") && !state.isTeleported()) {
-    				Teleport teleport = (Teleport)area;
-    				state.setCurrentPosition(teleport.getTeleportTo());
-    				state.setTeleported(true);
-    			}
-    			if(area == null) {
-    				state.setTeleported(false);
-    			}
-    			else if(!area.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
-    				state.setTeleported(false);
-    			}
-                
+                if(area != null && area.getClass().getName().equals("Group3.StaticObjects.Teleport") && !state.isTeleported()) {
+                    Teleport teleport = (Teleport)area;
+                    state.setCurrentPosition(teleport.getTeleportTo());
+                    state.setTeleported(true);
+                }
+                if(area == null) {
+                    state.setTeleported(false);
+                }
+                else if(!area.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
+                    state.setTeleported(false);
+                }
+
                 break;
             }
             case "Interop.Action.Yell":
@@ -844,54 +840,54 @@ public class MainControl {
                 state.setLastActionExecuted(false);
         }
     }
-    
-	private StaticObject inAreaType(AgentState state) {
-		for(StaticObject obj : staticObjects) {
-			if(obj.getClass().getName().equals("Group3.StaticObjects.ShadedArea")) {
-				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
-				if(inArea(state.getCurrentPosition(), area)) return obj;
-			}
-			if(obj.getClass().getName().equals("Group3.StaticObjects.SentryTower")) {
-				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
-				if(inArea(state.getCurrentPosition(), area)) return obj;
-			}
-			if(obj.getClass().getName().equals("Group3.StaticObjects.Door")) {
-				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
-				if(inArea(state.getCurrentPosition(), area)) return obj;
-			}
-			if(obj.getClass().getName().equals("Group3.StaticObjects.Window")) {
-				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
-				if(inArea(state.getCurrentPosition(), area)) return obj;
-			}
-			if(obj.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
-				Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
-				if(inArea(state.getCurrentPosition(), area)) return obj;
-			}
-		}
-		return null;
-	}
-	
-	private boolean inArea(Point point, Point[] area) {
-		double xmax = Integer.MIN_VALUE;
-		double xmin = Integer.MAX_VALUE;
-		double ymax = Integer.MIN_VALUE;
-		double ymin = Integer.MAX_VALUE;
-		
-		for(Point p : area) {
-			double x = p.getX();
-			double y = p.getY();
-			if(x < xmin) xmin = x;
-			else if(x > xmax) xmax = x;
-			if(y < ymin) ymin = y;
-			else if(y > ymax) ymax = y;
-		}
-		
-		if((point.getX() >= xmin) &&(point.getX() <= xmax))
-			if((point.getY() >= ymin) &&(point.getY() <= ymax))
-				return true;
-		
-		return false;
-	}
+
+    private StaticObject inAreaType(AgentState state) {
+        for(StaticObject obj : staticObjects) {
+            if(obj.getClass().getName().equals("Group3.StaticObjects.ShadedArea")) {
+                Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+                if(inArea(state.getCurrentPosition(), area)) return obj;
+            }
+            if(obj.getClass().getName().equals("Group3.StaticObjects.SentryTower")) {
+                Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+                if(inArea(state.getCurrentPosition(), area)) return obj;
+            }
+            if(obj.getClass().getName().equals("Group3.StaticObjects.Door")) {
+                Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+                if(inArea(state.getCurrentPosition(), area)) return obj;
+            }
+            if(obj.getClass().getName().equals("Group3.StaticObjects.Window")) {
+                Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+                if(inArea(state.getCurrentPosition(), area)) return obj;
+            }
+            if(obj.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
+                Point[] area = new Point[] {obj.getP1(), obj.getP2(), obj.getP3(), obj.getP4()};
+                if(inArea(state.getCurrentPosition(), area)) return obj;
+            }
+        }
+        return null;
+    }
+
+    private boolean inArea(Point point, Point[] area) {
+        double xmax = Integer.MIN_VALUE;
+        double xmin = Integer.MAX_VALUE;
+        double ymax = Integer.MIN_VALUE;
+        double ymin = Integer.MAX_VALUE;
+
+        for(Point p : area) {
+            double x = p.getX();
+            double y = p.getY();
+            if(x < xmin) xmin = x;
+            else if(x > xmax) xmax = x;
+            if(y < ymin) ymin = y;
+            else if(y > ymax) ymax = y;
+        }
+
+        if((point.getX() >= xmin) &&(point.getX() <= xmax))
+            if((point.getY() >= ymin) &&(point.getY() <= ymax))
+                return true;
+
+        return false;
+    }
 
     // TODO: implement a function which checks if the game is finished. Take into account the current game mode.
     // Victor
@@ -958,28 +954,29 @@ public class MainControl {
             state.addInTarget(1);
         }
     }
-    
+
     public MapVisualization getMapVisualization() { return this.mapVisualization; }
-	public void setMap(Map map) {
-		this.mapVisualization = new MapVisualization(map);
-	}
-	public void setWidthBound(double wB) {	this.widthBound = wB;	}
-	public void setHeightBound(double hb) {	this.heightBound = hb;	}
-	public void createVisualMap(String path) {
-		// visualisation of the map
-		this.map = new Map(path, this.widthBound, this.heightBound);
-		this.map.addAgents(this.agentStates);
-		this.mapVisualization = new MapVisualization(this.map);
-		//this.mapVisualization.addVisualAgents(agentStates);
-		this.mapPane = this.mapVisualization.getPane();
-	}
-	public Map getMap() {	return this.map;}
-	public BorderPane getMapPane() {	return this.mapPane;	}
+    public void setMap(Map map) {
+        this.mapVisualization = new MapVisualization(map);
+    }
+    public void setWidthBound(double wB) {	this.widthBound = wB;	}
+    public void setHeightBound(double hb) {	this.heightBound = hb;	}
+    public void createVisualMap(String path) {
+        // visualisation of the map
+        this.map = new Map(path, this.widthBound, this.heightBound);
+        this.map.addAgents(this.agentStates);
+        this.map.addPheromones(this.pherStorage.getPheromones());
+        this.mapVisualization = new MapVisualization(this.map);
+        //this.mapVisualization.addVisualAgents(agentStates);
+        this.mapPane = this.mapVisualization.getPane();
+    }
+    public Map getMap() {	return this.map;}
+    public BorderPane getMapPane() {	return this.mapPane;	}
 
 //	public void addVisualAgents() {
 //		this.visualAgents = new ArrayList<>();
-//		for (AgentState state : agentStates) 
-//		{ 
+//		for (AgentState state : agentStates)
+//		{
 //			VisualAgent in = new VisualAgent(state, this.map.getScalingFactor());
 //			visualAgents.add(in);
 //			System.out.println("ADD IN ADDVISUALAGENT");

@@ -13,6 +13,8 @@ public class Map {
 	//initial coordinates of the objects
 	private ArrayList<StaticObject> initialStaticObjects;
 	private ArrayList<AgentState> agents;
+	private ArrayList<Pheromone> pheromones;
+
 	public String path;
 	private int pheromoneCoolDown;
 	private double radiusPheromone;
@@ -29,6 +31,7 @@ public class Map {
 		//for scaling the map in the visualisation
 		this.initialStaticObjects = mr.getStaticObjects();
 		this.agents = new ArrayList<AgentState>();
+		this.pheromones = new ArrayList<Pheromone>();
 	}
 
 	public double getWidth() {	return this.width; }
@@ -63,5 +66,10 @@ public class Map {
 	public double getPheromoneRadius() {
 		return this.radiusPheromone;
 	}
-
+	public void addPheromones(ArrayList<Pheromone> pheromones) { 
+		this.pheromones = pheromones; 
+	}
+	public ArrayList<Pheromone> getPheromones() { 
+		return this.pheromones; 
+	}
 }
