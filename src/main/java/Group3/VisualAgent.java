@@ -33,8 +33,10 @@ public class VisualAgent{
 			this.shape.setFill(Color.BLUE);
 		}else if(agent.getAgent().getClass() == Intruder.class){
 			this.shape.setFill(Color.DEEPPINK);
-		}else{
-			System.out.println("not intruder nor guard");
+		}else if(agent.getAgent().getClass() == ExplorationAgent.class) {
+			this.shape.setFill(Color.YELLOW);
+		}
+		else{System.out.println("not intruder nor guard nor exploration agent");
 		}
 	}
 	public Ellipse getShape() {	

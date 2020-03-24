@@ -25,7 +25,6 @@ public class ExplorationAgent implements Interop.Agent.Guard {
 	 */
 	
 	public GuardAction getAction(GuardPercepts percepts) {
-		
 		boolean executed = percepts.wasLastActionExecuted();
 		AreaPercepts area = percepts.getAreaPercepts();
 		ScenarioGuardPercepts scenario = percepts.getScenarioGuardPercepts(); 
