@@ -27,7 +27,9 @@ public class MapVisualization {
 		}
 		addVisualAgents();
 	}
-	public BorderPane getPane() {	return this.pane; 	}
+	public BorderPane getPane() {	
+		return this.pane; 
+	}
 	public void addVisualAgents() {
 		this.visualAgents = new ArrayList<VisualAgent>();
 		for(AgentState s : this.map.getAgents()) {
@@ -43,7 +45,7 @@ public class MapVisualization {
 	public ArrayList<VisualAgent> getVisualAgents(){
 		return this.visualAgents;
 	}
-	
+
 	public void moveAgentX(int turn, double x) {
 		this.visualAgents.get(turn).getShape().setTranslateX(x * this.map.scalingFactor);
 	}

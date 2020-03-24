@@ -14,6 +14,8 @@ public class Map {
 	private ArrayList<StaticObject> initialStaticObjects;
 	private ArrayList<AgentState> agents;
 	public String path;
+	private int pheromoneCoolDown;
+	private double radiusPheromone;
 	
 	public Map(String path, double screenWidth, double screenHeight) {
 		this.path = path;
@@ -22,7 +24,8 @@ public class Map {
 
 		this.height = mr.getStorage().getHeight()*scalingFactor;
 		this.width = mr.getStorage().getWidth()*scalingFactor;
-		
+		this.pheromoneCoolDown = mr.getStorage().getPheromoneCoolDown();
+		this.radiusPheromone = mr.getStorage().getRadiusPheromone() * this.scalingFactor;
 		//for scaling the map in the visualisation
 		this.initialStaticObjects = mr.getStaticObjects();
 		this.agents = new ArrayList<AgentState>();
@@ -42,11 +45,23 @@ public class Map {
 		}
 		return scalingFactor;
 	}
-	public double getScalingFactor() {	return this.scalingFactor;	}
-	public ArrayList<StaticObject> getAllObjects() {	return this.initialStaticObjects;}
+	public double getScalingFactor() {	
+		return this.scalingFactor;
+	}
+	public ArrayList<StaticObject> getAllObjects() {	
+		return this.initialStaticObjects;
+	}
 	public void addAgents(ArrayList<AgentState> agents) {	
 		this.agents = agents;
 	}
-	public ArrayList<AgentState> getAgents(){	return this.agents;	}
-	
+	public ArrayList<AgentState> getAgents(){	
+		return this.agents;
+	}
+	public int getPheromoneCoolDown() {
+		return this.pheromoneCoolDown;
+	}
+	public double getPheromoneRadius() {
+		return this.radiusPheromone;
+	}
+
 }

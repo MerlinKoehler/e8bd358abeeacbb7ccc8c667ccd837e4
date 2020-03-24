@@ -158,12 +158,12 @@ public class MainControl {
     		Guard guard = (Guard) agent;
 
     		// 2. Calculate the perception of the agent
-    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
-    				soundPercepts(state),
-    				smellPercepts(state),
-    				areaPercepts(state),
-    				scenarioGuardPercepts(),
-    				state.isLastActionExecuted());
+//    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+//    				soundPercepts(state),
+//    				smellPercepts(state),
+//    				areaPercepts(state),
+//    				scenarioGuardPercepts(),
+//    				state.isLastActionExecuted());
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
@@ -198,17 +198,18 @@ public class MainControl {
     		updateIntarget(state);
 
     		// 2. Calculate the perception of the agent
-    		IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
-    				visionPercepts(state),
-    				soundPercepts(state),
-    				smellPercepts(state),
-    				areaPercepts(state),
-    				scenarioIntruderPercepts(),
-    				state.isLastActionExecuted());
+//    		IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
+//    				visionPercepts(state),
+//    				soundPercepts(state),
+//    				smellPercepts(state),
+//    				areaPercepts(state),
+//    				scenarioIntruderPercepts(),
+//    				state.isLastActionExecuted());
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.IntruderAction action = intruder.getAction(percept);
     		Interop.Action.IntruderAction action = new Interop.Action.Sprint(new Distance(2));
+    		//Interop.Action.GuardAction b = new Interop.Action.DropPheromone(Interop.Percept.Smell.SmellPerceptType.Pheromone5);
 
     		// 4. Check if the agent is allowed to make a move
     		boolean legalAction = checkLegalIntruderAction(state, action);
@@ -767,9 +768,13 @@ public class MainControl {
                 state.setPenalty(storage.getPheromoneCoolDown());
                 Interop.Action.DropPheromone actPheromone = (Interop.Action.DropPheromone) action;
                 // TODO: Set correct pheromone cooldown
-                pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getScalingFactor());
+                pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getPheromoneRadius());
                 state.setLastAction(actPheromone);
-                this.mapPane.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
+                if(pherStorage.getPheromonesIntruder().size() != 0 || pherStorage.getPheromonesGuard().size() != 0) {
+                	pherStorage.getLast(agent.getClass().getName()).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
+                	pherStorage.getLast(agent.getClass().getName()).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
+                	this.mapPane.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
+                }
                 break;
 
             case "Interop.Action.Move": {
