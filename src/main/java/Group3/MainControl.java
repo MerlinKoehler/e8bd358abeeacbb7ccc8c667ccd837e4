@@ -810,7 +810,17 @@ public class MainControl {
             case "Interop.Action.Rotate":
                 Interop.Action.Rotate actRotate = (Interop.Action.Rotate) action;
                 if (actRotate.getAngle().getDegrees() <= storage.getMaxRotationAngle()) {
-                    state.setTargetDirection(Direction.fromDegrees(state.getTargetDirection().getDegrees() + actRotate.getAngle().getDegrees()));
+                	double result = state.getTargetDirection().getDegrees() + actRotate.getAngle().getDegrees();
+                	if(result < 0) {
+                		result = 360 + result;
+                	}
+                	else if(result > 360) {
+                		result = 0 + (result - 360);
+                	}
+                	else if(result == 360) {
+                		result = 0;
+                	}
+                    state.setTargetDirection(Direction.fromDegrees(result));
                 } else {
                     state.setLastActionExecuted(false);
                 }
