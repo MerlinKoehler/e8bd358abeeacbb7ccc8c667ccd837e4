@@ -764,8 +764,8 @@ public class MainControl {
                 // TODO: Set correct pheromone cooldown
                 pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getScalingFactor());
                 state.setLastAction(actPheromone);
-                this.mapPane.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
                 break;
+
 
             case "Interop.Action.Move": {
                 Interop.Action.Move actMove = (Interop.Action.Move) action;
@@ -959,6 +959,7 @@ public class MainControl {
         // visualisation of the map
         this.map = new Map(path, this.widthBound, this.heightBound);
         this.map.addAgents(this.agentStates);
+        this.map.addPheromones(this.pherStorage.getPheromones());
         this.mapVisualization = new MapVisualization(this.map);
         //this.mapVisualization.addVisualAgents(agentStates);
         this.mapPane = this.mapVisualization.getPane();

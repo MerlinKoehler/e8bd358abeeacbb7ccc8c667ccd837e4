@@ -8,6 +8,7 @@ public class PheromoneStorage {
 	
 	private ArrayList<Pheromone> pheromonesGuard = new ArrayList<>();
 	private ArrayList<Pheromone> pheromonesIntruder = new ArrayList<>();
+	private ArrayList<Pheromone> pheromones = new ArrayList<>();
 	
 	public ArrayList<Pheromone> getPheromonesGuard() {
 		return pheromonesGuard;
@@ -16,6 +17,8 @@ public class PheromoneStorage {
 	public ArrayList<Pheromone> getPheromonesIntruder() {
 		return pheromonesIntruder;
 	}
+
+	public ArrayList<Pheromone> getPheromones() { return pheromones; }
 	
 	//updates this whole list - how long a pheromone has left
 	//deletes pheromones that are not smellable anymore
@@ -53,14 +56,11 @@ public class PheromoneStorage {
 		else {
 			pheromonesIntruder.add(pheromone);
 		}
+		pheromones.add(pheromone);
 	}
 	
-	public Pheromone getLast(String s) {
-		switch (s) {
-			case "Guard": return pheromonesGuard.get(pheromonesGuard.size()-1);
-			case "Intruder" : return pheromonesIntruder.get(pheromonesIntruder.size()-1);
-		}
-		return null;
+	public ArrayList<Pheromone> getAll() {
+		return this.pheromones;
 	}
 
 }
