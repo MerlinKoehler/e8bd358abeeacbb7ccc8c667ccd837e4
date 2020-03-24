@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="869c7e1c-225c-4856-b8fb-aaf522d3f77f" name="Default Changelist" comment="Fix">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Map.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Pheromone.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Pheromone.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -23,8 +21,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="367">
-              <caret line="58" column="34" selection-start-line="58" selection-start-column="34" selection-end-line="58" selection-end-column="34" />
+            <state relative-caret-position="248">
+              <caret line="51" column="65" selection-start-line="51" selection-start-column="65" selection-end-line="51" selection-end-column="65" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1718#1719#0" expanded="true" />
@@ -49,11 +47,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainControl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3515">
-              <caret line="959" column="68" lean-forward="true" selection-start-line="959" selection-start-column="68" selection-end-line="959" selection-end-column="68" />
+            <state relative-caret-position="282">
+              <caret line="764" column="150" selection-start-line="764" selection-start-column="150" selection-end-line="764" selection-end-column="150" />
               <folding>
                 <element signature="e#24424#24438#0" expanded="true" />
                 <element signature="e#25710#25724#0" expanded="true" />
@@ -77,11 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Pheromone.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="64" column="8" lean-forward="true" selection-start-line="64" selection-start-column="8" selection-end-line="67" selection-end-column="9" />
+            <state relative-caret-position="289">
+              <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
             </state>
           </provider>
         </entry>
@@ -115,13 +113,13 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/Group3/Pheromone.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/VisualObject.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/StaticObjects/StaticObject.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/Map.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Group3/Pheromone.java" />
       </list>
     </option>
   </component>
@@ -657,25 +655,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Pheromone.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="64" column="8" lean-forward="true" selection-start-line="64" selection-start-column="8" selection-end-line="67" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="58" column="34" selection-start-line="58" selection-start-column="34" selection-end-line="58" selection-end-column="34" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1718#1719#0" expanded="true" />
-            <element signature="e#1751#1752#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Map.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="146">
@@ -698,8 +677,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainControl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3515">
-          <caret line="959" column="68" lean-forward="true" selection-start-line="959" selection-start-column="68" selection-end-line="959" selection-end-column="68" />
+        <state relative-caret-position="282">
+          <caret line="764" column="150" selection-start-line="764" selection-start-column="150" selection-end-line="764" selection-end-column="150" />
           <folding>
             <element signature="e#24424#24438#0" expanded="true" />
             <element signature="e#25710#25724#0" expanded="true" />
@@ -710,6 +689,25 @@
             <element signature="e#44219#44220#0" expanded="true" />
             <element signature="e#44284#44285#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="51" column="65" selection-start-line="51" selection-start-column="65" selection-end-line="51" selection-end-column="65" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1718#1719#0" expanded="true" />
+            <element signature="e#1751#1752#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Pheromone.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
         </state>
       </provider>
     </entry>

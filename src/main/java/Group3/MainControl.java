@@ -762,7 +762,7 @@ public class MainControl {
                 state.setPenalty(storage.getPheromoneCoolDown());
                 Interop.Action.DropPheromone actPheromone = (Interop.Action.DropPheromone) action;
                 // TODO: Set correct pheromone cooldown
-                pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getScalingFactor());
+                pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class));
                 state.setLastAction(actPheromone);
                 break;
 

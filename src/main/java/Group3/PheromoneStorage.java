@@ -48,8 +48,8 @@ public class PheromoneStorage {
 			pheromonesIntruder.removeAll(remove);
 	}
 	
-	public void addPheromone(SmellPerceptType type, Point point, Integer timeLeft, boolean guard, double scalingFactor) {
-		Pheromone pheromone = new Pheromone(type, point, timeLeft, scalingFactor);
+	public void addPheromone(SmellPerceptType type, Point point, Integer timeLeft, boolean guard) {
+		Pheromone pheromone = new Pheromone(type, point, timeLeft);
 		if (guard) {
 			pheromonesGuard.add(pheromone);
 		}
