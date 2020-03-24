@@ -110,6 +110,13 @@ public class MainControl {
     static boolean circleIntersect(Point a, Point b, Point c) {
         double agentRadius = 0.5;
 
+        if((c.getX()+agentRadius < a.getX() && c.getX()+agentRadius < b.getX()) || (c.getX()-agentRadius > a.getX() && c.getX()-agentRadius > b.getX())){
+            return false;
+        }
+        if((c.getY()+agentRadius < a.getY() && c.getY()+agentRadius < b.getY()) || (c.getY()-agentRadius > a.getY() && c.getY()-agentRadius > b.getY())){
+            return false;
+        }
+
 
         Point vectorAB = new Point (b.getX()-a.getX(), b.getY()-a.getY());
         Point vectorAC = new Point(c.getX()-a.getX(), c.getY()-a.getY());
@@ -144,6 +151,7 @@ public class MainControl {
     public static void main(String[] args) {
         //args[0] = "C:\\Users\\victo\\OneDrive\\Documents\\GitHub\\Project2.2\\e8bd358abeeacbb7ccc8c667ccd837e4\\samplemap.txt";
         MainControl gameController = new MainControl(args[0]);
+
 
         for (int i = 0; i < 100; i++) {
             gameController.doStep();
