@@ -27,7 +27,7 @@ public class MapVisualization {
 			this.pane.getChildren().add(obj.getShape());
 		}
 		addVisualAgents();
-		addPheromones();
+		//addPheromones();
 	}
 	public BorderPane getPane() {	
 		return this.pane; 
@@ -41,16 +41,16 @@ public class MapVisualization {
 			this.pane.getChildren().add(agent.getDirection());
 		}
 	}
-	public void addPheromones() {
-		this.pheromones = new ArrayList<Pheromone>();
-		for (Pheromone p : this.map.getPheromones()) {
-			if (p.getTurnsLeft() > 0) {
-				p.radius = p.radius - p.radius / p.getTurnsLeft();
-				p.getShape().setRadius(p.radius);
-			}
-			this.pane.getChildren().add(p.getShape());
-		}
-	}
+//	public void addPheromones() {
+//		this.pheromones = new ArrayList<Pheromone>();
+//		for (Pheromone p : this.map.getPheromones()) {
+//			if (p.getTurnsLeft() > 0) {
+//				p.radius = p.radius - p.radius / p.getTurnsLeft();
+//				p.getShape().setRadius(p.radius);
+//			}
+//			this.pane.getChildren().add(p.getShape());
+//		}
+//	}
 	public VisualAgent getAgent(int i) {
 		return this.visualAgents.get(i);
 	}
