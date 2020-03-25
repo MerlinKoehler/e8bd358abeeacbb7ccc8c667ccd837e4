@@ -8,6 +8,7 @@ import Interop.Percept.Sound.SoundPerceptType;
 public class SoundStorage {
 
 	private ArrayList<Sound> sounds = new ArrayList<>();
+	MainControl ct = new MainControl(); //for mappane
 	
 	public ArrayList<Sound> getSounds() {
 		return sounds;
@@ -30,6 +31,8 @@ public class SoundStorage {
 			sounds.get(i).updateShape();
 			if (sounds.get(i).getTurnsLeft() <= 0) {
 				remove.add(sounds.get(i));
+				//remove the ellipse
+				ct.getMapPane().getChildren().remove(sounds.get(i).getShape());
 			}
 
 		}

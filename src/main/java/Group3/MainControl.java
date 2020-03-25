@@ -56,7 +56,7 @@ public class MainControl {
 
     //for the visualisation
     private MapVisualization mapVisualization;
-    private BorderPane mapPane;
+    private static BorderPane mapPane;
     private Map map;
     private String path;
     //ArrayList<VisualAgent> visualAgents;
@@ -772,7 +772,7 @@ public class MainControl {
             case "Interop.Action.DropPheromone":
                 state.setPenalty(storage.getPheromoneCoolDown());
                 Interop.Action.DropPheromone actPheromone = (Interop.Action.DropPheromone) action;
-                // TODO: Set correct pheromone cooldown
+                // TODO: Set correct pheromone time to expire
                 pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getPheromoneRadius());
                 state.setLastAction(actPheromone);
                 if(pherStorage.getPheromonesIntruder().size() != 0 || pherStorage.getPheromonesGuard().size() != 0) {

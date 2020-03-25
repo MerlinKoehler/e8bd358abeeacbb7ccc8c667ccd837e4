@@ -13,6 +13,7 @@ public class Pheromone {
 	private Point location;
 	private Ellipse shape;
 	private double radius;
+	private Storage storage = new Storage();
 
 	public Pheromone(SmellPerceptType type, Point location, int turnsLeft, double radiusScaled) {
 		this.type = type;
@@ -73,12 +74,11 @@ public class Pheromone {
 	public Ellipse getShape(){
 		return this.shape;
 	}
-
+	
 	public void updateShape() {
-		if (getTurnsLeft() > 0) {
-			this.radius = this.radius - this.radius / getTurnsLeft();
-			//this.shape.setW
-		}
+		this.radius = this.radius - (1 / storage.getPheromoneExpireRounds()) * storage.getRadiusPheromone();
+		this.shape.setRadiusX(this.radius);
+		this.shape.setRadiusY(this.radius);
 	}
 	
 }
