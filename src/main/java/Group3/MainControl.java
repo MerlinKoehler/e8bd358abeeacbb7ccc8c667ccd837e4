@@ -1004,7 +1004,17 @@ public class MainControl {
             case "Interop.Action.Move": {
                 Interop.Action.Move actMove = (Interop.Action.Move) action;
                 soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actMove.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
-                state.setCurrentPosition(new Point(actMove.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actMove.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
+                
+                double distance = actMove.getDistance().getValue();
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Window")) {
+                    distance = distance * storage.getSlowDownModifierWindow();
+                }
+                
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Door")) {
+                	distance = distance * storage.getSlowDownModifierDoor();
+                }
+                
+                state.setCurrentPosition(new Point(distance * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), distance * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
                 state.setLastAction(actMove);
 
                 StaticObject area = inAreaType(state);
@@ -1051,7 +1061,18 @@ public class MainControl {
             case "Interop.Action.Sprint": {
                 Interop.Action.Sprint actSprint = (Interop.Action.Sprint) action;
                 soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actSprint.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
-                state.setCurrentPosition(new Point(actSprint.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actSprint.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
+                
+                
+                double distance = actSprint.getDistance().getValue();
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Window")) {
+                    distance = distance * storage.getSlowDownModifierWindow();
+                }
+                
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Door")) {
+                	distance = distance * storage.getSlowDownModifierDoor();
+                }
+                
+                state.setCurrentPosition(new Point(distance * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), distance * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
                 state.setPenalty(storage.getSprintCoolDown());
                 state.setLastAction(actSprint);
 
