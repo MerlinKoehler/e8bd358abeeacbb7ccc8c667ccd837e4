@@ -3,11 +3,16 @@ package Group3;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.TimerTask;
+
+import javax.management.timer.Timer;
 
 import Group3.StaticObjects.TargetArea;
 import Group3.StaticObjects.Teleport;
 import Group3.StaticObjects.Wall;
 import Interop.Geometry.Point;
+import javafx.animation.AnimationTimer;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -66,11 +71,18 @@ public class Game extends Application {
 	        gameController.createVisualMap(path);
 			Button moveAgent = new Button("move");
 			moveAgent.setOnAction(e -> {
-				gameController.doStep();
+				gameController.animationLoop();
 			});
+//			Button pause = new Button("Pause");
+//			pause.setOnAction(e -> {
+//				gameController.pauseAnimation();
+//			});
+			
 			rightBox.getChildren().add(moveAgent);
+			//rightBox.getChildren().add(pause);
 			root.setRight(rightBox);
-			root.setCenter(gameController.getMapPane());
+			root.setCenter(gameController.getMapPane());			
+			   
 			Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
 			primaryStage.setScene(scene);
 			primaryStage.show();

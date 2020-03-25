@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.management.timer.Timer;
+
 /*
  * We can start the controller from here.
  */
@@ -58,7 +60,7 @@ public class MainControl {
     private Map map;
     private String path;
     //ArrayList<VisualAgent> visualAgents;
-
+    StepAnimationTimer animation;
 
     /*
      * TODO: Implement reading objects from the map description file (in MapReader)
@@ -962,29 +964,20 @@ public class MainControl {
     public void setWidthBound(double wB) {	this.widthBound = wB;	}
     public void setHeightBound(double hb) {	this.heightBound = hb;	}
     public void createVisualMap(String path) {
-        // visualisation of the map
-        this.map = new Map(path, this.widthBound, this.heightBound);
-        this.map.addAgents(this.agentStates);
-        this.map.addPheromones(this.pherStorage.getPheromones());
-        this.mapVisualization = new MapVisualization(this.map);
-        //this.mapVisualization.addVisualAgents(agentStates);
-        this.mapPane = this.mapVisualization.getPane();
+    	// visualisation of the map
+    	this.map = new Map(path, this.widthBound, this.heightBound);
+    	this.map.addAgents(this.agentStates);
+    	this.map.addPheromones(this.pherStorage.getPheromones());
+    	this.mapVisualization = new MapVisualization(this.map);
+    	//this.mapVisualization.addVisualAgents(agentStates);
+    	this.mapPane = this.mapVisualization.getPane();
     }
     public Map getMap() {	return this.map;}
     public BorderPane getMapPane() {	return this.mapPane;	}
 
-//	public void addVisualAgents() {
-//		this.visualAgents = new ArrayList<>();
-//		for (AgentState state : agentStates)
-//		{
-//			VisualAgent in = new VisualAgent(state, this.map.getScalingFactor());
-//			visualAgents.add(in);
-//			System.out.println("ADD IN ADDVISUALAGENT");
-//			this.mapVisualization.getPane().getChildren().add(in.getShape());
-//			this.mapVisualization.getPane().getChildren().add(in.getDirection());
-//		}
-//
-//	}
-
+    public void animationLoop() {
+    	animation = new StepAnimationTimer(this.mapVisualization, this);
+    	animation.start();
+    }
 
 }
