@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Group3.StaticObjects.StaticObject;
+import Group3.StaticObjects.Wall;
+import Interop.Geometry.Point;
 
 public class Map {
 	
@@ -32,6 +34,19 @@ public class Map {
 		this.initialStaticObjects = mr.getStaticObjects();
 		this.agents = new ArrayList<AgentState>();
 		this.pheromones = new ArrayList<Pheromone>();
+		
+		
+		double h = mr.getStorage().getHeight();
+		double w =mr.getStorage().getWidth();
+		double thickness = 0.1;
+		Wall border1 = new Wall(new Point(0,h), new Point(thickness, h), new Point(0,0), new Point(thickness,0));
+		Wall border2 = new Wall(new Point(0,thickness), new Point(w, thickness), new Point(0,0), new Point(w,0));
+		Wall border3 = new Wall(new Point(0,h), new Point(w, h), new Point(0,h-thickness), new Point(w,h-thickness));
+		Wall border4 = new Wall(new Point(w-thickness,h), new Point(w,h), new Point(w-thickness,0), new Point(w,0));
+		initialStaticObjects.add(border1);
+		initialStaticObjects.add(border2);
+		initialStaticObjects.add(border3);
+		initialStaticObjects.add(border4);
 	}
 
 	public double getWidth() {	return this.width; }

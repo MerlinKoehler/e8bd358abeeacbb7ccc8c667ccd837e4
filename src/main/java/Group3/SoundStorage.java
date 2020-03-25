@@ -9,7 +9,11 @@ import javafx.scene.layout.BorderPane;
 public class SoundStorage {
 
 	private ArrayList<Sound> sounds = new ArrayList<>();
+	private BorderPane mapPane;
 
+	public SoundStorage(BorderPane mapPane) {
+		this.mapPane = mapPane;
+	}
 	
 	public ArrayList<Sound> getSounds() {
 		return sounds;
@@ -25,7 +29,6 @@ public class SoundStorage {
 	}
 	
 	public void updateSounds() {
-		MainControl ct = new MainControl();
 		ArrayList<Sound> remove = new ArrayList<>();
 		
 		for (int i = 0; i < sounds.size(); i++) {
@@ -34,7 +37,7 @@ public class SoundStorage {
 			if (sounds.get(i).getTurnsLeft() <= 0) {
 				remove.add(sounds.get(i));
 				//remove the ellipse
-				ct.getMapPane().getChildren().remove(sounds.get(i).getShape());
+				mapPane.getChildren().remove(sounds.get(i).getShape());
 			}
 
 		}

@@ -35,7 +35,6 @@ public class StaticObject {
 		this.p2 = new Point(maxXCoor, maxYCoor);
 		this.p3 = new Point(minXCoor, minYCoor);
 		this.p4 = new Point(maxXCoor, minYCoor);
-		
 	}
 	
     /**
@@ -45,7 +44,7 @@ public class StaticObject {
      */
     public boolean isInside(double x, double y) {
         if (x > p1.getX() && x < p4.getX() &&
-                y > p1.getY() && y < p4.getY()) return true;
+                y < p1.getY() && y > p4.getY()) return true;
         return false;
     }
 
