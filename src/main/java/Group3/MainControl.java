@@ -11,6 +11,7 @@ import Interop.Percept.GuardPercepts;
 import Interop.Percept.IntruderPercepts;
 import Interop.Percept.Scenario.*;
 import Interop.Percept.Smell.SmellPercept;
+import Interop.Percept.Smell.SmellPerceptType;
 import Interop.Percept.Smell.SmellPercepts;
 import Interop.Percept.Sound.SoundPercept;
 import Interop.Percept.Sound.SoundPerceptType;
@@ -21,10 +22,9 @@ import javafx.scene.layout.BorderPane;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-
-import javax.management.timer.Timer;
 
 /*
  * We can start the controller from here.
@@ -83,14 +83,43 @@ public class MainControl {
         // TODO: Add the correct coordinates from the map file. Actually the agents will be placed at 0,0
         agentStates = new ArrayList<AgentState>();
 
+        Point intruderSpawn = new Point(0,0);
+        Point guardSpawn = new Point(0,0);
+        
+        for(int i = 0; i < staticObjects.size(); i++) {
+        	StaticObject obj = staticObjects.get(i);
+        	if(obj.getClass().getName() == "Group3.StaticObjects.SpawnAreaIntruders") {
+        		intruderSpawn = obj.getP3();
+        	}
+        	if(obj.getClass().getName() == "Group3.StaticObjects.SpawnAreaGuards") {
+        		guardSpawn = obj.getP3();
+        	}
+        }
+        
+        double c = 0;
         for (Interop.Agent.Intruder intruder : intruders) {
-            AgentState state = new AgentState(new Point(10, 10), Direction.fromDegrees(0), intruder);
+            AgentState state = new AgentState(new Point(intruderSpawn.getX() + 0.7 + c, intruderSpawn.getY() + 0.55), Direction.fromDegrees(90), intruder);
             agentStates.add(state);
+            c = c + 1.1;
         }
+        c = 0;
         for (Interop.Agent.Guard guard : guards) {
-            AgentState state = new AgentState(new Point(12, 12), Direction.fromDegrees(0), guard);
+        	AgentState state = new AgentState(new Point(guardSpawn.getX() + 0.7 + c, guardSpawn.getY() + 0.55), Direction.fromDegrees(90), guard);
             agentStates.add(state);
+            c = c + 1.1;
         }
+        
+        double h = storage.getHeight();
+		double w = storage.getWidth();
+		double thickness = 0.1;
+		Wall border1 = new Wall(new Point(0,h), new Point(thickness, h), new Point(0,0), new Point(thickness,0));
+		Wall border2 = new Wall(new Point(0,thickness), new Point(w, thickness), new Point(0,0), new Point(w,0));
+		Wall border3 = new Wall(new Point(0,h), new Point(w, h), new Point(0,h-thickness), new Point(w,h-thickness));
+		Wall border4 = new Wall(new Point(w-thickness,h), new Point(w,h), new Point(w-thickness,0), new Point(w,0));
+		staticObjects.add(border1);
+		staticObjects.add(border2);
+		staticObjects.add(border3);
+		staticObjects.add(border4);
 
         targetZoneCount = new ArrayList<Integer>();
         //Initialize counters for Intruders in target zone
@@ -437,17 +466,16 @@ public class MainControl {
     		Guard guard = (Guard) agent;
 
     		// 2. Calculate the perception of the agent
-    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+    		/*GuardPercepts percept = new GuardPercepts(visionPercepts(state),
     				soundPercepts(state),
     				smellPercepts(state),
     				areaPercepts(state),
     				scenarioGuardPercepts(),
-    				state.isLastActionExecuted());
+    				state.isLastActionExecuted());*/
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
     		Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
-
     		
     		// 4. Check if the agent is allowed to make a move
     		boolean legalAction = checkLegalGuardAction(state, action);
@@ -478,17 +506,37 @@ public class MainControl {
     		updateIntarget(state);
 
     		// 2. Calculate the perception of the agent
-    		IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
+    		/*IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
     				visionPercepts(state),
     				soundPercepts(state),
     				smellPercepts(state),
     				areaPercepts(state),
     				scenarioIntruderPercepts(),
-    				state.isLastActionExecuted());
+    				state.isLastActionExecuted());*/
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.IntruderAction action = intruder.getAction(percept);
     		Interop.Action.IntruderAction action = new Interop.Action.Sprint(new Distance(2));
+    		
+    		Random random = new Random(); 
+    		int ri = random. nextInt(5);
+    		
+    		switch(ri) {
+    		case 0:
+    			action = new Interop.Action.Move(new Distance(1));
+    			break;
+    		case 1:
+    			int rt = random. nextInt(90);
+    			if(random. nextInt(2) == 1) rt = rt * -1;
+    			action = new Interop.Action.Rotate(Angle.fromDegrees(rt));
+    			break;
+    		case 2:
+    			action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
+    			break;
+    		case 4:
+    			action = new Interop.Action.Sprint(new Distance(2));
+    			break;
+    		}
 
     		// 4. Check if the agent is allowed to make a move
     		boolean legalAction = checkLegalIntruderAction(state, action);
@@ -496,6 +544,65 @@ public class MainControl {
     		if (state.getPenalty() > 0) 
     			state.setPenalty(state.getPenalty() - 1);
 
+    		// 6. Update the game state according to the action.
+    		if (legalAction) {
+    			updateAgentState(state, action);
+    			state.setLastAction(action);
+    			if(this.mapVisualization != null) {
+    				this.mapVisualization.getAgent(currentTurn).setPosition(state.getCurrentPosition());
+    				this.mapVisualization.getAgent(currentTurn).setDirection(state.getTargetDirection());
+    			}
+    		} else {
+    			state.setLastAction(new NoAction());
+    		}
+    		state.setLastActionExecuted(legalAction);
+
+    		// 7. Check the win / fininsh conditions
+    		// 0 = not finished
+    		// 1 = intruders win
+    		// 2 = guards win
+    		return (gameFinished());
+    	} else if (agent.getClass() == ExplorationAgent.class) {
+    		//System.out.println("This is a Guard");
+    		ExplorationAgent guard = (ExplorationAgent)agent;
+
+    		// 2. Calculate the perception of the agent
+    		/*GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+    				soundPercepts(state),
+    				smellPercepts(state),
+    				areaPercepts(state),
+    				scenarioGuardPercepts(),
+    				state.isLastActionExecuted());*/
+
+    		// 3. Pass the perception to the agent and retrieve the action
+    		//Interop.Action.GuardAction action = guard.getAction(percept);
+    		Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
+    		
+    		Random random = new Random(); 
+    		int ri = random. nextInt(5);
+    		
+    		switch(ri) {
+    		case 0:
+    			action = new Interop.Action.Move(new Distance(1));
+    			break;
+    		case 1:
+    			int rt = random. nextInt(90);
+    			if(random. nextInt(2) == 1) rt = rt * -1;
+    			action = new Interop.Action.Rotate(Angle.fromDegrees(rt));
+    			break;
+    		case 2:
+    			action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
+    			break;
+    		case 4:
+    			action = new Interop.Action.Yell();
+    			break;
+    		}
+    		
+    		// 4. Check if the agent is allowed to make a move
+    		boolean legalAction = checkLegalGuardAction(state, action);
+
+    		if (state.getPenalty() > 0) 
+    			state.setPenalty(state.getPenalty() - 1);
     		// 6. Update the game state according to the action.
     		if (legalAction) {
     			updateAgentState(state, action);
@@ -939,8 +1046,17 @@ public class MainControl {
             case "Interop.Action.Move": {
                 Interop.Action.Move actMove = (Interop.Action.Move) action;
                 soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actMove.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
-                state.setCurrentPosition(new Point(actMove.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actMove.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
-                state.setPenalty(storage.getSprintCoolDown());
+                
+                double distance = actMove.getDistance().getValue();
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Window")) {
+                    distance = distance * storage.getSlowDownModifierWindow();
+                }
+                
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Door")) {
+                	distance = distance * storage.getSlowDownModifierDoor();
+                }
+                
+                state.setCurrentPosition(new Point(distance * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), distance * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
                 state.setLastAction(actMove);
 
                 StaticObject area = inAreaType(state);
@@ -987,7 +1103,18 @@ public class MainControl {
             case "Interop.Action.Sprint": {
                 Interop.Action.Sprint actSprint = (Interop.Action.Sprint) action;
                 soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actSprint.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
-                state.setCurrentPosition(new Point(actSprint.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actSprint.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
+                
+                
+                double distance = actSprint.getDistance().getValue();
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Window")) {
+                    distance = distance * storage.getSlowDownModifierWindow();
+                }
+                
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Door")) {
+                	distance = distance * storage.getSlowDownModifierDoor();
+                }
+                
+                state.setCurrentPosition(new Point(distance * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), distance * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
                 state.setPenalty(storage.getSprintCoolDown());
                 state.setLastAction(actSprint);
 
@@ -1148,13 +1275,12 @@ public class MainControl {
     	// visualisation of the map
     	this.map = new Map(path, this.widthBound, this.heightBound);
     	this.map.addAgents(this.agentStates);
-    	//this.map.addPheromones(this.pherStorage.getPheromones());
     	this.mapVisualization = new MapVisualization(this.map);
     	//this.mapVisualization.addVisualAgents(agentStates);
-    	this.mapPane = this.mapVisualization.getPane();
+    	mapPane = this.mapVisualization.getPane();
     }
     public Map getMap() {	return this.map;}
-    public BorderPane getMapPane() {	return this.mapPane;	}
+    public BorderPane getMapPane() {	return mapPane;	}
 
     public void animationLoop() {
     	animation = new StepAnimationTimer(this.mapVisualization, this);
