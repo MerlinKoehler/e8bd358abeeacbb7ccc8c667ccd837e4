@@ -106,7 +106,7 @@ public class ExplorationAgent implements Interop.Agent.Guard {
 		for (int i = 0; i < teleports.size(); i++) {
 			//determine the smallest x -> so the minimum angle we would need to turn, to walk there
 			//firstly, check whether we could reach it we walk in that direction (X = 0)
-			if (teleports.get(i).getPoint().getX() == 0) {
+			if (teleports.get(i).getPoint().getX() > -0.3&& teleports.get(i).getPoint().getX() < 0.3) {
 				if (teleports.get(i).getPoint().getY() > distWalk.getValue()) {
 					//walk towards it, the max we can walk
 					return new Move(distWalk);
@@ -149,7 +149,7 @@ public class ExplorationAgent implements Interop.Agent.Guard {
 		double maxY = 0;
 		
 		for (int i = 0; i < doors.size(); i++) {
-			if (doors.get(i).getPoint().getX() == 0) {
+			if (doors.get(i).getPoint().getX() < 0.3 && doors.get(i).getPoint().getX() > -0.3) {
 				if (doors.get(i).getPoint().getY() > distWalk.getValue()) {
 					return new Move(distWalk);
 				}
@@ -193,7 +193,7 @@ public class ExplorationAgent implements Interop.Agent.Guard {
 		
 		//do the same for the windows
 		for(int i = 0; i < windows.size(); i++) {
-			if (windows.get(i).getPoint().getX() == 0) {
+			if (windows.get(i).getPoint().getX() < 0.3 && windows.get(i).getPoint().getX() > -0.3) {
 				if (windows.get(i).getPoint().getY() > distWalk.getValue()) {
 					return new Move(distWalk);
 				}
