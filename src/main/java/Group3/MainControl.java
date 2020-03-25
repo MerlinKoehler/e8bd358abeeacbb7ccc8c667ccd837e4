@@ -56,7 +56,7 @@ public class MainControl {
 
     //for the visualisation
     private MapVisualization mapVisualization;
-    private BorderPane mapPane;
+    private static BorderPane mapPane;
     private Map map;
     private String path;
     //ArrayList<VisualAgent> visualAgents;

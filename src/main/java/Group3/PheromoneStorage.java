@@ -10,6 +10,8 @@ public class PheromoneStorage {
 	private ArrayList<Pheromone> pheromonesIntruder = new ArrayList<>();
 	private ArrayList<Pheromone> pheromones = new ArrayList<>();
 	
+	private MainControl ct = new MainControl();  //only needed for mappane
+	
 	public ArrayList<Pheromone> getPheromonesGuard() {
 		return pheromonesGuard;
 	}
@@ -30,10 +32,13 @@ public class PheromoneStorage {
 				pheromonesGuard.get(i).updateShape();
 				if (pheromonesGuard.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesGuard.get(i));
+					//removes ellipse
+					ct.getMapPane().getChildren().remove(pheromonesGuard.get(i).getShape());
 				}
 			}
 			
 			pheromonesGuard.removeAll(remove);
+			
 		
 			remove.clear();
 			
@@ -41,6 +46,7 @@ public class PheromoneStorage {
 				pheromonesIntruder.get(i).setTurnsLeft(pheromonesIntruder.get(i).getTurnsLeft()-1);
 				if (pheromonesIntruder.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesIntruder.get(i));
+					ct.getMapPane().getChildren().remove(pheromonesIntruder.get(i).getShape());
 				}
 			}
 			
