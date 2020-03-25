@@ -275,6 +275,158 @@ public class MainControl {
         return false;
     }
 
+    private ArrayList<Ray> getRays(Point agentPosition, Direction agentDirection, boolean guard){
+    	
+    	ArrayList<Ray> rays = new ArrayList<Ray>();
+    	
+    	double num_rays = storage.getViewRays();
+    	double viewAngle = storage.getViewAngle();
+    	
+    	double angleDegreeDistance = viewAngle / num_rays;
+    	
+    	if((num_rays%2)==1) {
+    		angleDegreeDistance = viewAngle / (num_rays-1);
+    	}
+    	
+    	double start = -viewAngle / 2;
+    	
+    	double viewRange = 0;
+    	
+    	// TODO: Add shaded
+    	if(guard) {
+    		viewRange = storage.getViewRangeGuardNormal();
+    	}
+    	else {
+    		viewRange = storage.getViewRangeIntruderNormal();
+    	}
+    	
+    	for(int i = 0; i < num_rays; i++) {
+    		Ray ray = new Ray();
+    		
+    		double direction = i * angleDegreeDistance + start;
+    		direction = direction + agentDirection.getDegrees();
+    		
+    		if(direction < 0) {
+    			direction = 360 + direction;
+        	}
+        	else if(direction > 360) {
+        		direction = 0 + (direction - 360);
+        	}
+        	else if(direction == 360) {
+        		direction = 0;
+        	}
+    		
+    		Direction dirRad = Direction.fromDegrees(direction);
+    		
+    		Point endPoint = new Point(viewRange * Math.cos(dirRad.getRadians()) + agentPosition.getX(), 
+    				viewRange * Math.sin(dirRad.getRadians()) + agentPosition.getY());
+    		
+    		for(StaticObject obj : staticObjects) {
+    			
+    			ObjectType type = null;
+    			switch (obj.getClass().getName()) {
+	    			case "Group3.StaticObjects.Door":
+	    				type = ObjectType.Door;
+	    				break;
+	    			case "Group3.StaticObjects.SentryTower":
+	    				type = ObjectType.SentryTower;
+	    				break;
+	    			case "Group3.StaticObjects.ShadedArea":
+	    				type = ObjectType.ShadedArea;
+	    				break;
+	    			case "Group3.StaticObjects.SpawnAreaGuards":
+	    				type = ObjectType.SpawnAreaGuards;
+	    				break;
+	    			case "Group3.StaticObjects.SpawnAreaIntruders":
+	    				type = ObjectType.SpawnAreaIntruders;
+	    				break;
+	    			case "Group3.StaticObjects.TargetArea":
+	    				type = ObjectType.TargetArea;
+	    				break;
+	    			case "Group3.StaticObjects.Teleport":
+	    				type = ObjectType.Teleport;
+	    				break;
+	    			case "Group3.StaticObjects.Wall":
+	    				type = ObjectType.Wall;
+	    				break;
+	    			case "Group3.StaticObjects.Window":
+	    				type = ObjectType.Window;
+	    				break;
+    			}
+    			
+    			IntersectionPoint intersectionPoint = intersectPoints(agentPosition, endPoint, obj.getP1(), obj.getP2(), type);
+    			if(intersectionPoint != null) {
+    				ray.setPoint(intersectionPoint);
+    			}
+    			intersectionPoint = intersectPoints(agentPosition, endPoint, obj.getP1(), obj.getP3(), type);
+    			if(intersectionPoint != null) {
+    				ray.setPoint(intersectionPoint);
+    			}
+    			intersectionPoint = intersectPoints(agentPosition, endPoint, obj.getP2(), obj.getP4(), type);
+    			if(intersectionPoint != null) {
+    				ray.setPoint(intersectionPoint);
+    			}
+    			intersectionPoint = intersectPoints(agentPosition, endPoint, obj.getP3(), obj.getP4(), type);
+    			if(intersectionPoint != null) {
+    				ray.setPoint(intersectionPoint);
+    			}
+    		}
+    		rays.add(ray);
+    		int j = 1;
+    	}
+    	
+    	return rays;
+    }
+    
+    
+    public IntersectionPoint intersectPoints(Point a1, Point a2, Point b1, Point b2, ObjectType objectType) {
+    	
+    	double[] line1 = getLineFunction(a1, a2);
+    	double[] line2 = getLineFunction(b1, b2);
+    	
+    	double axmin = Math.min(a1.getX(),a2.getX());
+    	double axmax = Math.max(a1.getX(),a2.getX());
+    	double aymin = Math.min(a1.getY(),a2.getY());
+    	double aymax = Math.max(a1.getY(),a2.getY());
+    	double bxmin = Math.min(b1.getX(),b2.getX());
+    	double bxmax = Math.max(b1.getX(),b2.getX());
+    	double bymin = Math.min(b1.getY(),b2.getY());
+    	double bymax = Math.max(b1.getY(),b2.getY());
+    	
+    	if(Math.abs(line1[0]) == Math.abs(line2[0])) {
+    		return null;
+    	}
+    	else {
+    		double x = (line2[1]-line1[1])/(line1[0]-line2[0]);
+    		double y = line1[0] * x + line1[1];
+    		
+    		if(((axmin <= x) && (axmax >= x)) && ((bxmin <= x) && (bxmax >= x))) {
+    			if(((aymin <= y) && (aymax >= y)) && ((bymin <= y) && (bymax >= y))){
+    				return new IntersectionPoint(new Point(x, y), objectType);
+    			}
+    			else return null;
+    		}
+    		else return null;
+    	}
+    	
+    }
+    
+    public double[] getLineFunction(Point a, Point b) {
+    	// y = a*x+b
+    	double[] ab = new double[2];
+    	
+    	double num = a.getY()-b.getY();
+    	double denom = a.getX()-b.getX();
+    	
+    	if(denom == 0) {
+    		denom = 0.000000000000000001;
+    	}
+    	
+    	ab[0] = (num)/(denom);
+    	ab[1] = a.getY() - (num)/(denom) * a.getX();
+    	return ab;
+    	
+    }
 
     public int doStep() {
     	// 1. Get the agent who does the next turn
