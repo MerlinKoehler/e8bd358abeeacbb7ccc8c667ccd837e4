@@ -106,6 +106,18 @@ public class MainControl {
             agentStates.add(state);
             c = c + 1.1;
         }
+        
+        double h = storage.getHeight();
+		double w = storage.getWidth();
+		double thickness = 0.1;
+		Wall border1 = new Wall(new Point(0,h), new Point(thickness, h), new Point(0,0), new Point(thickness,0));
+		Wall border2 = new Wall(new Point(0,thickness), new Point(w, thickness), new Point(0,0), new Point(w,0));
+		Wall border3 = new Wall(new Point(0,h), new Point(w, h), new Point(0,h-thickness), new Point(w,h-thickness));
+		Wall border4 = new Wall(new Point(w-thickness,h), new Point(w,h), new Point(w-thickness,0), new Point(w,0));
+		staticObjects.add(border1);
+		staticObjects.add(border2);
+		staticObjects.add(border3);
+		staticObjects.add(border4);
 
         targetZoneCount = new ArrayList<Integer>();
         //Initialize counters for Intruders in target zone
