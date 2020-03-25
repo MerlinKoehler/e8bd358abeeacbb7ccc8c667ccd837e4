@@ -43,8 +43,8 @@ public class MainControl {
 
     MapReader readMap;
     public static Storage storage;
-    PheromoneStorage pherStorage = new PheromoneStorage(this.mapPane);
-    SoundStorage soundStorage = new SoundStorage(this.mapPane);
+    PheromoneStorage pherStorage;
+    SoundStorage soundStorage;
 
     //made this an object outside to use in the smellpercepts etc
     Object agent;
@@ -277,6 +277,11 @@ public class MainControl {
 
 
     public int doStep() {
+    	if (pherStorage.equals(null) && soundStorage.equals(null)) {
+    		pherStorage = new PheromoneStorage(this.mapPane);
+            soundStorage = new SoundStorage(this.mapPane);
+    	}
+    	
     	// 1. Get the agent who does the next turn
     	agent = getAgentNextTurn();
     	AgentState state = agentStates.get(currentTurn);
