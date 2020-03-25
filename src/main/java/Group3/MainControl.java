@@ -43,8 +43,8 @@ public class MainControl {
 
     MapReader readMap;
     public static Storage storage;
-    PheromoneStorage pherStorage = new PheromoneStorage();
-    SoundStorage soundStorage = new SoundStorage();
+    PheromoneStorage pherStorage;
+    SoundStorage soundStorage;
 
     //made this an object outside to use in the smellpercepts etc
     Object agent;
@@ -1148,7 +1148,7 @@ public class MainControl {
     	// visualisation of the map
     	this.map = new Map(path, this.widthBound, this.heightBound);
     	this.map.addAgents(this.agentStates);
-    	this.map.addPheromones(this.pherStorage.getPheromones());
+    	//this.map.addPheromones(this.pherStorage.getPheromones());
     	this.mapVisualization = new MapVisualization(this.map);
     	//this.mapVisualization.addVisualAgents(agentStates);
     	this.mapPane = this.mapVisualization.getPane();

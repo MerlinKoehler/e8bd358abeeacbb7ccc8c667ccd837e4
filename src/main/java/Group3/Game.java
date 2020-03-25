@@ -71,6 +71,7 @@ public class Game extends Application {
 	        gameController.createVisualMap(path);
 	        gameController.pherStorage = new PheromoneStorage(gameController.getMapPane());
 	        gameController.soundStorage = new SoundStorage(gameController.getMapPane());
+	        gameController.getMap().addPheromones(gameController.pherStorage.getPheromones());
 			Button moveAgent = new Button("move");
 			moveAgent.setOnAction(e -> {
 				gameController.animationLoop();
