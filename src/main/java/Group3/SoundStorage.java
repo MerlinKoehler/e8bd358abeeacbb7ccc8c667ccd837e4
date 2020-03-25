@@ -3,12 +3,17 @@ package Group3;
 import java.util.ArrayList;
 import Interop.Geometry.Point;
 import Interop.Percept.Sound.SoundPerceptType;
+import javafx.scene.layout.BorderPane;
 
 
 public class SoundStorage {
 
 	private ArrayList<Sound> sounds = new ArrayList<>();
-	MainControl ct = new MainControl(); //for mappane
+	private BorderPane mapPane;
+
+	public SoundStorage(BorderPane mapPane) {
+		this.mapPane = mapPane;
+	}
 	
 	public ArrayList<Sound> getSounds() {
 		return sounds;
@@ -32,7 +37,7 @@ public class SoundStorage {
 			if (sounds.get(i).getTurnsLeft() <= 0) {
 				remove.add(sounds.get(i));
 				//remove the ellipse
-				ct.getMapPane().getChildren().remove(sounds.get(i).getShape());
+				mapPane.getChildren().remove(sounds.get(i).getShape());
 			}
 
 		}

@@ -43,8 +43,8 @@ public class MainControl {
 
     MapReader readMap;
     public static Storage storage;
-    PheromoneStorage pherStorage = new PheromoneStorage();
-    SoundStorage soundStorage = new SoundStorage();
+    PheromoneStorage pherStorage = new PheromoneStorage(this.mapPane);
+    SoundStorage soundStorage = new SoundStorage(this.mapPane);
 
     //made this an object outside to use in the smellpercepts etc
     Object agent;
@@ -780,6 +780,7 @@ public class MainControl {
                 	pherStorage.getLast(agent.getClass().getName()).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
                 	this.mapPane.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
                 }
+                this.updateStorages();
                 break;
 
 
@@ -802,12 +803,14 @@ public class MainControl {
                 else if(!area.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
                     state.setTeleported(false);
                 }
+                this.updateStorages();
 
                 break;
             }
             case "Interop.Action.NoAction":
                 Interop.Action.NoAction actNo = (Interop.Action.NoAction) action;
                 state.setLastAction(actNo);
+                this.updateStorages();
                 break;
             case "Interop.Action.Rotate":
                 Interop.Action.Rotate actRotate = (Interop.Action.Rotate) action;
@@ -827,6 +830,7 @@ public class MainControl {
                     state.setLastActionExecuted(false);
                 }
                 state.setLastAction(actRotate);
+                this.updateStorages();
                 break;
             case "Interop.Action.Sprint": {
                 Interop.Action.Sprint actSprint = (Interop.Action.Sprint) action;
@@ -847,6 +851,7 @@ public class MainControl {
                 else if(!area.getClass().getName().equals("Group3.StaticObjects.Teleport")) {
                     state.setTeleported(false);
                 }
+                this.updateStorages();
 
                 break;
             }
@@ -859,9 +864,11 @@ public class MainControl {
                 	soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
                 	this.mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
                 }
+                this.updateStorages();
                 break;
             default:
                 state.setLastActionExecuted(false);
+                this.updateStorages();
         }
     }
 
@@ -1000,6 +1007,11 @@ public class MainControl {
     public void animationLoop() {
     	animation = new StepAnimationTimer(this.mapVisualization, this);
     	animation.start();
+    }
+    
+    public void updateStorages() {
+    	this.pherStorage.updatePheromones();
+    	this.soundStorage.updateSounds();
     }
 
 }

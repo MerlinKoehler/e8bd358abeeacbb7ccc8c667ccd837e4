@@ -3,14 +3,18 @@ package Group3;
 import java.util.ArrayList;
 import Interop.Geometry.Point;
 import Interop.Percept.Smell.SmellPerceptType;
+import javafx.scene.layout.BorderPane;
 
 public class PheromoneStorage {
 	
 	private ArrayList<Pheromone> pheromonesGuard = new ArrayList<>();
 	private ArrayList<Pheromone> pheromonesIntruder = new ArrayList<>();
 	private ArrayList<Pheromone> pheromones = new ArrayList<>();
+	private BorderPane mapPane;
 	
-	private MainControl ct = new MainControl();  //only needed for mappane
+	public PheromoneStorage(BorderPane mapPane) {
+		this.mapPane = mapPane;
+	}
 	
 	public ArrayList<Pheromone> getPheromonesGuard() {
 		return pheromonesGuard;
@@ -33,7 +37,7 @@ public class PheromoneStorage {
 				if (pheromonesGuard.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesGuard.get(i));
 					//removes ellipse
-					ct.getMapPane().getChildren().remove(pheromonesGuard.get(i).getShape());
+					mapPane.getChildren().remove(pheromonesGuard.get(i).getShape());
 				}
 			}
 			
@@ -46,7 +50,7 @@ public class PheromoneStorage {
 				pheromonesIntruder.get(i).setTurnsLeft(pheromonesIntruder.get(i).getTurnsLeft()-1);
 				if (pheromonesIntruder.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesIntruder.get(i));
-					ct.getMapPane().getChildren().remove(pheromonesIntruder.get(i).getShape());
+					mapPane.getChildren().remove(pheromonesIntruder.get(i).getShape());
 				}
 			}
 			
