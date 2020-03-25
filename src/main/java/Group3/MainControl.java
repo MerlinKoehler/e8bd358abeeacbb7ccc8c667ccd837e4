@@ -516,7 +516,7 @@ public class MainControl {
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.IntruderAction action = intruder.getAction(percept);
-    		Interop.Action.IntruderAction action = new Interop.Action.Sprint(new Distance(2));
+    		Interop.Action.IntruderAction action = new NoAction();
     		
     		Random random = new Random(); 
     		int ri = random. nextInt(5);
@@ -576,7 +576,7 @@ public class MainControl {
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
-    		Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
+    		Interop.Action.GuardAction action = new Interop.Action.NoAction();
     		
     		Random random = new Random(); 
     		int ri = random. nextInt(5);
@@ -591,7 +591,7 @@ public class MainControl {
     			action = new Interop.Action.Rotate(Angle.fromDegrees(rt));
     			break;
     		case 2:
-    			action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
+    			//action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
     			break;
     		case 4:
     			action = new Interop.Action.Yell();
