@@ -1,5 +1,6 @@
 package Group3;
 
+import Interop.Action.Yell;
 import Interop.Geometry.Point;
 import Interop.Percept.Sound.SoundPerceptType;
 import javafx.scene.paint.Color;
@@ -20,7 +21,7 @@ public class Sound {
 		this.turnsLeft = turnsLeft;
 		this.radius = radius;
 
-		if (type.getClass().getName().equals("Yell")) {
+		if (type.toString().equals(SoundPerceptType.Yell.toString())) {
 			this.shape = new Circle(radius);
 			this.shape.setOpacity(0.3);
 			this.shape.setFill(Color.INDIANRED);
@@ -59,7 +60,7 @@ public class Sound {
 
 	//only for yell
 	public Circle getShape() {
-		if (type.getClass().getName().equals("Yell")) return this.shape;
+		if (type.toString().equals(SoundPerceptType.Yell.toString())) return this.shape;
 		else return null;
 	}
 

@@ -296,6 +296,7 @@ public class MainControl {
     		//Interop.Action.GuardAction action = guard.getAction(percept);
     		Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
 
+    		
     		// 4. Check if the agent is allowed to make a move
     		boolean legalAction = checkLegalGuardAction(state, action);
 
@@ -336,7 +337,6 @@ public class MainControl {
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.IntruderAction action = intruder.getAction(percept);
     		Interop.Action.IntruderAction action = new Interop.Action.Sprint(new Distance(2));
-    		//Interop.Action.GuardAction b = new Interop.Action.DropPheromone(Interop.Percept.Smell.SmellPerceptType.Pheromone5);
 
     		// 4. Check if the agent is allowed to make a move
     		boolean legalAction = checkLegalIntruderAction(state, action);
@@ -854,7 +854,11 @@ public class MainControl {
                 Interop.Action.Yell actYell = (Interop.Action.Yell) action;
                 soundStorage.addSound(SoundPerceptType.Yell, state.getCurrentPosition(), agentStates.size(), storage.getYellSoundRadius());
                 state.setLastAction(actYell);
-                this.mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
+                if(soundStorage.getSounds().size() > 0) {
+                	soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
+                	soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
+                	this.mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
+                }
                 break;
             default:
                 state.setLastActionExecuted(false);

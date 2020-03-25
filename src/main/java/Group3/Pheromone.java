@@ -74,11 +74,11 @@ public class Pheromone {
 		return this.shape;
 	}
 
-//	public void updateShape() {
-//		if (getTurnsLeft() > 0) {
-//			this.radius = this.radius - this.radius / getTurnsLeft();
-//			this.shape.setRadius(this.radius);
-//		}
-//	}
+	public void updateShape() {
+		if (getTurnsLeft() > 0) {
+			this.radius = this.radius - this.radius / getTurnsLeft();
+			//this.shape.setW
+		}
+	}
 	
 }

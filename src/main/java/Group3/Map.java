@@ -24,8 +24,8 @@ public class Map {
 		MapReader mr = new MapReader(path);
 		this.scalingFactor = getScalingFactor(screenWidth, screenHeight, mr.getStorage().getWidth() , mr.getStorage().getHeight());
 
-		this.height = mr.getStorage().getHeight()*scalingFactor;
-		this.width = mr.getStorage().getWidth()*scalingFactor;
+		height = mr.getStorage().getHeight()*scalingFactor;
+		width = mr.getStorage().getWidth()*scalingFactor;
 		this.pheromoneCoolDown = mr.getStorage().getPheromoneCoolDown();
 		this.radiusPheromone = mr.getStorage().getRadiusPheromone() * this.scalingFactor;
 		//for scaling the map in the visualisation
