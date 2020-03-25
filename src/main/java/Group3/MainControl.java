@@ -43,8 +43,8 @@ public class MainControl {
 
     MapReader readMap;
     public static Storage storage;
-    PheromoneStorage pherStorage = new PheromoneStorage();
-    SoundStorage soundStorage = new SoundStorage();
+    PheromoneStorage pherStorage;
+    SoundStorage soundStorage;
 
     //made this an object outside to use in the smellpercepts etc
     Object agent;
@@ -447,7 +447,6 @@ public class MainControl {
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
     		Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
-
     		
     		// 4. Check if the agent is allowed to make a move
     		boolean legalAction = checkLegalGuardAction(state, action);
@@ -1148,13 +1147,12 @@ public class MainControl {
     	// visualisation of the map
     	this.map = new Map(path, this.widthBound, this.heightBound);
     	this.map.addAgents(this.agentStates);
-    	this.map.addPheromones(this.pherStorage.getPheromones());
     	this.mapVisualization = new MapVisualization(this.map);
     	//this.mapVisualization.addVisualAgents(agentStates);
-    	this.mapPane = this.mapVisualization.getPane();
+    	mapPane = this.mapVisualization.getPane();
     }
     public Map getMap() {	return this.map;}
-    public BorderPane getMapPane() {	return this.mapPane;	}
+    public BorderPane getMapPane() {	return mapPane;	}
 
     public void animationLoop() {
     	animation = new StepAnimationTimer(this.mapVisualization, this);
