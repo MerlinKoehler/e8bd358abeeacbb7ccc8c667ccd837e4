@@ -76,7 +76,7 @@ public class Pheromone {
 	}
 	
 	public void updateShape() {
-		this.radius = (this.getTurnsLeft() / storage.getPheromoneExpireRounds()) * storage.getRadiusPheromone();
+		this.radius = this.radius - (1 / storage.getPheromoneExpireRounds()) * storage.getRadiusPheromone();
 		this.shape.setRadiusX(this.radius);
 		this.shape.setRadiusY(this.radius);
 	}
