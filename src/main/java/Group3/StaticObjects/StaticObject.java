@@ -13,7 +13,6 @@ public class StaticObject {
    
 	public StaticObject(Point a, Point b, Point c, Point d) {
 
-		
 		ArrayList<Point> points = new ArrayList<>();
 		points.add(a);
 		points.add(b);
@@ -37,15 +36,7 @@ public class StaticObject {
 		this.p3 = new Point(minXCoor, minYCoor);
 		this.p4 = new Point(maxXCoor, minYCoor);
 		
-		/*
-		p1 = upperleft;
-		p2 = upperright;
-		p3 = bottomleft;
-		p4 = bottomright;
-		*/
 	}
-
-
 	
     /**
      * @param x

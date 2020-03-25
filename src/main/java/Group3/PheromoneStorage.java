@@ -10,11 +10,7 @@ public class PheromoneStorage {
 	private ArrayList<Pheromone> pheromonesGuard = new ArrayList<>();
 	private ArrayList<Pheromone> pheromonesIntruder = new ArrayList<>();
 	private ArrayList<Pheromone> pheromones = new ArrayList<>();
-	private BorderPane mapPane;
 	
-	public PheromoneStorage(BorderPane mapPane) {
-		this.mapPane = mapPane;
-	}
 	
 	public ArrayList<Pheromone> getPheromonesGuard() {
 		return pheromonesGuard;
@@ -29,6 +25,7 @@ public class PheromoneStorage {
 	//updates this whole list - how long a pheromone has left
 	//deletes pheromones that are not smellable anymore
 	public void updatePheromones() {
+			MainControl ct = new MainControl();
 			ArrayList<Pheromone> remove = new ArrayList<>();
 			
 			for (int i = 0; i < pheromonesGuard.size(); i++) {
@@ -37,7 +34,7 @@ public class PheromoneStorage {
 				if (pheromonesGuard.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesGuard.get(i));
 					//removes ellipse
-					mapPane.getChildren().remove(pheromonesGuard.get(i).getShape());
+					ct.getMapPane().getChildren().remove(pheromonesGuard.get(i).getShape());
 				}
 			}
 			
@@ -50,7 +47,7 @@ public class PheromoneStorage {
 				pheromonesIntruder.get(i).setTurnsLeft(pheromonesIntruder.get(i).getTurnsLeft()-1);
 				if (pheromonesIntruder.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesIntruder.get(i));
-					mapPane.getChildren().remove(pheromonesIntruder.get(i).getShape());
+					ct.getMapPane().getChildren().remove(pheromonesIntruder.get(i).getShape());
 				}
 			}
 			

@@ -60,9 +60,9 @@ public class Map {
 	public ArrayList<AgentState> getAgents(){	
 		return this.agents;
 	}
-	public int getPheromoneCoolDown() {
-		return this.pheromoneCoolDown;
-	}
+	//public int getPheromoneCoolDown() {
+	//	return this.pheromoneCoolDown;
+	//}
 	public double getPheromoneRadius() {
 		return this.radiusPheromone;
 	}

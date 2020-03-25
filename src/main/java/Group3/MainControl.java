@@ -43,8 +43,8 @@ public class MainControl {
 
     MapReader readMap;
     public static Storage storage;
-    PheromoneStorage pherStorage;
-    SoundStorage soundStorage;
+    PheromoneStorage pherStorage = new PheromoneStorage();
+    SoundStorage soundStorage = new SoundStorage();
 
     //made this an object outside to use in the smellpercepts etc
     Object agent;
@@ -1014,4 +1014,7 @@ public class MainControl {
     	this.soundStorage.updateSounds();
     }
 
+    public BorderPane getPane() {
+    	return mapPane;
+    }
 }
