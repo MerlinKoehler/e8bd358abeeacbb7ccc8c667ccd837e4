@@ -277,11 +277,6 @@ public class MainControl {
 
 
     public int doStep() {
-    	if (pherStorage.equals(null) && soundStorage.equals(null)) {
-    		pherStorage = new PheromoneStorage(this.mapPane);
-            soundStorage = new SoundStorage(this.mapPane);
-    	}
-    	
     	// 1. Get the agent who does the next turn
     	agent = getAgentNextTurn();
     	AgentState state = agentStates.get(currentTurn);
