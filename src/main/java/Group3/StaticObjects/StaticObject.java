@@ -13,47 +13,30 @@ public class StaticObject {
    
 	public StaticObject(Point a, Point b, Point c, Point d) {
 
+		
 		ArrayList<Point> points = new ArrayList<>();
 		points.add(a);
 		points.add(b);
 		points.add(c);
 		points.add(d);
 
-		ArrayList<Point> left = new ArrayList<>();
-		ArrayList<Point> right = new ArrayList<>();
-
-		for(int i=0; i<points.size(); i++){
-			for(int j=0; j<points.size(); j++){
-				if(i!=j){
-					if(points.get(i).getX() < points.get(j).getX()) {
-						if(!left.contains(points.get(i))){
-							left.add(points.get(i));
-						}
-					}else if(points.get(i).getX() > points.get(j).getX()){
-						if(!right.contains(points.get(i))){
-							right.add(points.get(i));
-						}
-					}
-				}
-			}
+		double maxXCoor = Double.NEGATIVE_INFINITY;
+		double maxYCoor = Double.NEGATIVE_INFINITY;
+		double minXCoor = Double.POSITIVE_INFINITY;
+		double minYCoor = Double.POSITIVE_INFINITY;
+		
+		for (int i = 0; i < points.size(); i++) {
+			maxXCoor = Math.max(maxXCoor, points.get(i).getX());
+			minXCoor = Math.min(minXCoor, points.get(i).getX());
+			maxYCoor = Math.max(maxYCoor, points.get(i).getY());
+			minYCoor = Math.min(minYCoor, points.get(i).getY());
 		}
-
-		if(left.get(0).getY() > left.get(1).getY()) {
-			this.p1 = left.get(1);
-			this.p3 = left.get(0);
-		}else {
-			this.p1 = left.get(0);
-			this.p3 = left.get(1);
-		}
-
-		if(right.get(0).getY() > right.get(1).getY()) {
-			this.p2 = right.get(1);
-			this.p4 = right.get(0);
-		}else {
-			this.p2 = right.get(0);
-			this.p4 = right.get(1);
-		}
-
+		
+		this.p1 = new Point(minXCoor, maxYCoor);
+		this.p2 = new Point(maxXCoor, maxYCoor);
+		this.p3 = new Point(minXCoor, minYCoor);
+		this.p4 = new Point(maxXCoor, minYCoor);
+		
 		/*
 		p1 = upperleft;
 		p2 = upperright;
