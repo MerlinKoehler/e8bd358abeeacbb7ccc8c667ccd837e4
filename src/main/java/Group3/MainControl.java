@@ -24,10 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.management.timer.Timer;
-
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion.Static;
-
 /*
  * We can start the controller from here.
  */
@@ -514,6 +510,45 @@ public class MainControl {
     		if (state.getPenalty() > 0) 
     			state.setPenalty(state.getPenalty() - 1);
 
+    		// 6. Update the game state according to the action.
+    		if (legalAction) {
+    			updateAgentState(state, action);
+    			state.setLastAction(action);
+    			if(this.mapVisualization != null) {
+    				this.mapVisualization.getAgent(currentTurn).setPosition(state.getCurrentPosition());
+    				this.mapVisualization.getAgent(currentTurn).setDirection(state.getTargetDirection());
+    			}
+    		} else {
+    			state.setLastAction(new NoAction());
+    		}
+    		state.setLastActionExecuted(legalAction);
+
+    		// 7. Check the win / fininsh conditions
+    		// 0 = not finished
+    		// 1 = intruders win
+    		// 2 = guards win
+    		return (gameFinished());
+    	} else if (agent.getClass() == ExplorationAgent.class) {
+    		//System.out.println("This is a Guard");
+    		ExplorationAgent guard = (ExplorationAgent)agent;
+
+    		// 2. Calculate the perception of the agent
+    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+    				soundPercepts(state),
+    				smellPercepts(state),
+    				areaPercepts(state),
+    				scenarioGuardPercepts(),
+    				state.isLastActionExecuted());
+
+    		// 3. Pass the perception to the agent and retrieve the action
+    		//Interop.Action.GuardAction action = guard.getAction(percept);
+    		Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
+    		
+    		// 4. Check if the agent is allowed to make a move
+    		boolean legalAction = checkLegalGuardAction(state, action);
+
+    		if (state.getPenalty() > 0) 
+    			state.setPenalty(state.getPenalty() - 1);
     		// 6. Update the game state according to the action.
     		if (legalAction) {
     			updateAgentState(state, action);
