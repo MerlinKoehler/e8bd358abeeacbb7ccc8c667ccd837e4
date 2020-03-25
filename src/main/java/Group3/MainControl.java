@@ -538,6 +538,9 @@ public class MainControl {
         FieldOfView fieldOfView = new FieldOfView(
                 new Distance(range), Angle.fromDegrees(storage.getViewAngle()));
 
+        //try to create the objectPercepts
+        
+        
         /*
         Ray-casting
          */
@@ -545,23 +548,32 @@ public class MainControl {
         Point rayEnd;
         Direction rayDirection;
 
-        if (state.getTargetDirection().getDegrees() + storage.getViewAngle() / 2 > 360)
+        if (state.getTargetDirection().getDegrees() + storage.getViewAngle() / 2 > 360) {
             rayDirection = Direction.fromDegrees(
                     state.getTargetDirection().getDegrees() + storage.getViewAngle() / 2 - 360);
-        else
+        }
+        else {
             rayDirection = Direction.fromDegrees(
                     state.getTargetDirection().getDegrees() + storage.getViewAngle() / 2);
+        }
 
+        double stepSize = storage.getViewAngle() / storage.getViewRays();
+        
         for (int i = 0; i < storage.getViewRays(); i++) {
-            if (rayDirection.getDegrees() - i < 0)
-                rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - i + 360);
+            if (rayDirection.getDegrees() - stepSize < 0) {
+                rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - stepSize + 360);
+            }
 
-            else
-                rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - i);
+            else {
+                rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - stepSize);
+            }
 
             rayEnd = new Point(
                     range * Math.sin(rayDirection.getRadians()),
                     range * Math.cos(rayDirection.getRadians()));
+            
+            //checked up till here
+            
             double[] rayCoefficients = computeLineCoefficients(rayOrigin, rayEnd);
             Point pointOfIntersection = null;
 
@@ -662,6 +674,7 @@ public class MainControl {
                     ((rayOrigin.getY() > rayEnd.getY()) && (pointOfIntersection.getY() > rayOrigin.getY() || pointOfIntersection.getY() < rayEnd.getY()))) {
                 objectPercepts.add(new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
             }
+            
         }
         return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
     }
