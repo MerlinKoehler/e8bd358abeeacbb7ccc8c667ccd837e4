@@ -31,9 +31,9 @@ public class AgentsFactory {
     	
     	List<Guard> guards = new ArrayList<Guard>();
     	for(int i = 0; i < number; i++) {
-    		Group3.Guard guard =  new Group3.Guard();
+    		//Group3.Guard guard =  new Group3.Guard();
     		Group3.ExplorationAgent agent = new Group3.ExplorationAgent();
-    		guards.add(guard);
+    		//guards.add(guard);
     		guards.add(agent);
     	}
     	return guards;
