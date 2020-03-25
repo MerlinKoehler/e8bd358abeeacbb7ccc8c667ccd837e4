@@ -13,7 +13,7 @@ What things you need to install the software and how to install them
 * Java Version 10\*
 * JavaFX
 
-\*check also the main 
+\*check also that the enviroment path variables are set corectly to the java path of java version 10!!!
 ### Installing
 
 Open a command line in the root of the repository and run:
