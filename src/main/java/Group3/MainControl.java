@@ -1005,7 +1005,6 @@ public class MainControl {
                 Interop.Action.Move actMove = (Interop.Action.Move) action;
                 soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actMove.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
                 state.setCurrentPosition(new Point(actMove.getDistance().getValue() * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), actMove.getDistance().getValue() * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
-                state.setPenalty(storage.getSprintCoolDown());
                 state.setLastAction(actMove);
 
                 StaticObject area = inAreaType(state);
