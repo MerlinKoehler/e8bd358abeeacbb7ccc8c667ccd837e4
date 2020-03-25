@@ -26,6 +26,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import javax.management.timer.Timer;
 
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion.Static;
+
 /*
  * We can start the controller from here.
  */
@@ -83,13 +85,30 @@ public class MainControl {
         // TODO: Add the correct coordinates from the map file. Actually the agents will be placed at 0,0
         agentStates = new ArrayList<AgentState>();
 
-        for (Interop.Agent.Intruder intruder : intruders) {
-            AgentState state = new AgentState(new Point(10, 10), Direction.fromDegrees(0), intruder);
-            agentStates.add(state);
+        Point intruderSpawn = new Point(0,0);
+        Point guardSpawn = new Point(0,0);
+        
+        for(int i = 0; i < staticObjects.size(); i++) {
+        	StaticObject obj = staticObjects.get(i);
+        	if(obj.getClass().getName() == "Group3.StaticObjects.SpawnAreaIntruders") {
+        		intruderSpawn = obj.getP3();
+        	}
+        	if(obj.getClass().getName() == "Group3.StaticObjects.SpawnAreaGuards") {
+        		guardSpawn = obj.getP3();
+        	}
         }
-        for (Interop.Agent.Guard guard : guards) {
-            AgentState state = new AgentState(new Point(12, 12), Direction.fromDegrees(0), guard);
+        
+        double c = 0;
+        for (Interop.Agent.Intruder intruder : intruders) {
+            AgentState state = new AgentState(new Point(intruderSpawn.getX() + 0.7 + c, intruderSpawn.getY() + 0.55), Direction.fromDegrees(90), intruder);
             agentStates.add(state);
+            c = c + 1.1;
+        }
+        c = 0;
+        for (Interop.Agent.Guard guard : guards) {
+        	AgentState state = new AgentState(new Point(guardSpawn.getX() + 0.7 + c, guardSpawn.getY() + 0.55), Direction.fromDegrees(90), guard);
+            agentStates.add(state);
+            c = c + 1.1;
         }
 
         targetZoneCount = new ArrayList<Integer>();
