@@ -27,7 +27,7 @@ public class PheromoneStorage {
 			
 			for (int i = 0; i < pheromonesGuard.size(); i++) {
 				pheromonesGuard.get(i).setTurnsLeft(pheromonesGuard.get(i).getTurnsLeft()-1);
-				//pheromonesGuard.get(i).updateShape();
+				pheromonesGuard.get(i).updateShape();
 				if (pheromonesGuard.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesGuard.get(i));
 				}
@@ -39,7 +39,6 @@ public class PheromoneStorage {
 			
 			for (int i = 0; i < pheromonesIntruder.size(); i++) {
 				pheromonesIntruder.get(i).setTurnsLeft(pheromonesIntruder.get(i).getTurnsLeft()-1);
-				//pheromonesIntruder.get(i).updateShape();
 				if (pheromonesIntruder.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesIntruder.get(i));
 				}
