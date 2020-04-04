@@ -10,6 +10,10 @@ public class SoundStorage {
 
 	private ArrayList<Sound> sounds = new ArrayList<>();
 	private BorderPane mapPane;
+	
+	public SoundStorage() {
+		this.mapPane = null;
+	}
 
 	public SoundStorage(BorderPane mapPane) {
 		this.mapPane = mapPane;
@@ -34,14 +38,17 @@ public class SoundStorage {
 		for (int i = 0; i < sounds.size(); i++) {
 			sounds.get(i).setTurnsLeft(sounds.get(i).getTurnsLeft()-1);
 			sounds.get(i).updateShape();
+			
+			
 			if (sounds.get(i).getTurnsLeft() <= 0) {
 				remove.add(sounds.get(i));
 				//remove the ellipse
-				mapPane.getChildren().remove(sounds.get(i).getShape());
+				if(mapPane != null) {
+					mapPane.getChildren().remove(sounds.get(i).getShape());
+				}
 			}
 
 		}
-		
 		sounds.removeAll(remove);
 	}
 }
