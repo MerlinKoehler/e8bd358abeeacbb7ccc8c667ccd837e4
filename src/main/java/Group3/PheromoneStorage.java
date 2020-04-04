@@ -12,9 +12,15 @@ public class PheromoneStorage {
 	private ArrayList<Pheromone> pheromones = new ArrayList<>();
 	private BorderPane mapPane;
 	
+	public PheromoneStorage() {
+		this.mapPane = null;
+	}
+	
 	public PheromoneStorage(BorderPane mapPane) {
 		this.mapPane = mapPane;
+		
 	}
+
 
 	public ArrayList<Pheromone> getPheromonesGuard() {
 		return pheromonesGuard;
@@ -34,23 +40,30 @@ public class PheromoneStorage {
 			for (int i = 0; i < pheromonesGuard.size(); i++) {
 				pheromonesGuard.get(i).setTurnsLeft(pheromonesGuard.get(i).getTurnsLeft()-1);
 				pheromonesGuard.get(i).updateShape();
+				
+				
 				if (pheromonesGuard.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesGuard.get(i));
 					//removes ellipse
-					mapPane.getChildren().remove(pheromonesGuard.get(i).getShape());
+					if(mapPane != null) {
+						mapPane.getChildren().remove(pheromonesGuard.get(i).getShape());
+					}
 				}
 			}
 			
 			pheromonesGuard.removeAll(remove);
-			
 		
 			remove.clear();
 			
 			for (int i = 0; i < pheromonesIntruder.size(); i++) {
 				pheromonesIntruder.get(i).setTurnsLeft(pheromonesIntruder.get(i).getTurnsLeft()-1);
+				pheromonesIntruder.get(i).updateShape();
+				
 				if (pheromonesIntruder.get(i).getTurnsLeft() <= 0) {
 					remove.add(pheromonesIntruder.get(i));
-					mapPane.getChildren().remove(pheromonesIntruder.get(i).getShape());
+					if(mapPane != null) {
+						mapPane.getChildren().remove(pheromonesIntruder.get(i).getShape());
+					}
 				}
 			}
 			

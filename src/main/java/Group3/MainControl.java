@@ -43,8 +43,8 @@ public class MainControl {
 
     MapReader readMap;
     public static Storage storage;
-    PheromoneStorage pherStorage;
-    SoundStorage soundStorage;
+    PheromoneStorage pherStorage = new PheromoneStorage();
+    SoundStorage soundStorage = new SoundStorage();
 
     //made this an object outside to use in the smellpercepts etc
     Object agent;
@@ -57,7 +57,7 @@ public class MainControl {
     //for the visualisation
     private MapVisualization mapVisualization;
     private static BorderPane mapPane;
-    private Map map;
+    private Map map = null;
     private String path;
     //ArrayList<VisualAgent> visualAgents;
     StepAnimationTimer animation;
@@ -130,7 +130,8 @@ public class MainControl {
 
     public MainControl(){
         this.path = "C:\\Users\\victo\\OneDrive\\Documents\\GitHub\\Project2.2\\e8bd358abeeacbb7ccc8c667ccd837e4\\samplemap.txt";
-        // Read map file and settings
+    	//this.path = "C://Users//janneke//Documents//e8bd358abeeacbb7ccc8c667ccd837e4//samplemap.txt";
+    	// Read map file and settings
         readMap = new MapReader(path);
         storage = readMap.getStorage();
         scenarioPercepts = scenarioPercepts();
@@ -180,10 +181,8 @@ public class MainControl {
     }
 
     public static void main(String[] args) {
-        //args[0] = "C:\\Users\\victo\\OneDrive\\Documents\\GitHub\\Project2.2\\e8bd358abeeacbb7ccc8c667ccd837e4\\samplemap.txt";
-        MainControl gameController = new MainControl(args[0]);
-
-
+        MainControl gameController = new MainControl("/Users/janneke/Documents/e8bd358abeeacbb7ccc8c667ccd837e4/samplemap.txt");
+        
         for (int i = 0; i < 100; i++) {
             gameController.doStep();
         }
@@ -458,6 +457,7 @@ public class MainControl {
     }
 
     public int doStep() {
+    	
     	// 1. Get the agent who does the next turn
     	agent = getAgentNextTurn();
     	AgentState state = agentStates.get(currentTurn);
@@ -1047,12 +1047,23 @@ public class MainControl {
                 state.setPenalty(storage.getPheromoneCoolDown());
                 Interop.Action.DropPheromone actPheromone = (Interop.Action.DropPheromone) action;
                 // TODO: Set correct pheromone time to expire
-                pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getPheromoneRadius());
+                if(map != null) {
+                	pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getPheromoneRadius());
+                }
+                else {
+                	pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), 0);
+                }
+                	
                 state.setLastAction(actPheromone);
+                
                 if(pherStorage.getPheromonesIntruder().size() != 0 || pherStorage.getPheromonesGuard().size() != 0) {
-                	pherStorage.getLast(agent.getClass().getName()).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
-                	pherStorage.getLast(agent.getClass().getName()).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
-                	this.mapPane.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
+                	if(map != null) {
+                		pherStorage.getLast(agent.getClass().getName()).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
+                		pherStorage.getLast(agent.getClass().getName()).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
+                	}
+                	if(mapPane != null) {
+                		this.mapPane.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
+                	}
                 }
                 this.updateStorages();
                 break;
@@ -1154,9 +1165,13 @@ public class MainControl {
                 soundStorage.addSound(SoundPerceptType.Yell, state.getCurrentPosition(), agentStates.size(), storage.getYellSoundRadius());
                 state.setLastAction(actYell);
                 if(soundStorage.getSounds().size() > 0) {
-                	soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
-                	soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
-                	this.mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
+                	if(map != null) {
+                		soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
+                		soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
+                	}
+                	if(mapPane != null) {
+                		this.mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
+                	}
                 }
                 this.updateStorages();
                 break;
