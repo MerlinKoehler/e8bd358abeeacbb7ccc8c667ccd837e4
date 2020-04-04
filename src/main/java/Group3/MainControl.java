@@ -466,12 +466,12 @@ public class MainControl {
     		Guard guard = (Guard) agent;
 
     		// 2. Calculate the perception of the agent
-    		/*GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
     				soundPercepts(state),
     				smellPercepts(state),
     				areaPercepts(state),
     				scenarioGuardPercepts(),
-    				state.isLastActionExecuted());*/
+    				state.isLastActionExecuted());
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
@@ -782,13 +782,15 @@ public class MainControl {
      * @return 'a' and 'b' coefficients
      */
     private double[] computeLineCoefficients(Point A, Point B) {
-        if (A.getX() - B.getX() == 0)
-            return new double[]{A.getX(), Integer.MAX_VALUE};
+		if (A.getX() == B.getX())
+			return new double[]{A.getX(), Integer.MAX_VALUE};
+		if (A.getY() == B.getY())
+			return new double[]{Integer.MAX_VALUE, A.getY()};
 
-        double a = (A.getY() - B.getY()) / (A.getX() - B.getX());
-        double b = (A.getX() * B.getY() - B.getX() * A.getY()) / (A.getX() - B.getX());
+		double a = (A.getY() - B.getY()) / (A.getX() - B.getX());
+		double b = (A.getX() * B.getY() - B.getX() * A.getY()) / (A.getX() - B.getX());
 
-        return new double[]{a, b};
+		return new double[]{a, b};
     }
 
     /**
@@ -799,20 +801,33 @@ public class MainControl {
      * @return Point of intersection
      */
     private Point intersects(double[] coef1, double[] coef2) {
-        if (coef1[1] == Integer.MAX_VALUE && coef2[1] == Integer.MAX_VALUE)
-            return new Point(coef1[0], coef2[0] * coef1[0] + coef2[1]);
-        if (coef1[1] == Integer.MAX_VALUE)
-            return new Point(coef1[0], coef2[0] * coef1[0] + coef2[1]);
-        if (coef2[1] == Integer.MAX_VALUE)
-            return new Point(coef2[0], coef1[0] * coef2[0] + coef1[1]);
-        if (coef1[0] * coef2[1] - coef2[0] * coef1[1] == 0) {
-            //System.out.println("Given lines do not intersect!");
-            return null;
-        }
+		if (coef1[0] * coef2[1] - coef2[0] * coef1[1] == 0) {
+			//System.out.println("Given lines do not intersect!");
+			return null;
+		}
+		if (coef1[1] == Integer.MAX_VALUE && coef2[1] == Integer.MAX_VALUE)
+			return null;
+		if (coef1[0] == Integer.MAX_VALUE && coef2[0] == Integer.MAX_VALUE)
+			return null;
 
-        double x = (coef2[1] - coef1[1]) / (coef1[0] - coef2[0]);
-        double y = coef1[0] * x + coef1[1];
-        return new Point(x, y);
+		if (coef1[1] == Integer.MAX_VALUE && coef2[0] == Integer.MAX_VALUE)
+			return new Point(coef1[0], coef2[1]);
+		if (coef1[0] == Integer.MAX_VALUE && coef2[1] == Integer.MAX_VALUE)
+			return new Point(coef1[1], coef2[0]);
+
+		if (coef1[1] == Integer.MAX_VALUE)
+			return new Point(coef1[0], coef2[0] * coef1[0] + coef2[1]);
+		if (coef2[1] == Integer.MAX_VALUE)
+			return new Point(coef2[0], coef1[0] * coef2[0] + coef1[1]);
+
+		if (coef1[0] == Integer.MAX_VALUE)
+			return new Point(coef1[1], (coef1[1] - coef2[1])/coef2[0]);
+		if (coef2[0] == Integer.MAX_VALUE)
+			return new Point(coef2[1], (coef2[1] - coef1[1])/coef1[0]);
+
+		double x = (coef2[1] - coef1[1]) / (coef1[0] - coef2[0]);
+		double y = coef1[0] * x + coef1[1];
+		return new Point(x, y);
     }
 
 
