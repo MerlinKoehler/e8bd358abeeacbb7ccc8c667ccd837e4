@@ -19,11 +19,7 @@ import Interop.Percept.Sound.SoundPercepts;
 import Interop.Percept.Vision.*;
 import javafx.scene.layout.BorderPane;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 /*
@@ -104,7 +100,8 @@ public class MainControl {
         }
         c = 0;
         for (Interop.Agent.Guard guard : guards) {
-        	AgentState state = new AgentState(new Point(guardSpawn.getX() + 0.7 + c, guardSpawn.getY() + 0.55), Direction.fromDegrees(90), guard);
+        	//AgentState state = new AgentState(new Point(guardSpawn.getX() + 0.7 + c, guardSpawn.getY() + 0.55), Direction.fromDegrees(90), guard);
+			AgentState state = new AgentState(new Point(10.0, 13.0), Direction.fromDegrees(0), guard);
             agentStates.add(state);
             c = c + 1.1;
         }
@@ -181,7 +178,7 @@ public class MainControl {
     }
 
     public static void main(String[] args) {
-        MainControl gameController = new MainControl("/Users/janneke/Documents/e8bd358abeeacbb7ccc8c667ccd837e4/samplemap.txt");
+        MainControl gameController = new MainControl(args[0]);
         
         for (int i = 0; i < 100; i++) {
             gameController.doStep();
@@ -567,12 +564,12 @@ public class MainControl {
     		ExplorationAgent guard = (ExplorationAgent)agent;
 
     		// 2. Calculate the perception of the agent
-    		/*GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
     				soundPercepts(state),
     				smellPercepts(state),
     				areaPercepts(state),
     				scenarioGuardPercepts(),
-    				state.isLastActionExecuted());*/
+    				state.isLastActionExecuted());
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
@@ -634,102 +631,117 @@ public class MainControl {
     }
 
     // Oskar
-    private VisionPrecepts visionPercepts(AgentState state) {
-        Set<ObjectPercept> objectPercepts = new HashSet<>();
-        Point currentPosition = state.getCurrentPosition();
+	private VisionPrecepts visionPercepts(AgentState state) {
+		Set<ObjectPercept> objectPercepts = new HashSet<>();
+		Point currentPosition = state.getCurrentPosition();
+		System.out.println(currentPosition);
+		System.out.println(state.getTargetDirection().getDegrees());
 
-        double range;
-        if (state.getAgent().getClass() == Intruder.class)
-            range = storage.getViewRangeIntruderNormal();
-        else range = storage.getViewRangeGuardNormal();
+		double range;
+		if (state.getAgent().getClass() == Intruder.class)
+			range = storage.getViewRangeIntruderNormal();
+		else range = storage.getViewRangeGuardNormal();
 
-        FieldOfView fieldOfView = new FieldOfView(
-                new Distance(range), Angle.fromDegrees(storage.getViewAngle()));
+		FieldOfView fieldOfView = new FieldOfView(
+				new Distance(range), Angle.fromDegrees(storage.getViewAngle()));
 
         /*
         Ray-casting
          */
-        Point rayOrigin = new Point(currentPosition.getX(), currentPosition.getY());
-        Point rayEnd;
-        Direction rayDirection;
+		Point rayOrigin = new Point(currentPosition.getX(), currentPosition.getY());
+		Point rayEnd;
+		Direction rayDirection;
 
-        if (state.getTargetDirection().getDegrees() + storage.getViewAngle() / 2 > 360)
-            rayDirection = Direction.fromDegrees(
-                    state.getTargetDirection().getDegrees() + storage.getViewAngle() / 2 - 360);
-        else
-            rayDirection = Direction.fromDegrees(
-                    state.getTargetDirection().getDegrees() + storage.getViewAngle() / 2);
+		if (state.getTargetDirection().getDegrees() + (storage.getViewAngle() / 2) + 1 > 360)
+			rayDirection = Direction.fromDegrees(
+					state.getTargetDirection().getDegrees() + (storage.getViewAngle() / 2) - 360 + 1);
+		else
+			rayDirection = Direction.fromDegrees(
+					state.getTargetDirection().getDegrees() + (storage.getViewAngle() / 2) + 1);
 
-        for (int i = 0; i < storage.getViewRays(); i++) {
-            if (rayDirection.getDegrees() - i < 0)
-                rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - i + 360);
+		for (int i = 0; i < storage.getViewRays(); i++) {
+			if (rayDirection.getDegrees() - 1 < 0)
+				rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - 1 + 360);
+			else
+				rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - 1);
 
-            else
-                rayDirection = Direction.fromDegrees(rayDirection.getDegrees() - i);
+			rayEnd = new Point(
+					rayOrigin.getX() + range * Math.cos(rayDirection.getRadians()),
+					rayOrigin.getY() + range * Math.sin(rayDirection.getRadians()));
 
-            rayEnd = new Point(
-                    range * Math.sin(rayDirection.getRadians()),
-                    range * Math.cos(rayDirection.getRadians()));
-            double[] rayCoefficients = computeLineCoefficients(rayOrigin, rayEnd);
-            Point pointOfIntersection = null;
+			double[] rayCoefficients = computeLineCoefficients(rayOrigin, rayEnd);
+			Point pointOfIntersection = null;
 
-            label:
-            for (StaticObject staticObject : staticObjects) {
-                ArrayList<Point> validIntersectionPoints = new ArrayList<>();
+			label:
+			for (StaticObject staticObject : staticObjects) {
+				ArrayList<Point> validIntersectionPoints = new ArrayList<>();
 
-                Point pointOfIntersectionWithSegment1 = intersects(rayCoefficients,
-                        computeLineCoefficients(
-                                new Point(staticObject.getP1().getX(), staticObject.getP1().getY()),
-                                new Point(staticObject.getP2().getX(), staticObject.getP2().getY())
-                        )
-                );
-                if (pointOfIntersectionWithSegment1 != null)
-                    validIntersectionPoints.add(pointOfIntersectionWithSegment1);
+				Point pointOfIntersectionWithSegment1 = intersects(rayCoefficients,
+						computeLineCoefficients(
+								new Point(staticObject.getP1().getX(), staticObject.getP1().getY()),
+								new Point(staticObject.getP2().getX(), staticObject.getP2().getY())));
+				if (pointOfIntersectionWithSegment1 != null)
+					validIntersectionPoints.add(pointOfIntersectionWithSegment1);
 
-                Point pointOfIntersectionWithSegment2 = intersects(rayCoefficients,
-                        computeLineCoefficients(
-                                new Point(staticObject.getP2().getX(), staticObject.getP2().getY()),
-                                new Point(staticObject.getP3().getX(), staticObject.getP3().getY())
-                        )
-                );
-                if (pointOfIntersectionWithSegment2 != null)
-                    validIntersectionPoints.add(pointOfIntersectionWithSegment2);
+				Point pointOfIntersectionWithSegment2 = intersects(rayCoefficients,
+						computeLineCoefficients(
+								new Point(staticObject.getP2().getX(), staticObject.getP2().getY()),
+								new Point(staticObject.getP4().getX(), staticObject.getP4().getY())));
+				if (pointOfIntersectionWithSegment2 != null)
+					validIntersectionPoints.add(pointOfIntersectionWithSegment2);
 
-                Point pointOfIntersectionWithSegment3 = intersects(rayCoefficients,
-                        computeLineCoefficients(
-                                new Point(staticObject.getP3().getX(), staticObject.getP3().getY()),
-                                new Point(staticObject.getP4().getX(), staticObject.getP4().getY())
-                        )
-                );
-                if (pointOfIntersectionWithSegment3 != null)
-                    validIntersectionPoints.add(pointOfIntersectionWithSegment3);
+				Point pointOfIntersectionWithSegment3 = intersects(rayCoefficients,
+						computeLineCoefficients(
+								new Point(staticObject.getP3().getX(), staticObject.getP3().getY()),
+								new Point(staticObject.getP4().getX(), staticObject.getP4().getY())));
+				if (pointOfIntersectionWithSegment3 != null)
+					validIntersectionPoints.add(pointOfIntersectionWithSegment3);
 
-                Point pointOfIntersectionWithSegment4 = intersects(rayCoefficients,
-                        computeLineCoefficients(
-                                new Point(staticObject.getP4().getX(), staticObject.getP4().getY()),
-                                new Point(staticObject.getP1().getX(), staticObject.getP1().getY())
-                        )
-                );
-                if (pointOfIntersectionWithSegment4 != null)
-                    validIntersectionPoints.add(pointOfIntersectionWithSegment4);
+				Point pointOfIntersectionWithSegment4 = intersects(rayCoefficients,
+						computeLineCoefficients(
+								new Point(staticObject.getP3().getX(), staticObject.getP3().getY()),
+								new Point(staticObject.getP1().getX(), staticObject.getP1().getY())));
+				if (pointOfIntersectionWithSegment4 != null)
+					validIntersectionPoints.add(pointOfIntersectionWithSegment4);
 
-                /* Consider only the segment that is the closest to the agent (rayOrigin) */
-                double minDistance = Double.MAX_VALUE;
-                for (Point intersectionPoint : validIntersectionPoints) {
-                    if (rayOrigin.getDistance(intersectionPoint).getValue() < minDistance) {
-                        minDistance = rayOrigin.getDistance(intersectionPoint).getValue();
-                        pointOfIntersection = intersectionPoint;
-                    }
-                }
+				/* Domain check (so that we don't take an intersection point that is 'behind' the agent) */
+				Iterator<Point> iterator = validIntersectionPoints.iterator();
+				while (iterator.hasNext()) {
+					Point p = iterator.next();
+					if (
+							((rayOrigin.getX() < rayEnd.getX()) && (p.getX() < rayOrigin.getX() || p.getX() > rayEnd.getX())) ||
+							((rayOrigin.getX() > rayEnd.getX()) && (p.getX() > rayOrigin.getX() || p.getX() < rayEnd.getX())) ||
+							((rayOrigin.getY() < rayEnd.getY()) && (p.getY() < rayOrigin.getY() || p.getY() > rayEnd.getY())) ||
+							((rayOrigin.getY() > rayEnd.getY()) && (p.getY() > rayOrigin.getY() || p.getY() < rayEnd.getY())))
+						iterator.remove();
+				}
 
-                if (pointOfIntersection == null ||
-                        ((rayOrigin.getX() < rayEnd.getX()) && (pointOfIntersection.getX() < rayOrigin.getX() || pointOfIntersection.getX() > rayEnd.getX())) ||
-                        ((rayOrigin.getX() > rayEnd.getX()) && (pointOfIntersection.getX() > rayOrigin.getX() || pointOfIntersection.getX() < rayEnd.getX())) ||
-                        ((rayOrigin.getY() < rayEnd.getY()) && (pointOfIntersection.getY() < rayOrigin.getY() || pointOfIntersection.getY() > rayEnd.getY())) ||
-                        ((rayOrigin.getY() > rayEnd.getY()) && (pointOfIntersection.getY() > rayOrigin.getY() || pointOfIntersection.getY() < rayEnd.getY())))
-                    continue;
+				/* Consider only the segment that is the closest to the agent (rayOrigin) */
+				double minDistance = range;
+				for (Point intersectionPoint : validIntersectionPoints) {
+					if (rayOrigin.getDistance(intersectionPoint).getValue() < minDistance) {
+						minDistance = rayOrigin.getDistance(intersectionPoint).getValue();
+						pointOfIntersection = intersectionPoint;
+					}
+				}
 
-                switch (staticObject.getClass().getName()) {
+				/* If no intersection points with given static object were found proceed to the next static object */
+				if (pointOfIntersection == null) {
+					continue;
+				}
+
+				//Point pointOfIntersectionTranslated = new Point(pointOfIntersection.getX(), pointOfIntersection.getY());
+				//Translate
+
+				Point pointOfIntersectionTranslated = new Point(
+						0.999 * (pointOfIntersection.getX() - currentPosition.getX()),
+						0.999 * (pointOfIntersection.getY() - currentPosition.getY()));
+				//Rotate
+				pointOfIntersectionTranslated = new Point(
+					pointOfIntersectionTranslated.getX() * Math.cos(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()) - pointOfIntersectionTranslated.getY() * Math.sin(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()),
+					pointOfIntersectionTranslated.getX() * Math.sin(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()) + pointOfIntersectionTranslated.getY() * Math.cos(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()));
+				//pointOfIntersectionTranslated = new Point(pointOfIntersection.getX(), pointOfIntersection.getY());
+				switch (staticObject.getClass().getName()) {
                     /*
                     Guard and Intruder do not exist as staticObjects,
                     TODO: iterate through guards[] and intruders[] instead
@@ -738,41 +750,45 @@ public class MainControl {
                     case "Intruder":
                         objectPercepts.add(new ObjectPercept(ObjectPerceptType.Intruder, pointOfIntersect));
                     */
-                    case "Group3.StaticObjects.Door":
-                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Door, pointOfIntersection));
-                        break label;
-                    case "Group3.StaticObjects.Wall":
-                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Wall, pointOfIntersection));
-                        break label;
-                    case "Group3.StaticObjects.Window":
-                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Window, pointOfIntersection));
-                        break label;
-                    case "Group3.StaticObjects.Teleport":
-                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.Teleport, pointOfIntersection));
-                        break label;
-                    case "Group3.StaticObjects.SentryTower":
-                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.SentryTower, pointOfIntersection));
-                        break label;
-                    case "Group3.StaticObjects.ShadedArea":
-                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.ShadedArea, pointOfIntersection));
-                        break label;
-                    case "Group3.StaticObjects.TargetArea":
-                        objectPercepts.add(new ObjectPercept(ObjectPerceptType.TargetArea, pointOfIntersection));
-                        break label;
+					case "Group3.StaticObjects.Door":
+						objectPercepts.add(new ObjectPercept(ObjectPerceptType.Door, pointOfIntersectionTranslated));
+						break label;
+					case "Group3.StaticObjects.Wall":
+						objectPercepts.add(new ObjectPercept(ObjectPerceptType.Wall, pointOfIntersectionTranslated));
+						break label;
+					case "Group3.StaticObjects.Window":
+						objectPercepts.add(new ObjectPercept(ObjectPerceptType.Window, pointOfIntersectionTranslated));
+						break label;
+					case "Group3.StaticObjects.Teleport":
+						objectPercepts.add(new ObjectPercept(ObjectPerceptType.Teleport, pointOfIntersectionTranslated));
+						break label;
+					case "Group3.StaticObjects.SentryTower":
+						objectPercepts.add(new ObjectPercept(ObjectPerceptType.SentryTower, pointOfIntersectionTranslated));
+						break label;
+					case "Group3.StaticObjects.ShadedArea":
+						objectPercepts.add(new ObjectPercept(ObjectPerceptType.ShadedArea, pointOfIntersectionTranslated));
+						break label;
+					case "Group3.StaticObjects.TargetArea":
+						objectPercepts.add(new ObjectPercept(ObjectPerceptType.TargetArea, pointOfIntersectionTranslated));
+						break label;
+				}
+			}
+			if (pointOfIntersection == null)
+				objectPercepts.add(new ObjectPercept(ObjectPerceptType.EmptySpace, new Point(0.999 * (rayEnd.getX() - currentPosition.getX()), 0.999 * (rayEnd.getY() - currentPosition.getY()))));
 
+		}
+		int i = 0;
+		for (ObjectPercept o : objectPercepts) {
+			i++;
+			System.out.println("o" + i + ": " + o.getType() + "     X: " + o.getPoint().getX() + " Y: " + o.getPoint().getY());
+		}
 
-                }
-            }
-            if (pointOfIntersection == null ||
-                    ((rayOrigin.getX() < rayEnd.getX()) && (pointOfIntersection.getX() < rayOrigin.getX() || pointOfIntersection.getX() > rayEnd.getX())) ||
-                    ((rayOrigin.getX() > rayEnd.getX()) && (pointOfIntersection.getX() > rayOrigin.getX() || pointOfIntersection.getX() < rayEnd.getX())) ||
-                    ((rayOrigin.getY() < rayEnd.getY()) && (pointOfIntersection.getY() < rayOrigin.getY() || pointOfIntersection.getY() > rayEnd.getY())) ||
-                    ((rayOrigin.getY() > rayEnd.getY()) && (pointOfIntersection.getY() > rayOrigin.getY() || pointOfIntersection.getY() < rayEnd.getY()))) {
-                objectPercepts.add(new ObjectPercept(ObjectPerceptType.EmptySpace, rayEnd));
-            }
-        }
-        return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
-    }
+		for (StaticObject s : staticObjects) {
+			//System.out.println(s.getClass());
+			//System.out.println(s.getP1() + " * " + s.getP2() + " * " + s.getP3() + " * " + s.getP4());
+		}
+		return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
+	}
 
     /**
      * Computes line's slope-intercept form coefficients given two points it goes through
@@ -787,8 +803,8 @@ public class MainControl {
 		if (A.getY() == B.getY())
 			return new double[]{Integer.MAX_VALUE, A.getY()};
 
-		double a = (A.getY() - B.getY()) / (A.getX() - B.getX());
-		double b = (A.getX() * B.getY() - B.getX() * A.getY()) / (A.getX() - B.getX());
+		double a = (B.getY() - A.getY()) / (B.getX() - A.getX());
+		double b = (B.getX() * A.getY() - A.getX() * B.getY()) / (B.getX() - A.getX());
 
 		return new double[]{a, b};
     }
@@ -802,28 +818,41 @@ public class MainControl {
      */
     private Point intersects(double[] coef1, double[] coef2) {
 		if (coef1[0] * coef2[1] - coef2[0] * coef1[1] == 0) {
-			//System.out.println("Given lines do not intersect!");
 			return null;
 		}
-		if (coef1[1] == Integer.MAX_VALUE && coef2[1] == Integer.MAX_VALUE)
+		if (coef1[1] == Integer.MAX_VALUE && coef2[1] == Integer.MAX_VALUE) {
 			return null;
-		if (coef1[0] == Integer.MAX_VALUE && coef2[0] == Integer.MAX_VALUE)
+		}
+		if (coef1[0] == Integer.MAX_VALUE && coef2[0] == Integer.MAX_VALUE) {
 			return null;
+		}
 
-		if (coef1[1] == Integer.MAX_VALUE && coef2[0] == Integer.MAX_VALUE)
-			return new Point(coef1[0], coef2[1]);
-		if (coef1[0] == Integer.MAX_VALUE && coef2[1] == Integer.MAX_VALUE)
-			return new Point(coef1[1], coef2[0]);
+		if (coef1[1] == Integer.MAX_VALUE && coef2[0] == Integer.MAX_VALUE) {
+			return new Point(coef1[0] / coef2[1], coef2[1]);
+		}
 
-		if (coef1[1] == Integer.MAX_VALUE)
+		if (coef1[0] == Integer.MAX_VALUE && coef2[1] == Integer.MAX_VALUE) {
+			return new Point(coef1[1] / coef2[0], coef2[0]);
+		}
+
+
+
+		if (coef1[1] == Integer.MAX_VALUE) {
 			return new Point(coef1[0], coef2[0] * coef1[0] + coef2[1]);
-		if (coef2[1] == Integer.MAX_VALUE)
-			return new Point(coef2[0], coef1[0] * coef2[0] + coef1[1]);
+		}
+		if (coef2[1] == Integer.MAX_VALUE) {
 
-		if (coef1[0] == Integer.MAX_VALUE)
-			return new Point(coef1[1], (coef1[1] - coef2[1])/coef2[0]);
-		if (coef2[0] == Integer.MAX_VALUE)
-			return new Point(coef2[1], (coef2[1] - coef1[1])/coef1[0]);
+			return new Point(coef2[0], coef1[0] * coef2[0] + coef1[1]);
+		}
+
+		if (coef1[0] == Integer.MAX_VALUE) {
+			return new Point((coef1[1] - coef2[1]) / coef2[0], coef1[1]);
+		}
+
+		if (coef2[0] == Integer.MAX_VALUE) {
+
+			return new Point((coef2[1] - coef1[1]) / coef1[0], coef2[1]);
+		}
 
 		double x = (coef2[1] - coef1[1]) / (coef1[0] - coef2[0]);
 		double y = coef1[0] * x + coef1[1];
