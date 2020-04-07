@@ -1111,6 +1111,10 @@ public class MainControl {
                 	distance = distance * storage.getSlowDownModifierDoor();
                 }
                 
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.SentryTower")) {
+                	distance = distance * storage.getSlowDownModifierSentryTower();
+                }
+                
                 state.setCurrentPosition(new Point(distance * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), distance * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
                 state.setLastAction(actMove);
 
@@ -1167,6 +1171,10 @@ public class MainControl {
                 
                 if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Door")) {
                 	distance = distance * storage.getSlowDownModifierDoor();
+                }
+                
+                if(a != null && a.getClass().getName().equals("Group3.StaticObjects.SentryTower")) {
+                	distance = distance * storage.getSlowDownModifierSentryTower();
                 }
                 
                 state.setCurrentPosition(new Point(distance * Math.cos(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getX(), distance * Math.sin(state.getTargetDirection().getRadians()) + state.getCurrentPosition().getY()));
