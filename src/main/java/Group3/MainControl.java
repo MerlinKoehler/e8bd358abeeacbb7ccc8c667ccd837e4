@@ -989,7 +989,7 @@ public class MainControl {
         }
 
         if (action.getClass().getName().equals("Interop.Action.Rotate")) {
-            if (Math.abs(((Rotate) action).getAngle().getRadians()) > storage.getMaxRotationAngle()) {//maxRotationAngle in radians or degrees ?
+            if (Math.abs(((Rotate) action).getAngle().getDegrees()) > storage.getMaxRotationAngle()) {//maxRotationAngle in radians or degrees ?
                 return false;
             }
             if (state.getPenalty() != 0) {
