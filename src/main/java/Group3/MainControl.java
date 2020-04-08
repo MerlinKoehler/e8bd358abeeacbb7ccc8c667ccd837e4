@@ -463,16 +463,16 @@ public class MainControl {
     		Guard guard = (Guard) agent;
 
     		// 2. Calculate the perception of the agent
-    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+    		/*GuardPercepts percept = new GuardPercepts(visionPercepts(state),
     				soundPercepts(state),
     				smellPercepts(state),
     				areaPercepts(state),
     				scenarioGuardPercepts(),
-    				state.isLastActionExecuted());
+    				state.isLastActionExecuted());*/
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
-    		Interop.Action.GuardAction action = new Interop.Action.Move(new Distance(2));
+    		Interop.Action.GuardAction action = getRandomGuardAction();
     		
     		// 4. Check if the agent is allowed to make a move
     		boolean legalAction = checkLegalGuardAction(state, action);
@@ -513,27 +513,7 @@ public class MainControl {
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.IntruderAction action = intruder.getAction(percept);
-    		Interop.Action.IntruderAction action = new NoAction();
-    		
-    		Random random = new Random(); 
-    		int ri = random. nextInt(5);
-    		
-    		switch(ri) {
-    		case 0:
-    			action = new Interop.Action.Move(new Distance(1));
-    			break;
-    		case 1:
-    			int rt = random. nextInt(90);
-    			if(random. nextInt(2) == 1) rt = rt * -1;
-    			action = new Interop.Action.Rotate(Angle.fromDegrees(rt));
-    			break;
-    		case 2:
-    			action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
-    			break;
-    		case 4:
-    			action = new Interop.Action.Sprint(new Distance(2));
-    			break;
-    		}
+    		Interop.Action.IntruderAction action = getRandomIntruderAction();
 
     		// 4. Check if the agent is allowed to make a move
     		boolean legalAction = checkLegalIntruderAction(state, action);
@@ -573,27 +553,9 @@ public class MainControl {
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
-    		Interop.Action.GuardAction action = new Interop.Action.NoAction();
+    		Interop.Action.GuardAction action = getRandomGuardAction();
     		
-    		Random random = new Random(); 
-    		int ri = random. nextInt(5);
     		
-    		switch(ri) {
-    		case 0:
-    			action = new Interop.Action.Move(new Distance(1));
-    			break;
-    		case 1:
-    			int rt = random. nextInt(90);
-    			if(random. nextInt(2) == 1) rt = rt * -1;
-    			action = new Interop.Action.Rotate(Angle.fromDegrees(rt));
-    			break;
-    		case 2:
-    			action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
-    			break;
-    		case 4:
-    			action = new Interop.Action.Yell();
-    			break;
-    		}
     		
     		// 4. Check if the agent is allowed to make a move
     		boolean legalAction = checkLegalGuardAction(state, action);
@@ -620,6 +582,57 @@ public class MainControl {
     		return (gameFinished());
     	}
     	return -1;
+    }
+    
+    private IntruderAction getRandomIntruderAction() {
+    	Interop.Action.IntruderAction action = new NoAction();
+		
+		Random random = new Random(); 
+		int ri = random. nextInt(5);
+		
+		switch(ri) {
+		case 0:
+			action = new Interop.Action.Move(new Distance(1));
+			break;
+		case 1:
+			int rt = random. nextInt(90);
+			if(random. nextInt(2) == 1) rt = rt * -1;
+			action = new Interop.Action.Rotate(Angle.fromDegrees(rt));
+			break;
+		case 2:
+			action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
+			break;
+		case 4:
+			action = new Interop.Action.Sprint(new Distance(2));
+			break;
+		}
+		return action;
+    }
+    
+    private GuardAction getRandomGuardAction() { 
+    	
+    	Interop.Action.GuardAction action = new Interop.Action.NoAction();
+    	
+    	Random random = new Random(); 
+		int ri = random. nextInt(5);
+		
+		switch(ri) {
+		case 0:
+			action = new Interop.Action.Move(new Distance(1));
+			break;
+		case 1:
+			int rt = random. nextInt(90);
+			if(random. nextInt(2) == 1) rt = rt * -1;
+			action = new Interop.Action.Rotate(Angle.fromDegrees(rt));
+			break;
+		case 2:
+			action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
+			break;
+		case 4:
+			action = new Interop.Action.Yell();
+			break;
+		}
+		return action;
     }
 
     private Object getAgentNextTurn() {
@@ -1342,7 +1355,7 @@ public class MainControl {
     public BorderPane getMapPane() {	return mapPane;	}
 
     public void animationLoop() {
-    	animation = new StepAnimationTimer(this.mapVisualization, this ,300);
+    	animation = new StepAnimationTimer(this.mapVisualization, this ,25);
     	animation.start();
     }
     
