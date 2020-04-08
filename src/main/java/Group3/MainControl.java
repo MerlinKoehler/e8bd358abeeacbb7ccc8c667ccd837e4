@@ -905,22 +905,85 @@ public class MainControl {
         for (int i = 0; i < soundStorage.getSounds().size(); i++) {
             Point point1 = state.getCurrentPosition();
             Point point2 = soundStorage.getSounds().get(i).getLocation();
-
+            
+            //the direction the agent is facing, is known, as well as the distance
+            Direction viewDirec = state.getTargetDirection();
             Distance distance = new Distance(point1, point2);
 
             double radius = soundStorage.getSounds().get(i).getRadius();
             SoundPerceptType type = soundStorage.getSounds().get(i).getType();
 
             if (radius >= distance.getValue()) {
-                double degrees = (10 * Math.PI) / 180;
+                double totalRadMinMax = (10 * Math.PI) / 180;
 
-                //calculate angle
-                double rad = Math.atan(((point2.getY() - point1.getY()) / (point2.getX() - point1.getX())));
-                rad = rad + ThreadLocalRandom.current().nextDouble(-degrees, degrees);
+                //calculate angle between the sound and the direction the agent is facing
+                double rad = 0;
+                double radSound;
+                
+                //calculate the angle the sound is in
+                if(point1.getX() > point2.getX()) {
+                	if(point1.getY() == point2.getY()) {
+                		radSound = Math.PI;
+                	}
+                	else if(point1.getY() > point2.getY()) {
+                		radSound = Math.PI + Math.atan((point1.getY() - point2.getY())/(point1.getX() - point2.getX()));
+                	}
+                	//Y2 > Y1
+                	else {
+                		radSound = 1/2 * Math.PI + Math.atan((point1.getX()-point2.getX())/(point2.getY() - point1.getY()));
+                	}
+                }
+                else if(point2.getX() > point1.getX()) {
+                	if(point1.getY() == point2.getY()) {
+                		radSound = 0;
+                	}
+                	else if(point1.getY() > point2.getY()) {
+                		radSound = 3/2 *Math.PI + Math.atan((point2.getX()-point1.getX())/(point1.getY() - point2.getY()));
+                	}
+                	//Y2 >Y1
+                	else {
+                		radSound = Math.atan((point2.getY() - point1.getY()) / (point2.getX() - point1.getX()));
+                	}
+                }
+                // X1 == X2
+                else {
+                	//at the place of the sound
+                	if(point1.getY() == point2.getY()) {
+                		radSound = 0;
+                	}
+                	else if(point1.getY() > point2.getY()) {
+                		radSound = 3/2 * Math.PI;
+                	}
+                	//Y2 >Y1
+                	else {
+                		radSound = 1/2 * Math.PI;
+                	}
+                }
+                
+                if (radSound > viewDirec.getRadians()) {
+                	rad = (2 * Math.PI + viewDirec.getRadians()) - radSound;
+                }
+                else if (radSound <viewDirec.getRadians()) {
+                	rad = viewDirec.getRadians() - radSound;
+                }
+                else {
+                	rad = 0;
+                }
+                
+                //add a random amount of radians (degrees between -10 and 10)		
+                rad = rad + ThreadLocalRandom.current().nextDouble(-totalRadMinMax, totalRadMinMax);
+                while (rad >= 2*Math.PI) {
+                	rad = rad - Math.PI/180;
+                }
+                while (rad < 0) {
+                	rad = rad + Math.PI/180;
+                }
 
+                //create the direction
                 Direction direction = null;
                 direction = direction.fromRadians(rad);
 
+                //make and add the soundpercept
                 SoundPercept sound = new SoundPercept(soundStorage.getSounds().get(i).getType(), direction);
                 sounds.add(sound);
             }
