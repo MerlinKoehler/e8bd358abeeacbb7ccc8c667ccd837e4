@@ -69,8 +69,8 @@ public class Game extends Application {
 	        gameController.setHeightBound(mapBoundHeight);
 	        gameController.setWidthBound(mapBoundWidth);
 	        gameController.createVisualMap(path);
-	        gameController.pherStorage = new PheromoneStorage(gameController.getMapPane());
-	        gameController.soundStorage = new SoundStorage(gameController.getMapPane());
+	        gameController.pherStorage = new PheromoneStorage(gameController.getMapPane(), gameController.getMap().getScalingFactor());
+	        gameController.soundStorage = new SoundStorage(gameController.getMapPane(), gameController.getMap().getScalingFactor());
 	        gameController.getMap().addPheromones(gameController.pherStorage.getPheromones());
 			Button moveAgent = new Button("move");
 			moveAgent.setOnAction(e -> {

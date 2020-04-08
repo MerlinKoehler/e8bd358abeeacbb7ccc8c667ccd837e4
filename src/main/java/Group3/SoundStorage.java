@@ -10,13 +10,14 @@ public class SoundStorage {
 
 	private ArrayList<Sound> sounds = new ArrayList<>();
 	private BorderPane mapPane;
-	
+	private double scalingFactor = 1;
 	public SoundStorage() {
 		this.mapPane = null;
 	}
 
-	public SoundStorage(BorderPane mapPane) {
+	public SoundStorage(BorderPane mapPane, double scalingFactor) {
 		this.mapPane = mapPane;
+		this.scalingFactor = scalingFactor;
 	}
 	
 	public ArrayList<Sound> getSounds() {
@@ -28,7 +29,7 @@ public class SoundStorage {
 	}
 	
 	public void addSound(SoundPerceptType type, Point point, Integer timeLeft, Double radius) {
-			Sound sound = new Sound(type, point, timeLeft, radius);
+			Sound sound = new Sound(type, point, timeLeft, radius, scalingFactor);
 			sounds.add(sound);
 	}
 	

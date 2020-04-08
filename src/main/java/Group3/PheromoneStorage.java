@@ -11,16 +11,16 @@ public class PheromoneStorage {
 	private ArrayList<Pheromone> pheromonesIntruder = new ArrayList<>();
 	private ArrayList<Pheromone> pheromones = new ArrayList<>();
 	private BorderPane mapPane;
-	
+	private double scalingFactor = 1;
 	public PheromoneStorage() {
 		this.mapPane = null;
 	}
 	
-	public PheromoneStorage(BorderPane mapPane) {
+	public PheromoneStorage(BorderPane mapPane, double scalingFactor) {
 		this.mapPane = mapPane;
+		this.scalingFactor = scalingFactor;
 		
 	}
-
 
 	public ArrayList<Pheromone> getPheromonesGuard() {
 		return pheromonesGuard;
@@ -69,8 +69,8 @@ public class PheromoneStorage {
 			
 			pheromonesIntruder.removeAll(remove);
 	}
-	public void addPheromone(SmellPerceptType type, Point point, Integer timeLeft, boolean guard, double radiusScaled) {
-		Pheromone pheromone = new Pheromone(type, point, timeLeft, radiusScaled);
+	public void addPheromone(SmellPerceptType type, Point point, Integer timeLeft, boolean guard, double radius) {
+		Pheromone pheromone = new Pheromone(type, point, timeLeft, radius, scalingFactor);
 
 		if (guard) {
 			pheromonesGuard.add(pheromone);
@@ -81,15 +81,6 @@ public class PheromoneStorage {
 		pheromones.add(pheromone);
 	}
 
-	public Pheromone getLast(String s) {
-		if(s.equals(Guard.class.getName()) && pheromonesGuard.size() > 0) {
-			return pheromonesGuard.get(pheromonesGuard.size()-1);
-		}
-		else if(s.equals(Intruder.class.getName()) && pheromonesIntruder.size() > 0) {
-			return pheromonesIntruder.get(pheromonesIntruder.size()-1);
-		}
-		return null;
-	}
 	public ArrayList<Pheromone> getAll() {
 		return this.pheromones;
 	}

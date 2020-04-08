@@ -14,7 +14,7 @@ public class Sound {
 	private double radius; //30 for yell
 	private Circle shape;
 	
-	public Sound(SoundPerceptType type, Point location, int turnsLeft, double radius) {
+	public Sound(SoundPerceptType type, Point location, int turnsLeft, double radius, double scalingFcator) {
 
 		this.type = type;
 		this.location = location;
@@ -22,7 +22,7 @@ public class Sound {
 		this.radius = radius;
 
 		if (type.toString().equals(SoundPerceptType.Yell.toString())) {
-			this.shape = new Circle(radius);
+			this.shape = new Circle(radius * scalingFcator/2);
 			this.shape.setOpacity(0.3);
 			this.shape.setFill(Color.INDIANRED);
 			this.shape.setCenterX(location.getX());

@@ -4,24 +4,30 @@ import Interop.Geometry.Point;
 import Interop.Percept.Smell.SmellPerceptType;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Ellipse;
 
 public class Pheromone {
 
 	private SmellPerceptType type;
 	private int turnsLeft;
 	private Point location;
-	private Ellipse shape;
+	private Circle shape;
 	private double radius;
-	private Storage storage = new Storage();
+	
+	private double initialRadius;
+	private double initialRounds;
+	private double scalingFactor = 1;
 
-	public Pheromone(SmellPerceptType type, Point location, int turnsLeft, double radiusScaled) {
+	public Pheromone(SmellPerceptType type, Point location, int turnsLeft, double radius, double scalingFactor) {
 		this.type = type;
 		this.turnsLeft = turnsLeft;
 		this.location = location;
-		this.radius = radiusScaled;
+		this.radius = radius;
+		
+		this.initialRounds = turnsLeft;
+		this.initialRadius = radius;
+		this.scalingFactor = scalingFactor;
 
-		this.shape = new Ellipse(this.radius, this.radius);
+		this.shape = new Circle(this.radius*scalingFactor);
 		this.shape.setCenterX(location.getX());
 		this.shape.setCenterY(location.getY());
 		switch(type) {
@@ -71,14 +77,13 @@ public class Pheromone {
 		this.shape.setCenterY(this.location.getY());
 	}
 
-	public Ellipse getShape(){
+	public Circle getShape(){
 		return this.shape;
 	}
 	
 	public void updateShape() {
-		this.radius = this.radius - (1 / ((storage.getPheromoneExpireRounds()) * storage.getRadiusPheromone()));
-		this.shape.setRadiusX(this.radius);
-		this.shape.setRadiusY(this.radius);
+		this.radius = this.radius - (initialRadius/initialRounds);
+		this.shape.setRadius(this.radius*scalingFactor);
 	}
 	
 }

@@ -588,7 +588,7 @@ public class MainControl {
     			action = new Interop.Action.Rotate(Angle.fromDegrees(rt));
     			break;
     		case 2:
-    			//action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
+    			action = new Interop.Action.DropPheromone(SmellPerceptType.Pheromone1);
     			break;
     		case 4:
     			action = new Interop.Action.Yell();
@@ -1076,28 +1076,20 @@ public class MainControl {
                 state.setPenalty(storage.getPheromoneCoolDown());
                 Interop.Action.DropPheromone actPheromone = (Interop.Action.DropPheromone) action;
                 // TODO: Set correct pheromone time to expire
-                if(map != null) {
-                	pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), this.map.getPheromoneRadius());
-                }
-                else {
-                	pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), 5 * agentStates.size(), (agent.getClass() == Guard.class), 0);
-                }
-                	
+                pherStorage.addPheromone(actPheromone.getType(), state.getCurrentPosition(), storage.getPheromoneCoolDown(), (agent.getClass() == Guard.class), storage.getRadiusPheromone());
                 state.setLastAction(actPheromone);
-                
+
                 if(pherStorage.getPheromonesIntruder().size() != 0 || pherStorage.getPheromonesGuard().size() != 0) {
                 	if(map != null) {
-                		pherStorage.getLast(agent.getClass().getName()).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
-                		pherStorage.getLast(agent.getClass().getName()).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
+                		pherStorage.getPheromones().get(pherStorage.getPheromones().size() - 1).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
+                		pherStorage.getPheromones().get(pherStorage.getPheromones().size() - 1).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
                 	}
                 	if(mapPane != null) {
-                		this.mapPane.getChildren().add(pherStorage.getLast(agent.getClass().getName()).getShape());
+                		mapPane.getChildren().add(pherStorage.getPheromones().get(pherStorage.getPheromones().size() - 1).getShape());
                 	}
                 }
                 this.updateStorages();
                 break;
-
-
             case "Interop.Action.Move": {
                 Interop.Action.Move actMove = (Interop.Action.Move) action;
                 soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actMove.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
@@ -1207,7 +1199,7 @@ public class MainControl {
                 		soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
                 	}
                 	if(mapPane != null) {
-                		this.mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
+                		mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
                 	}
                 }
                 this.updateStorages();
@@ -1350,7 +1342,7 @@ public class MainControl {
     public BorderPane getMapPane() {	return mapPane;	}
 
     public void animationLoop() {
-    	animation = new StepAnimationTimer(this.mapVisualization, this);
+    	animation = new StepAnimationTimer(this.mapVisualization, this ,100);
     	animation.start();
     }
     
