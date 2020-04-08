@@ -3,35 +3,19 @@ package Group3;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.TimerTask;
-
-import javax.management.timer.Timer;
-
-import Group3.StaticObjects.TargetArea;
-import Group3.StaticObjects.Teleport;
-import Group3.StaticObjects.Wall;
-import Interop.Geometry.Point;
-import javafx.animation.AnimationTimer;
-import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -47,11 +31,11 @@ public class Game extends Application {
 			//add things to the root
 			BorderPane root = new BorderPane();
 			VBox rightBox = new VBox();
-			rightBox.setPadding(new Insets(20,20,20,20));
-			rightBox.setSpacing(50);
+			rightBox.setPadding(new Insets(20,20,20,0));
+			rightBox.setSpacing(10);
 			rightBox.getChildren().add(addLegend());
 			root.setStyle("-fx-background-color: lightgray ;");
-			root.setPadding(new Insets(20,50,20,20));
+			root.setPadding(new Insets(20,20,20,20));
 			
 			//set the scene
 	        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
@@ -80,7 +64,7 @@ public class Game extends Application {
 //			pause.setOnAction(e -> {
 //				gameController.pauseAnimation();
 //			});
-			
+		
 			rightBox.getChildren().add(moveAgent);
 			//rightBox.getChildren().add(pause);
 			root.setRight(rightBox);
@@ -97,10 +81,9 @@ public class Game extends Application {
 	
 	public GridPane addLegend() {
 		GridPane grid = new GridPane();
-		grid.setAlignment(Pos.CENTER);
 		grid.setHgap(10);
 		grid.setVgap(10);
-		
+
 		Rectangle color; 
 		String text = ""; 
 		for(int i = 0; i < 9; i++) {
@@ -149,6 +132,50 @@ public class Game extends Application {
 			Label label = new Label(text);
 			grid.add(label, 1, i);
 		}
-		return grid;
+		
+		GridPane circles = new GridPane();
+		circles.setHgap(15);
+		circles.setVgap(15);
+		circles.setPadding(new Insets(10, 0, 0, 30));
+		Circle circle; 
+		String text2 = ""; 
+		for(int i = 0; i < 6; i++) {
+			circle = new Circle();
+			circle.setRadius(30);
+			switch(i) {
+			case 0:
+				circle.setFill(Color.rgb(20, 120, 200, 0.8));
+				text2 = "Pheromone 1";
+				break;
+			case 1:
+				circle.setFill(Color.rgb(100, 50, 100, 0.8));
+				text2 = "Pheromone 2";
+				break; 
+			case 2:
+				circle.setFill(Color.rgb(10, 150, 130, 0.8));
+				text2 = "Pheromone 3"; 
+				break; 
+			case 3:
+				circle.setFill(Color.rgb(100, 70, 180, 0.8));
+				text2 = "Pheromone 4";
+				break;
+			case 4:
+				circle.setFill(Color.rgb(180, 50, 180, 0.8));
+				text2 = "Pheromone 5";
+				break; 
+			case 5:
+				circle.setFill(Color.INDIANRED);
+				text2 = "Yell";
+				break;
+			}
+			circles.add(circle, 0, i);
+			Label label = new Label(text2);
+			circles.add(label, 1, i);
+		}
+		
+		GridPane all = new GridPane();
+		all.add(grid, 0, 0);
+		all.add(circles, 1, 0);
+		return all;
 	}
 }

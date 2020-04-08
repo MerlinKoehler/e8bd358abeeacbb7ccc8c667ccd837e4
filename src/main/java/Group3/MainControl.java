@@ -1342,7 +1342,7 @@ public class MainControl {
     public BorderPane getMapPane() {	return mapPane;	}
 
     public void animationLoop() {
-    	animation = new StepAnimationTimer(this.mapVisualization, this ,100);
+    	animation = new StepAnimationTimer(this.mapVisualization, this ,300);
     	animation.start();
     }
     
