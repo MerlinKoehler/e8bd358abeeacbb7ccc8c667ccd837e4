@@ -903,6 +903,8 @@ public class MainControl {
         Set<SoundPercept> sounds = new HashSet<SoundPercept>();
 
         for (int i = 0; i < soundStorage.getSounds().size(); i++) {
+        	//point 1 is the agent
+        	//point 2 is the sound source
             Point point1 = state.getCurrentPosition();
             Point point2 = soundStorage.getSounds().get(i).getLocation();
             
@@ -910,11 +912,13 @@ public class MainControl {
             Direction viewDirec = state.getTargetDirection();
             Distance distance = new Distance(point1, point2);
 
+            //use these to see whether you can observe it
             double radius = soundStorage.getSounds().get(i).getRadius();
             SoundPerceptType type = soundStorage.getSounds().get(i).getType();
 
             if (radius >= distance.getValue()) {
-                double totalRadMinMax = (10 * Math.PI) / 180;
+            	//at the end, the maximum difference you observe (random)
+                double totalRadMinMax = 10 * (Math.PI / 180);
 
                 //calculate angle between the sound and the direction the agent is facing
                 double rad = 0;
@@ -922,25 +926,31 @@ public class MainControl {
                 
                 //calculate the angle the sound is in
                 if(point1.getX() > point2.getX()) {
+                	//left side of x axis in circle
                 	if(point1.getY() == point2.getY()) {
                 		radSound = Math.PI;
                 	}
+                	//bottom left of circle -> add pi, and then do the arctan, with y as opposite
                 	else if(point1.getY() > point2.getY()) {
                 		radSound = Math.PI + Math.atan((point1.getY() - point2.getY())/(point1.getX() - point2.getX()));
                 	}
                 	//Y2 > Y1
+                	//top left of the circle -> add 1/2 pi, and then do the arctan with x as opposite
                 	else {
                 		radSound = 1/2 * Math.PI + Math.atan((point1.getX()-point2.getX())/(point2.getY() - point1.getY()));
                 	}
                 }
                 else if(point2.getX() > point1.getX()) {
+                	//right side of x axis in circle
                 	if(point1.getY() == point2.getY()) {
                 		radSound = 0;
                 	}
+                	//bottom right of circle -> add 1 1/2 pi and then do the arctan, with x as opposite
                 	else if(point1.getY() > point2.getY()) {
                 		radSound = 3/2 *Math.PI + Math.atan((point2.getX()-point1.getX())/(point1.getY() - point2.getY()));
                 	}
                 	//Y2 >Y1
+                	//top right of circle - don't add anything, and then to arctan, y as opposite
                 	else {
                 		radSound = Math.atan((point2.getY() - point1.getY()) / (point2.getX() - point1.getX()));
                 	}
@@ -951,20 +961,23 @@ public class MainControl {
                 	if(point1.getY() == point2.getY()) {
                 		radSound = 0;
                 	}
+                	//bottom side of y axis
                 	else if(point1.getY() > point2.getY()) {
                 		radSound = 3/2 * Math.PI;
                 	}
                 	//Y2 >Y1
+                	//top side of y axis
                 	else {
                 		radSound = 1/2 * Math.PI;
                 	}
                 }
                 
-                if (radSound > viewDirec.getRadians()) {
-                	rad = (2 * Math.PI + viewDirec.getRadians()) - radSound;
-                }
-                else if (radSound <viewDirec.getRadians()) {
+                //then, calculate what the angle (clockwise) would be between these angles
+                if (radSound <viewDirec.getRadians()) {
                 	rad = viewDirec.getRadians() - radSound;
+                }
+                else if (radSound > viewDirec.getRadians()) {
+                	rad = 2 * Math.PI + viewDirec.getRadians() - radSound;
                 }
                 else {
                 	rad = 0;
@@ -973,14 +986,15 @@ public class MainControl {
                 //add a random amount of radians (degrees between -10 and 10)		
                 rad = rad + ThreadLocalRandom.current().nextDouble(-totalRadMinMax, totalRadMinMax);
                 
-                while (rad >= 2*Math.PI) {
-                	rad = rad - Math.PI/180;
+                //adjust in case the randomness made it go out of bounds
+                if (rad >= 2*Math.PI) {
+                	rad = rad - totalRadMinMax;
                 }
-                while (rad < 0) {
-                	rad = rad + Math.PI/180;
+                else if (rad < 0) {
+                	rad = rad + totalRadMinMax;
                 }
 
-                //create the direction
+                //create the direction - use rads
                 Direction direction = null;
                 direction = direction.fromRadians(rad);
 
