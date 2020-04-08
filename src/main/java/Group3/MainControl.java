@@ -972,6 +972,7 @@ public class MainControl {
                 
                 //add a random amount of radians (degrees between -10 and 10)		
                 rad = rad + ThreadLocalRandom.current().nextDouble(-totalRadMinMax, totalRadMinMax);
+                
                 while (rad >= 2*Math.PI) {
                 	rad = rad - Math.PI/180;
                 }
@@ -999,7 +1000,7 @@ public class MainControl {
 
         if (agent.getClass() == Guard.class) {
             for (int i = 0; i < pherStorage.getPheromonesGuard().size(); i++) {
-                Distance distance = new Distance(state.getCurrentPosition(), pherStorage.getPheromonesIntruder().get(i).getLocation());
+                Distance distance = new Distance(state.getCurrentPosition(), pherStorage.getPheromonesGuard().get(i).getLocation());
                 if (distance.getValue() <= (pherStorage.getPheromonesGuard().get(i).getTurnsLeft() / storage.getPheromoneExpireRounds()) * storage.getRadiusPheromone()) {
                     SmellPercept smell = new SmellPercept(pherStorage.getPheromonesGuard().get(i).getType(), distance);
                     smells.add(smell);
