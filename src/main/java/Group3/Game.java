@@ -139,34 +139,38 @@ public class Game extends Application {
 		circles.setPadding(new Insets(10, 0, 0, 30));
 		Circle circle; 
 		String text2 = ""; 
-		for(int i = 0; i < 6; i++) {
+		for(int i = 0; i < 7; i++) {
 			circle = new Circle();
 			circle.setRadius(30);
 			switch(i) {
-			case 0:
-				circle.setFill(Color.rgb(20, 120, 200, 0.8));
-				text2 = "Pheromone 1";
-				break;
-			case 1:
-				circle.setFill(Color.rgb(100, 50, 100, 0.8));
-				text2 = "Pheromone 2";
-				break; 
-			case 2:
-				circle.setFill(Color.rgb(10, 150, 130, 0.8));
-				text2 = "Pheromone 3"; 
-				break; 
-			case 3:
-				circle.setFill(Color.rgb(100, 70, 180, 0.8));
-				text2 = "Pheromone 4";
-				break;
-			case 4:
-				circle.setFill(Color.rgb(180, 50, 180, 0.8));
-				text2 = "Pheromone 5";
-				break; 
-			case 5:
-				circle.setFill(Color.INDIANRED);
-				text2 = "Yell";
-				break;
+				case 0:
+					circle.setFill(Color.rgb(20, 120, 200, 0.8));
+					text2 = "Pheromone 1";
+					break;
+				case 1:
+					circle.setFill(Color.rgb(100, 50, 100, 0.8));
+					text2 = "Pheromone 2";
+					break;
+				case 2:
+					circle.setFill(Color.rgb(10, 150, 130, 0.8));
+					text2 = "Pheromone 3";
+					break;
+				case 3:
+					circle.setFill(Color.rgb(100, 70, 180, 0.8));
+					text2 = "Pheromone 4";
+					break;
+				case 4:
+					circle.setFill(Color.rgb(180, 50, 180, 0.8));
+					text2 = "Pheromone 5";
+					break;
+				case 5:
+					circle.setFill(Color.INDIANRED);
+					text2 = "Yell";
+					break;
+				case 6:
+					circle.setFill(Color.LIGHTYELLOW);
+					text2 = "Noise";
+					break;
 			}
 			circles.add(circle, 0, i);
 			Label label = new Label(text2);

@@ -11,23 +11,41 @@ public class Sound {
 	private SoundPerceptType type;
 	private Point location;
 	private int turnsLeft;
-	private double radius; //30 for yell
+	private double radius;
+	private double initialRadius;
+	private double initialRounds;
 	private Circle shape;
+	private double scalingFactor;
+
 	
-	public Sound(SoundPerceptType type, Point location, int turnsLeft, double radius, double scalingFcator) {
+	public Sound(SoundPerceptType type, Point location, int turnsLeft, double radius, double scalingFactor) {
 
 		this.type = type;
 		this.location = location;
 		this.turnsLeft = turnsLeft;
 		this.radius = radius;
 
-		if (type.toString().equals(SoundPerceptType.Yell.toString())) {
-			this.shape = new Circle(radius * scalingFcator/2);
-			this.shape.setOpacity(0.3);
-			this.shape.setFill(Color.INDIANRED);
-			this.shape.setCenterX(location.getX());
-			this.shape.setCenterY(location.getY());
+		this.initialRounds = turnsLeft;
+		this.initialRadius = radius;
+		this.scalingFactor = scalingFactor;
+
+		switch (type) {
+			case Noise:
+				this.shape = new Circle(this.radius*scalingFactor);
+				this.shape.setOpacity(0.5);
+				this.shape.setFill(Color.LIGHTYELLOW);
+				this.shape.setCenterX(location.getX());
+				this.shape.setCenterY(location.getY());
+				break;
+			case Yell:
+				this.shape = new Circle(this.radius*scalingFactor);
+				this.shape.setOpacity(0.5);
+				this.shape.setFill(Color.INDIANRED);
+				this.shape.setCenterX(location.getX());
+				this.shape.setCenterY(location.getY());
+				break;
 		}
+
 	}
 	
 	public SoundPerceptType getType() {
@@ -58,18 +76,12 @@ public class Sound {
 		this.radius = radius;
 	}
 
-	//only for yell
 	public Circle getShape() {
-		if (type.toString().equals(SoundPerceptType.Yell.toString())) return this.shape;
-		else return null;
+		return this.shape;
 	}
 
 	public void updateShape() {
-		if (type.getClass().getName().equals("Yell")) {
-			if (getTurnsLeft() > 0) {
-				this.radius = this.radius - this.radius / getTurnsLeft();
-				this.shape.setRadius(this.radius);
-			}
-		}
+		this.radius = this.radius - (initialRadius/initialRounds);
+		this.shape.setRadius(this.radius*scalingFactor);
 	}
 }

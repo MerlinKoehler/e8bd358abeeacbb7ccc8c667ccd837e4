@@ -1130,7 +1130,16 @@ public class MainControl {
             case "Interop.Action.Move": {
                 Interop.Action.Move actMove = (Interop.Action.Move) action;
                 soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actMove.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
-                
+				if(soundStorage.getSounds().size() > 0) {
+					if(map != null) {
+						soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
+						soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
+					}
+					if(mapPane != null) {
+						mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
+					}
+				}
+
                 double distance = actMove.getDistance().getValue();
                 if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Window")) {
                     distance = distance * storage.getSlowDownModifierWindow();
@@ -1191,7 +1200,16 @@ public class MainControl {
             case "Interop.Action.Sprint": {
                 Interop.Action.Sprint actSprint = (Interop.Action.Sprint) action;
                 soundStorage.addSound(SoundPerceptType.Noise, state.getCurrentPosition(), agentStates.size(), (actSprint.getDistance().getValue() / storage.getMaxSprintDistanceIntruder().getValue()) * storage.getMaxMoveSoundRadius());
-                
+
+                if(soundStorage.getSounds().size() > 0) {
+					if(map != null) {
+						soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterX(this.agentStates.get(currentTurn).getCurrentPosition().getX() * this.map.scalingFactor);
+						soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape().setCenterY(this.agentStates.get(currentTurn).getCurrentPosition().getY() * this.map.scalingFactor);
+					}
+					if(mapPane != null) {
+						mapPane.getChildren().add(soundStorage.getSounds().get(soundStorage.getSounds().size()-1).getShape());
+					}
+				}
                 
                 double distance = actSprint.getDistance().getValue();
                 if(a != null && a.getClass().getName().equals("Group3.StaticObjects.Window")) {

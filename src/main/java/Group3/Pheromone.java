@@ -15,7 +15,7 @@ public class Pheromone {
 	
 	private double initialRadius;
 	private double initialRounds;
-	private double scalingFactor = 1;
+	private double scalingFactor;
 
 	public Pheromone(SmellPerceptType type, Point location, int turnsLeft, double radius, double scalingFactor) {
 		this.type = type;
