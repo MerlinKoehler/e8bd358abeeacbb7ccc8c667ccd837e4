@@ -80,8 +80,4 @@ public class Sound {
 		return this.shape;
 	}
 
-	public void updateShape() {
-		this.radius = this.radius - (initialRadius/initialRounds);
-		this.shape.setRadius(this.radius*scalingFactor);
-	}
 }
