@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="869c7e1c-225c-4856-b8fb-aaf522d3f77f" name="Default Changelist" comment="Fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Sound.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Sound.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -16,48 +18,29 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group3/SoundStorage.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-51">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/samplemap.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="33" column="28" lean-forward="true" selection-start-line="33" selection-start-column="28" selection-end-line="33" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainControl.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="1206" column="102" lean-forward="true" selection-start-line="1206" selection-start-column="102" selection-end-line="1206" selection-end-column="102" />
-              <folding>
-                <element signature="e#58321#58322#0" expanded="true" />
-                <element signature="e#58357#58358#0" expanded="true" />
-                <element signature="e#58410#58411#0" expanded="true" />
-                <element signature="e#58444#58445#0" expanded="true" />
-                <element signature="e#58779#58780#0" expanded="true" />
-                <element signature="e#58844#58845#0" expanded="true" />
-                <element signature="e#59743#59744#0" expanded="true" />
-                <element signature="e#59770#59771#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="136">
+              <caret line="8" column="11" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Sound.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Map.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="884">
-              <caret line="66" column="5" lean-forward="true" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
+            <state relative-caret-position="209">
+              <caret line="59" column="28" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainScreen.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="153">
+              <caret line="34" column="38" selection-start-line="34" selection-start-column="38" selection-end-line="34" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -88,7 +71,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/VisualObject.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/StaticObjects/StaticObject.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/AgentState.java" />
@@ -96,8 +78,9 @@
         <option value="$PROJECT_DIR$/src/main/java/Group3/Game.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/MainScreen.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/Pheromone.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/Sound.java" />
         <option value="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Group3/Sound.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java" />
       </list>
     </option>
   </component>
@@ -129,27 +112,6 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="Group3" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Interop" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Interop" type="462c0819:PsiDirectoryNode" />
-              <item name="Percept" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Interop" type="462c0819:PsiDirectoryNode" />
-              <item name="Percept" type="462c0819:PsiDirectoryNode" />
-              <item name="Sound" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -275,14 +237,14 @@
       <window_info anchor="bottom" id="Messages" order="0" weight="0.3285968" />
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.49959514" visible="true" weight="0.10906515" />
+      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.49959514" visible="true" weight="0.19971672" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.28596804" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.4582593" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50040483" side_tool="true" weight="0.59680283" />
-      <window_info anchor="bottom" id="Version Control" order="10" weight="0.33286119" />
+      <window_info anchor="bottom" id="Version Control" order="10" weight="0.11473088" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -586,44 +548,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Map.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="59" column="28" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="490">
-          <caret line="83" column="20" selection-start-line="83" selection-start-column="20" selection-end-line="83" selection-end-column="20" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Game.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-17">
           <caret line="157" column="19" selection-start-line="157" selection-start-column="19" selection-end-line="157" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="34" column="38" selection-start-line="34" selection-start-column="38" selection-end-line="34" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="47" column="66" lean-forward="true" selection-start-line="47" selection-start-column="66" selection-end-line="47" selection-end-column="66" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -665,27 +593,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Pheromone.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="35">
-          <caret line="17" column="32" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/SoundStorage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Sound.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="884">
-          <caret line="66" column="5" lean-forward="true" selection-start-line="66" selection-start-column="5" selection-end-line="66" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/samplemap.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
@@ -693,20 +600,77 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/SoundStorage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="424">
+          <caret line="83" column="20" selection-start-line="83" selection-start-column="20" selection-end-line="83" selection-end-column="20" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Sound.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-476">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Pheromone.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="26" column="23" selection-start-line="26" selection-start-column="23" selection-end-line="26" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainControl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="1206" column="102" lean-forward="true" selection-start-line="1206" selection-start-column="102" selection-end-line="1206" selection-end-column="102" />
+        <state relative-caret-position="977">
+          <caret line="1208" column="48" lean-forward="true" selection-start-line="1208" selection-start-column="48" selection-end-line="1208" selection-end-column="48" />
           <folding>
-            <element signature="e#58321#58322#0" expanded="true" />
-            <element signature="e#58357#58358#0" expanded="true" />
-            <element signature="e#58410#58411#0" expanded="true" />
-            <element signature="e#58444#58445#0" expanded="true" />
-            <element signature="e#58779#58780#0" expanded="true" />
-            <element signature="e#58844#58845#0" expanded="true" />
-            <element signature="e#59743#59744#0" expanded="true" />
-            <element signature="e#59770#59771#0" expanded="true" />
+            <element signature="e#34338#34352#0" expanded="true" />
+            <element signature="e#39165#39179#0" expanded="true" />
+            <element signature="e#61516#61517#0" expanded="true" />
+            <element signature="e#61552#61553#0" expanded="true" />
+            <element signature="e#61605#61606#0" expanded="true" />
+            <element signature="e#61639#61640#0" expanded="true" />
+            <element signature="e#61974#61975#0" expanded="true" />
+            <element signature="e#62039#62040#0" expanded="true" />
+            <element signature="e#62938#62939#0" expanded="true" />
+            <element signature="e#62965#62966#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Map.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="59" column="28" selection-start-line="59" selection-start-column="28" selection-end-line="59" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainScreen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="34" column="38" selection-start-line="34" selection-start-column="38" selection-end-line="34" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="11" selection-start-line="8" selection-start-column="11" selection-end-line="8" selection-end-column="11" />
         </state>
       </provider>
     </entry>
