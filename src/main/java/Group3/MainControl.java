@@ -179,7 +179,7 @@ public class MainControl {
     }
 
     public static void main(String[] args) {
-        MainControl gameController = new MainControl(args[0]);
+        MainControl gameController = new MainControl("samplemap.txt");
         
         for (int i = 0; i < 100; i++) {
             gameController.doStep();
