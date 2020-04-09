@@ -648,8 +648,6 @@ public class MainControl {
 	private VisionPrecepts visionPercepts(AgentState state) {
 		Set<ObjectPercept> objectPercepts = new HashSet<>();
 		Point currentPosition = state.getCurrentPosition();
-		System.out.println(currentPosition);
-		System.out.println(state.getTargetDirection().getDegrees());
 
 		double range;
 		if (state.getAgent().getClass() == Intruder.class)
@@ -688,7 +686,6 @@ public class MainControl {
 
 			label:
 			for (StaticObject staticObject : staticObjects) {
-				//pointOfIntersection = null;
 				ArrayList<Point> validIntersectionPoints = new ArrayList<>();
 
 				Point pointOfIntersectionWithSegment1 = intersects(rayCoefficients,
@@ -743,9 +740,7 @@ public class MainControl {
 
 				/* Consider only the segment that is the closest to the agent (rayOrigin) */
 				double minDistance = range;
-				//System.out.println(staticObject.getClass());
 				for (Point intersectionPoint : validIntersectionPoints) {
-					//System.out.println(intersectionPoint);
 					if (rayOrigin.getDistance(intersectionPoint).getValue() < minDistance) {
 						minDistance = rayOrigin.getDistance(intersectionPoint).getValue();
 						pointOfIntersection = intersectionPoint;
@@ -758,7 +753,6 @@ public class MainControl {
 					continue;
 				}
 
-				//Point pointOfIntersectionTranslated = new Point(pointOfIntersection.getX(), pointOfIntersection.getY());
 				//Translate
 
 				Point pointOfIntersectionTranslated = new Point(
@@ -768,7 +762,6 @@ public class MainControl {
 				pointOfIntersectionTranslated = new Point(
 					pointOfIntersectionTranslated.getX() * Math.cos(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()) - pointOfIntersectionTranslated.getY() * Math.sin(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()),
 					pointOfIntersectionTranslated.getX() * Math.sin(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()) + pointOfIntersectionTranslated.getY() * Math.cos(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()));
-				//pointOfIntersectionTranslated = new Point(pointOfIntersection.getX(), pointOfIntersection.getY());
 				switch (staticObject.getClass().getName()) {
                     /*
                     Guard and Intruder do not exist as staticObjects,
@@ -810,20 +803,9 @@ public class MainControl {
 				pointOfEmptySpaceTranslated = new Point(
 						pointOfEmptySpaceTranslated.getX() * Math.cos(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()) - pointOfEmptySpaceTranslated.getY() * Math.sin(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()),
 						pointOfEmptySpaceTranslated.getX() * Math.sin(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()) + pointOfEmptySpaceTranslated.getY() * Math.cos(Angle.fromDegrees(450).getRadians() - rayDirection.getRadians()));
-				//pointOfIntersectionTranslated = new Point(pointOfIntersection.getX(), pointOfIntersection.getY());
 				objectPercepts.add(new ObjectPercept(ObjectPerceptType.EmptySpace, new Point(pointOfEmptySpaceTranslated.getX(), pointOfEmptySpaceTranslated.getY())));
 			}
 		}
-		int i = 0;
-		for (ObjectPercept o : objectPercepts) {
-			i++;
-			System.out.println("o" + i + ": " + o.getType() + "     X: " + o.getPoint().getX() + " Y: " + o.getPoint().getY());
-		}
-
-		//for (StaticObject s : staticObjects) {
-			//System.out.println(s.getClass());
-			//System.out.println(s.getP1() + " * " + s.getP2() + " * " + s.getP3() + " * " + s.getP4());
-		//}
 		return new VisionPrecepts(fieldOfView, new ObjectPercepts(objectPercepts));
 	}
 

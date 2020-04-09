@@ -1,6 +1,5 @@
 package Group3;
 
-import Interop.Action.Yell;
 import Interop.Geometry.Point;
 import Interop.Percept.Sound.SoundPerceptType;
 import javafx.scene.paint.Color;
