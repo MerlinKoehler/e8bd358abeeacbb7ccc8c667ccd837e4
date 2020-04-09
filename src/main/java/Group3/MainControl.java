@@ -101,8 +101,8 @@ public class MainControl {
         }
         c = 0;
         for (Interop.Agent.Guard guard : guards) {
-        	//AgentState state = new AgentState(new Point(guardSpawn.getX() + 0.7 + c, guardSpawn.getY() + 0.55), Direction.fromDegrees(90), guard);
-			AgentState state = new AgentState(new Point(2, 2), Direction.fromDegrees(180), guard);
+        	AgentState state = new AgentState(new Point(guardSpawn.getX() + 0.7 + c, guardSpawn.getY() + 0.55), Direction.fromDegrees(90), guard);
+			//AgentState state = new AgentState(new Point(2, 2), Direction.fromDegrees(180), guard);
             agentStates.add(state);
             c = c + 1.1;
         }
@@ -464,12 +464,12 @@ public class MainControl {
     		Guard guard = (Guard) agent;
 
     		// 2. Calculate the perception of the agent
-    		/*GuardPercepts percept = new GuardPercepts(visionPercepts(state),
+    		GuardPercepts percept = new GuardPercepts(visionPercepts(state),
     				soundPercepts(state),
     				smellPercepts(state),
     				areaPercepts(state),
     				scenarioGuardPercepts(),
-    				state.isLastActionExecuted());*/
+    				state.isLastActionExecuted());
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.GuardAction action = guard.getAction(percept);
@@ -504,13 +504,13 @@ public class MainControl {
     		updateIntarget(state);
 
     		// 2. Calculate the perception of the agent
-    		/*IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
+    		IntruderPercepts percept = new IntruderPercepts(state.getTargetDirection(),
     				visionPercepts(state),
     				soundPercepts(state),
     				smellPercepts(state),
     				areaPercepts(state),
     				scenarioIntruderPercepts(),
-    				state.isLastActionExecuted());*/
+    				state.isLastActionExecuted());
 
     		// 3. Pass the perception to the agent and retrieve the action
     		//Interop.Action.IntruderAction action = intruder.getAction(percept);
