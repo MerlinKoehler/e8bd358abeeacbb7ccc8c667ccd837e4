@@ -65,10 +65,9 @@ public class MainSceneTry extends Scene {
     private final GameMap map;
     private Gui gui;
     private boolean hasHistory = false;
-    private Scene sceneidk;
 
     //Buttons
-
+    private Button moveAgent;
     ///Agent
     private List<MapObject> elements;
 
@@ -91,6 +90,7 @@ public class MainSceneTry extends Scene {
     private void build(){
 
         calcScale();
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         //add things to the root
         BorderPane root = new BorderPane();
 
@@ -104,7 +104,7 @@ public class MainSceneTry extends Scene {
         rightBox.getChildren().add(addLegend());
         root.setStyle("-fx-background-color: lightgray ;");
         root.setPadding(new Insets(20,20,20,20));
-        Button moveAgent = new Button("move");
+        moveAgent = new Button("move");
         moveAgent.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             this.playbackAnimationTimer = new AnimationTimer() {
 
@@ -142,14 +142,15 @@ public class MainSceneTry extends Scene {
 
         });
         //set the scene
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         double mapBoundWidth = bounds.getWidth();
         double mapBoundHeight = (bounds.getHeight()*9)/10;
 
         rightBox.getChildren().add(moveAgent);
         //rightBox.getChildren().add(pause);
         root.setRight(rightBox);
-        mainStack.getChildren().add(mainbox);
+        root.setLeft(mainbox);
+        draw();
+        //mainStack.getChildren().add(mainbox);
         mainStack.getChildren().add(root);
     }
 
@@ -271,7 +272,6 @@ public class MainSceneTry extends Scene {
         play.setDisable(false);
     }
 
-    //the method for drawing the objects on map?
     private void draw(){
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.clearRect(0,0,canvas.getWidth(),canvas.getHeight());
@@ -303,12 +303,13 @@ public class MainSceneTry extends Scene {
 
             Vector2 center = e.getArea().getCenter();
             g.setTextAlign(TextAlignment.CENTER);
-
+            if(settings.showText){
+                g.setFill(Color.WHITE);
+                g.fillText(graphicElement.text,center.getX()*mapScale,center.getY()*mapScale+1.5*mapScale);
+            }
         }
     }
 
-
-    //method for drawing the pheromones and sounds
     public void drawMovables(List<GuardContainer> guards, List<IntruderContainer> intruders, List<DynamicObject<?>> objects){
         GraphicsContext g = canvasAgents.getGraphicsContext2D();
         g.clearRect(0,0,canvasAgents.getWidth(),canvasAgents.getHeight());

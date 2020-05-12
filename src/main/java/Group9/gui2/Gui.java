@@ -55,8 +55,6 @@ public class Gui extends Application {
         enterGame.setStyle("-fx-background-color: white");
         enterGame.setAlignment(Pos.CENTER);
         enterGame.setText("Explore!");
-
-
         enterGame.setMaxSize(200, 10);
         enterGame.setFont(Font.font(null, FontWeight.BOLD, 30));
 
@@ -102,6 +100,7 @@ public class Gui extends Application {
                 stage2.initModality(Modality.APPLICATION_MODAL);
                 stage2.initOwner(primary);
                 stage2.setScene(scene);
+                stage2.setTitle("Project 2.2 - Multi-agent surveillance");
                 stage2.show();
             }
         });
