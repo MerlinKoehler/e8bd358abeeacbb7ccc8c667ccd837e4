@@ -4,8 +4,9 @@ import Interop.Agent.Guard;
 import Interop.Agent.Intruder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import Group9.agent.factories.IAgentFactory;
 
 /**
  * This class provides common way to build agents for the competition.
@@ -15,8 +16,8 @@ import java.util.List;
  * For example:
  * Agents must not hold ANY references to common objects or references to each other.
  */
-public class AgentsFactory {
-    static public List<Intruder> createIntruders(int number) {
+public class AgentsFactory implements IAgentFactory{
+    public List<Intruder> createIntruders(int number) {
         
     	List<Intruder> intruders = new ArrayList<Intruder>();
     	
@@ -27,7 +28,7 @@ public class AgentsFactory {
     	
     	return intruders;
     }
-    static public List<Guard> createGuards(int number) {
+    public List<Guard> createGuards(int number) {
     	
     	List<Guard> guards = new ArrayList<Guard>();
     	for(int i = 0; i < number; i++) {

@@ -2,19 +2,6 @@ package Group3;
 
 import Interop.Geometry.Point;
 
-enum ObjectType {
-	  ShadedArea,
-	  Wall,
-	  Teleport,
-	  Door,
-	  Window,
-	  SentryTower,
-	  TargetArea,
-	  SpawnAreaGuards,
-	  SpawnAreaIntruders,
-}
-
-
 public class IntersectionPoint {
 	
 	Point point;
