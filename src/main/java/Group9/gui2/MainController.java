@@ -45,7 +45,6 @@ public class MainController implements Runnable {
                         entry.guardContainers = game.getGuards().stream().map(e -> e.clone(game)).collect(Collectors.toList());
                         entry.intruderContainers = game.getIntruders().stream().map(e -> e.clone(game)).collect(Collectors.toList());
 
-
                         entry.dynamicObjects = game.getGameMap().getDynamicObjects().stream()
                                 .map(DynamicObject::clone)
                                 .collect(Collectors.toList());

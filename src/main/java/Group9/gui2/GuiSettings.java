@@ -11,32 +11,40 @@ public class GuiSettings {
     public static final double quickSettingsBarHeight = 40;
     //Colors
             //dark blue
-    public static final Color backgroundColor = Color.web("#282A37",1);
+    public static final Color backgroundColor = Color.WHITE;
             //bright pink
-    public static final Color guardColor = Color.web("#FB44CC",1);
+    public static final Color guardColor = Color.BLUE;
             //bright orange
-    public static final Color intruderColor = Color.web("#FFB70A",1);
+    public static final Color intruderColor = Color.DEEPPINK;
 
     //Object Colors
             //light lavender
-    public static final Color wallColor = Color.web("#747CFF",1);
+    public static final Color wallColor = Color.PALEGREEN;
             //bright green
-    public static final Color targetAreaColor = Color.web("#0EFD00",1);
+    public static final Color targetAreaColor = Color.MEDIUMPURPLE;
             //light orange
-    public static final Color spawnIntrudersColor = Color.web("#FFB70A",0.8);
+    public static final Color spawnIntrudersColor = Color.PLUM;
             //light pink
-    public static final Color spawnGuardsColor = Color.web("#FB44CC",0.8);
+    public static final Color spawnGuardsColor = Color.CORNFLOWERBLUE;
             //darker dark blue
-    public static final Color shadedColor = Color.web("#1C2029",1);
+    public static final Color shadedColor = Color.DARKGRAY;
             //bright yellow
-    public static final Color doorColor = Color.web("#F0E114",1);
+    public static final Color doorColor = Color.TEAL;
             //bright blue
-    public static final Color windowColor = Color.web("#1DF8FF",1);
+    public static final Color windowColor = Color.MEDIUMTURQUOISE;
             //blue
-    public static final Color sentryColor = Color.web("#1B7AEC",1);
+    public static final Color sentryColor = Color.GREY;
             //bright purple
-    public static final Color teleportColor = Color.web("#C275FF",1);
+    public static final Color teleportColor = Color.ROYALBLUE;
 
-    public static final Color pheromoneColor = Color.web("#ffba00",0.5);
+    public static final Color pheromone1Color = Color.rgb(20, 120, 200, 0.8);
+
+    public static final Color pheromone2Color = Color.rgb(100, 50, 100, 0.8);
+
+    public static final Color pheromone3Color = Color.rgb(10, 150, 130, 0.8);
+
+    public static final Color pheromone4Color = Color.rgb(100, 70, 180, 0.8);
+
+    public static final Color pheromone5Color = Color.rgb(180, 50, 180, 0.8);
 
 }
