@@ -42,6 +42,7 @@ public class MainController implements Runnable {
                         History entry = new History();
                         history.add(historyIndex, entry);
 
+                        //what is this doing?
                         entry.guardContainers = game.getGuards().stream().map(e -> e.clone(game)).collect(Collectors.toList());
                         entry.intruderContainers = game.getIntruders().stream().map(e -> e.clone(game)).collect(Collectors.toList());
 

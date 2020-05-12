@@ -71,7 +71,7 @@ public class MainScreen extends Application {
         HBox hor = new HBox();
         hor.setSpacing(125);
         hor.setAlignment(Pos.CENTER);
-        
+
         hor.getChildren().addAll();
         vert.getChildren().addAll(title, hor, enterGame); 
         

@@ -436,6 +436,7 @@ public class MainScene extends Scene {
         scale(false);
         draw();
     }
+
     public void rescaleMap(){
         calcScale();
         scale(false);
@@ -714,6 +715,7 @@ public class MainScene extends Scene {
 
         }
     }
+
     private void openHelp(){
         String text = "History - History is storing the state of the game after each turn. History generation can be" +
                 " disabled in the menu. If it is disabled, playback, step-by-step inspection, and video rendering will not" +
@@ -782,7 +784,7 @@ public class MainScene extends Scene {
         {
             if(dynamicObject instanceof Pheromone)
             {
-                g.setFill(GuiSettings.pheromoneColor);
+                g.setFill(GuiSettings.pheromone1Color);
                 drawPheromone(g, (Pheromone) dynamicObject);
 
             }
@@ -813,6 +815,7 @@ public class MainScene extends Scene {
         double y = z.getY()*mapScale;
         g.fillOval(x-radius/2,y-radius/2,radius,radius);
     }
+
     private void drawAgent(GraphicsContext g, AgentContainer<?> agent) {
 
         Vector2 center = agent.getPosition().mul(mapScale);
