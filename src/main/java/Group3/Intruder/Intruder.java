@@ -167,6 +167,7 @@ public class Intruder implements Interop.Agent.Intruder {
 				inVertice.setType(ObjectType.Window);
 				break;
 			case Guard:
+				map.removeDanger();
 				System.out.println("Danger");
 				escape = true;
 				inVertice.setType(ObjectType.Danger);
