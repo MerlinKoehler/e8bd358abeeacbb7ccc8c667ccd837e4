@@ -43,6 +43,12 @@ public class Guard implements Interop.Agent.Guard {
 
 	//General structure guard - finds action
 	public GuardAction getAction(GuardPercepts percepts) {
+		if (percepts.getAreaPercepts().isJustTeleported()){
+			currentX = 0;
+			currentY = 0;
+			currentAngleInRads = 0;
+		}
+
 		// First, find the maximum distance in which the guard can currently move.
 		double currentSlowDownModifier = 1;
 
