@@ -6,6 +6,7 @@ import Interop.Action.GuardAction;
 import Interop.Action.Move;
 import Interop.Action.Rotate;
 import Interop.Geometry.Angle;
+import Interop.Geometry.Distance;
 import Interop.Geometry.Point;
 import Interop.Percept.GuardPercepts;
 import Interop.Percept.Scenario.ScenarioGuardPercepts;
@@ -28,8 +29,8 @@ public class Guard implements Interop.Agent.Guard {
 	double currentY = 0;
 	double currentAngleInRads = 0;
 	double gridSize = 0.5;
+	int currentMapCount = 1;
 
-	ArrayList<GridMapStorage> maps = new ArrayList<>();
 	//Make a start map.
 	GridMapStorage currentMap = new GridMapStorage(gridSize);
 
@@ -65,11 +66,11 @@ public class Guard implements Interop.Agent.Guard {
 		}
 
 		// First, check whether a intruder is seen at the moment.
-		ObjectPercept[] vision = (ObjectPercept[]) percepts.getVision().getObjects().getAll().toArray();
+		Object[] vision = percepts.getVision().getObjects().getAll().toArray();
 		for (int i = 0; i < vision.length; i++) {
-			if (vision[i].getType() == ObjectPerceptType.Intruder) {
+			if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Intruder) {
 				lastAction = chaseIntruder();
-				return lastAction;
+				//return lastAction;
 			}
 		}
 
@@ -82,6 +83,7 @@ public class Guard implements Interop.Agent.Guard {
 
 		// Else, explore, try to see and cover as much as possible.
 		lastAction = explore(percepts);
+		lastAction = new Move(new Distance(maximumDistance));
 		return lastAction;
 	}
 
@@ -96,10 +98,8 @@ public class Guard implements Interop.Agent.Guard {
 
 		// Create a new map when it has just teleported.
 		if (percepts.getAreaPercepts().isJustTeleported()){
-			maps.add(currentMap);
-
-			// Links to the old map that has been stored in the arraylist.
-			currentMap = new GridMapStorage(gridSize, (maps.size()-1));
+			currentMap = new GridMapStorage(gridSize, currentMapCount);
+			currentMapCount = currentMapCount + 1;
 			updateMapSight(percepts);
 		}
 		else if (lastAction instanceof Interop.Action.Rotate){
@@ -123,15 +123,16 @@ public class Guard implements Interop.Agent.Guard {
 
 	public void updateMapSight(GuardPercepts percepts){
 		// The same as before, but use the special properties. (Such as 'wall' and 'teleport')
-		ObjectPercept[] vision = (ObjectPercept[]) percepts.getVision().getObjects().getAll().toArray();
+
+		Object[] vision = percepts.getVision().getObjects().getAll().toArray();
 		for (int i = 0; i < vision.length; i++) {
-			Point objectPoint = vision[i].getPoint();
+			Point objectPoint = ((ObjectPercept) vision[i]).getPoint();
 			Point currentPoint = new Point(currentX, currentY);
 			int type = 0;
-			if (vision[i].getType() == ObjectPerceptType.Teleport){
+			if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Teleport){
 				type = 3;
 			}
-			else if (vision[i].getType() == ObjectPerceptType.Wall){
+			else if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Wall){
 				type = 2;
 			}
 			else{

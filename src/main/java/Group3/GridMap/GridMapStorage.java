@@ -2,6 +2,7 @@ package Group3.GridMap;
 
 import Group3.MainControl;
 import Group3.GridMap.Grid;
+import Interop.Action.Sprint;
 import Interop.Geometry.*;
 import java.util.ArrayList;
 
@@ -18,7 +19,10 @@ public class GridMapStorage {
     public GridMapStorage(double size){
         grid = new ArrayList<Grid>();
         int type = 1; //normally
-        Grid tile = new Grid(new Point((this.size/2) ,-(this.size/2)), new Point((this.size/2), (this.size/2)), new Point((-this.size/2), -(this.size/2)), new Point((-this.size/2), (this.size/2)), size, type);
+        this.size = size;
+
+        Grid tile = new Grid(new Point((this.size/2.0) ,-(this.size/2.0)), new Point((this.size/2.0), (this.size/2.0)), new Point((-this.size/2.0), -(this.size/2.0)), new Point((-this.size/2.0), (this.size/2.0)), size, type);
+        System.out.println("initial tile " + tile.getTopLeft());
 
         // The tile where the agent starts.
         grid.add(tile);
@@ -28,6 +32,7 @@ public class GridMapStorage {
     public GridMapStorage(double size, int teleportNr){
         grid = new ArrayList<Grid>();
         int type = 3;
+        this.size = size;
 
         Grid tile = new Grid(new Point((this.size/2) ,-(this.size/2)), new Point((this.size/2), (this.size/2)), new Point((-this.size/2), -(this.size/2)), new Point((-this.size/2), (this.size/2)), size, type);
         tile.setTeleport_to(teleportNr);
@@ -64,7 +69,7 @@ public class GridMapStorage {
             currentY = currentY + (newPosition.getY() - lastPosition.getY()) / scalingFactor;
 
             Grid temp = this.findCurrentTile(new Point(currentX, currentY));
-            if (temp.equals(null)){
+            if (temp == null){
                 temp = addTile(currentX, currentY, current, 1);
 
                 // Update adjacency list
@@ -86,9 +91,9 @@ public class GridMapStorage {
             currentY = currentY + (newPosition.getY() - lastPosition.getY()) / scalingFactor;
 
             Grid temp = this.findCurrentTile(new Point(currentX, currentY));
-            if (temp.equals(null)){
+            if (temp == null){
                 // here we can see, the type changes, according to what the last grid's type was supposed to be
-                addTile(currentX, currentY, current, type);
+                temp = addTile(currentX, currentY, current, type);
 
                 // Update adjacency list
                 for (int j = 0; j < this.getGrid().size(); j++){
@@ -108,7 +113,7 @@ public class GridMapStorage {
         // Now, add a new tile
         // top
         if (currentX >= this.current.getTopLeft().getX() && currentX <= this.current.getTopRight().getX() && currentY >= this.current.getTopLeft().getY()){
-            temp = new Grid(this.current.getTopRight(), new Point(this.current.getTopRight().getX(), size + this.current.getTopRight().getX())
+            temp = new Grid(this.current.getTopRight(), new Point(this.current.getTopRight().getX(), size + this.current.getTopRight().getY())
                         , this.current.getTopLeft(), new Point(this.current.getTopLeft().getX(), this.current.getTopLeft().getY() + size), this.size, type);
         }
 
@@ -155,7 +160,7 @@ public class GridMapStorage {
         }
 
         // Add it to the grid
-        System.out.println("Added a grid. " + temp.getBottomRight().getX() + " " + temp.getTopLeft());
+        System.out.println("Added a grid. " + temp.getBottomLeft() + " " + temp.getTopRight());
         System.out.println(type);
         grid.add(temp);
         return temp;

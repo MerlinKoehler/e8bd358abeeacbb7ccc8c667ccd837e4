@@ -23,7 +23,7 @@ public class Grid {
 
     // Will contain maximally 4 tiles (surrounding eight directions).
     //
-    private Grid[] adjacentTo = new Grid[7];
+    private Grid[] adjacentTo = new Grid[8];
 
     // make keys in case it's a teleport (0 means it is not a teleport or that it hasn't found it yet)
     private int teleport_to = 0;
