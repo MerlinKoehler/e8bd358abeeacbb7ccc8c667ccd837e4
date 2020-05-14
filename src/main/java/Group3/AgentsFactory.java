@@ -6,7 +6,7 @@ import Interop.Agent.Intruder;
 import java.util.ArrayList;
 import java.util.List;
 
-import Group9.agent.factories.IAgentFactory;
+import GUI.agent.factories.IAgentFactory;
 
 /**
  * This class provides common way to build agents for the competition.
@@ -22,7 +22,7 @@ public class AgentsFactory implements IAgentFactory{
     	List<Intruder> intruders = new ArrayList<Intruder>();
     	
     	for(int i = 0; i < number; i++) {
-    		Group3.Intruder intruder =  new Group3.Intruder();
+    		Group3.Intruder.Intruder intruder =  new Group3.Intruder.Intruder();
     		intruders.add(intruder);
     	}
     	
@@ -32,7 +32,7 @@ public class AgentsFactory implements IAgentFactory{
     	
     	List<Guard> guards = new ArrayList<Guard>();
     	for(int i = 0; i < number; i++) {
-    		Group3.Guard guard =  new Group3.Guard();
+    		Group3.Guard2.Guard2 guard =  new Group3.Guard2.Guard2();
     		//Group3.ExplorationAgent agent = new Group3.ExplorationAgent();
     		guards.add(guard);
     		//guards.add(agent);

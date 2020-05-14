@@ -1,7 +1,7 @@
 package Group3.DiscreteMap;
 
 import java.util.ArrayList;
-import Group3.ObjectType;
+
 import Interop.Geometry.Point;
 
 public class Vertice {
@@ -11,6 +11,8 @@ public class Vertice {
 	Point center;
 	double radius;
 	Integer coordinate[];
+	boolean marked = false;
+	Vertice parent = null;
 
 	public Vertice(ObjectType type, Point center, double radius, Integer[] coordinate) {
 		this.center = center;
@@ -42,7 +44,6 @@ public class Vertice {
 		}
 		DirectedEdge reverseedge = new DirectedEdge(endVertice, this, degrees);
 		endVertice.edges.add(reverseedge);
-		
 	}
 	
 	public boolean isInside(Point point) {
@@ -67,5 +68,25 @@ public class Vertice {
 
 	public Integer[] getCoordinate() {
 		return coordinate;
+	}
+
+	public boolean isMarked() {
+		return marked;
+	}
+
+	public void setMarked(boolean marked) {
+		this.marked = marked;
+	}
+
+	public Vertice getParent() {
+		return parent;
+	}
+
+	public void setParent(Vertice parent) {
+		this.parent = parent;
+	}
+	
+	public String toString() {
+		return "[" + this.coordinate[0] + "|" + this.coordinate[2] + "]";
 	}
 }

@@ -12,4 +12,16 @@ public class DirectedEdge {
 	public int getDegrees() {
 		return degrees;
 	}
+	public Vertice getStartVertice() {
+		return startVertice;
+	}
+	public void setStartVertice(Vertice startVertice) {
+		this.startVertice = startVertice;
+	}
+	public Vertice getEndVertice() {
+		return endVertice;
+	}
+	public void setEndVertice(Vertice endVertice) {
+		this.endVertice = endVertice;
+	}
 }

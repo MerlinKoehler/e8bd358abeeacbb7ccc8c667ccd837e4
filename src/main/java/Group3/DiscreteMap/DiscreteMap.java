@@ -1,9 +1,11 @@
 package Group3.DiscreteMap;
 import java.util.HashMap;
-
-import Group3.ObjectType;
+import java.util.List;
+import java.util.ArrayList;;
 
 public class DiscreteMap {
+	private static final String ArrayList = null;
+
 	HashMap<String, Vertice> vertices;
 	
 	int xMin = 0;
@@ -18,6 +20,14 @@ public class DiscreteMap {
 	public Vertice getVertice(Integer[] position) {
 		String key = position[0] + " " + position[1];
 		return vertices.get(key);
+	}
+	
+	public List<Vertice> getAllVertices() {
+		ArrayList<Vertice> verticeList = new ArrayList<Vertice>();
+		for(String key: vertices.keySet()) {
+			verticeList.add(vertices.get(key));
+		}
+		return verticeList;
 	}
 
 	public void addVertice(Vertice vertice) {
@@ -153,6 +163,14 @@ public class DiscreteMap {
 			sb.append('\n');
 		}
 		return sb.toString();
+	}
+	
+	public void unMark() {
+		for(String key: vertices.keySet()) {
+			Vertice vertice = vertices.get(key);
+			vertice.setMarked(false);
+			vertice.setParent(null);
+		}
 	}
 	
 	public void reset() {

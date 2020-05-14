@@ -1,11 +1,19 @@
-package Group3;
+package Group3.Guard2;
 
 import java.util.Random;
 import java.util.Set;
+import java.util.Stack;
 import java.util.List;
+import java.util.Queue;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import Group3.Agent.Action;
+import Group3.DiscreteMap.BFS;
+import Group3.DiscreteMap.DirectedEdge;
 import Group3.DiscreteMap.DiscreteMap;
+import Group3.DiscreteMap.ObjectType;
 import Group3.DiscreteMap.Vertice;
+import Interop.Action.GuardAction;
 import Interop.Action.IntruderAction;
 import Interop.Action.Move;
 import Interop.Action.NoAction;
@@ -13,17 +21,14 @@ import Interop.Action.Rotate;
 import Interop.Geometry.Angle;
 import Interop.Geometry.Distance;
 import Interop.Geometry.Point;
+import Interop.Percept.GuardPercepts;
 import Interop.Percept.IntruderPercepts;
+import Interop.Percept.Percepts;
 import Interop.Percept.Vision.ObjectPercept;
 import Interop.Percept.Vision.VisionPrecepts;
+import sun.nio.cs.MS950_HKSCS_XP;
 
-public class Intruder implements Interop.Agent.Intruder {
-
-	private enum Action{
-		Left,
-		Right,
-		Move
-	}
+public class Guard2 implements Interop.Agent.Guard {
 	
 	Action lastAction = null;
 	DiscreteMap map;
@@ -31,30 +36,90 @@ public class Intruder implements Interop.Agent.Intruder {
 	double viewAngle;
 	double radius;
 	Angle angle;
+	Queue<Action> actionList = new LinkedList<Action>();
+	Queue<Double> distanceCounter = new LinkedList<Double>();
+	boolean foundTarget = false;
 	
 	@Override
-	public IntruderAction getAction(IntruderPercepts percepts) {
+	public GuardAction getAction(GuardPercepts percepts) {
 		// TODO Auto-generated method stub
 		
 		if(this.map == null || percepts.getAreaPercepts().isJustTeleported()) {
 			viewAngle = percepts.getVision().getFieldOfView().getViewAngle().getDegrees();
-			radius = Math.sqrt(Math.pow(percepts.getScenarioIntruderPercepts().getMaxMoveDistanceIntruder().getValue(),2)/2)/2;
+			radius = Math.sqrt(Math.pow(percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue(),2)/2)/2;
 			angle = Angle.fromDegrees(0);
 			this.map = new DiscreteMap();
 			currentPosition = new Vertice(ObjectType.None, new Point(0, 0), radius, new Integer[] {0,0});
 			map.addVertice(currentPosition);
+			lastAction = null;
+			if(percepts.wasLastActionExecuted()) {
+				actionList.offer(Action.Move);
+			}
+			else {
+				actionList.offer(Action.Right);
+			}
+		}
+		if(distanceCounter.size() != 0) {
+			return new Move(new Distance(distanceCounter.poll()));
 		}
 		if(percepts.wasLastActionExecuted()) {
 			updateState();
 		}
-		
+		else {
+			System.out.println("Illegal Move!!!");
+			actionList = new LinkedList<Action>();
+			actionList.offer(Action.Left);
+			actionList.offer(Action.Move);
+		}
+		if(percepts.getAreaPercepts().isInSentryTower()) {
+			System.out.println("In Sentry");
+		}
 		createNewVerticesInSight(percepts.getVision());
+		//System.out.println(map.toString(currentPosition.getCoordinate()));
 		evaluateVision(percepts.getVision());
 		
-		System.out.println("");
-		System.out.println(map.toString(currentPosition.getCoordinate()));
+		//System.out.println("");
+		//System.out.println(map.toString(currentPosition.getCoordinate()));
 		
-		return getNextAction(percepts);
+		if(actionList.size() == 0) {
+			getNextAction(percepts);
+			if(actionList.size() == 0) {
+				actionList.offer(Action.Move);
+			}
+			return returnAction(actionList.poll(), percepts);
+		}
+		else {
+			return returnAction(actionList.poll(), percepts);
+		}
+	}
+	
+	private GuardAction returnAction(Action action, GuardPercepts percepts) {
+		switch(action) {
+		case Left:
+			System.out.println("Left");
+			return turnLeft(); 
+		case Right:
+			System.out.println("Right");
+			return turnRight();
+		case Move:
+			System.out.println("Move");
+			double maxMoveDistance = percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue();
+			if(percepts.getAreaPercepts().isInSentryTower()) {
+				maxMoveDistance = maxMoveDistance * percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInSentryTower();
+			}
+			else if(percepts.getAreaPercepts().isInDoor()) {
+				maxMoveDistance = maxMoveDistance * percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInDoor();
+			}
+			else if(percepts.getAreaPercepts().isInWindow()) {
+				maxMoveDistance = maxMoveDistance * percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInWindow();
+			}
+			else {
+				maxMoveDistance = percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue(); 
+			}		
+			return forward(maxMoveDistance);
+		default:
+			return new NoAction();
+		}
 	}
 	
 	private void evaluateVision(VisionPrecepts vision) {
@@ -85,6 +150,7 @@ public class Intruder implements Interop.Agent.Intruder {
 				break;
 			case TargetArea:
 				inVertice.setType(ObjectType.TargetArea);
+				foundTarget = true;
 				break;
 			case Teleport:
 				inVertice.setType(ObjectType.Teleport);
@@ -102,6 +168,101 @@ public class Intruder implements Interop.Agent.Intruder {
 		}
 	}
 	
+	private void getNextAction(GuardPercepts percepts) {
+		if(foundTarget) {
+			map.unMark();
+			Stack<Vertice> target = BFS.findPath(currentPosition, ObjectType.TargetArea);
+			if(target != null) {
+				generateActionList(target);
+				return;
+			}
+		}
+		
+		List<Action> actionSpace = new ArrayList<Action>();
+		actionSpace.add(Action.Left);
+		actionSpace.add(Action.Right);
+		Integer[] nextPosition = DiscreteMap.getCoordinate((int)angle.getDegrees(), currentPosition.getCoordinate());
+		Vertice nextVertice = map.getVertice(nextPosition);
+		if(BFS.checkVertice(nextVertice)) {
+			actionSpace.add(Action.Move);
+		}
+		
+		double actionValue = 0;
+		Action selectedAction = null;
+		for(Action action : actionSpace) {
+			Angle angle = Angle.fromRadians(this.angle.getRadians());
+			Vertice currentPosition = this.currentPosition;
+			switch(action) {
+			case Left:
+				angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() +45));
+				break;
+			case Right:
+				angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() -45));
+				break;
+			case Move:
+				Integer[] newPosition = DiscreteMap.getCoordinate((int)angle.getDegrees(), currentPosition.getCoordinate());
+				currentPosition = map.getVertice(newPosition);
+				break;
+			}
+			double value = simulateAction(percepts.getVision(), angle, currentPosition);
+			if(value > actionValue) {
+				actionValue = value;
+				selectedAction = action;
+			}
+		}
+		//selectedAction = null;
+		if(selectedAction == null) {
+			map.unMark();
+			Stack<Vertice> path = BFS.findNonCompleteVertice(currentPosition);
+			if(path == null) {
+				map.unMark();
+				path = BFS.findPath(currentPosition, ObjectType.Teleport);
+			}
+			generateActionList(path);
+		}
+		else {
+			actionList.offer(selectedAction);
+		}
+	}
+	
+	private void generateActionList(Stack<Vertice> path) {
+		if(path == null) {
+			actionList.add(Action.Move);
+		}
+		Vertice start = path.pop();
+		int currentDegrees = (int)angle.getDegrees();
+		while(path.size() != 0) {
+			Vertice end = path.pop();
+			for(DirectedEdge e : start.getEdges()) {
+				if(e.getEndVertice() == end) {
+					int degrees = e.getDegrees();
+					// Some inaccuracies
+					double add;
+					if(currentDegrees > 180) {
+						add = 360 - currentDegrees;
+					}
+					else {
+						add = -currentDegrees;
+					}
+					while(Math.abs(currentDegrees - degrees)>2) {
+						if(getTrueAngle(degrees + add) < 180) {
+							actionList.add(Action.Left);
+							currentDegrees = (int)getTrueAngle(currentDegrees +45);
+						}
+						else {
+							actionList.add(Action.Right);
+							currentDegrees = (int)getTrueAngle(currentDegrees -45);
+						}
+					}
+					break;
+				}
+			}
+			start = end;
+			actionList.add(Action.Move);
+		}
+	}
+
+	/*
 	private IntruderAction getNextAction(IntruderPercepts percepts) {
 		if(!percepts.wasLastActionExecuted()) {
 			int r = new Random().nextInt(2);
@@ -112,59 +273,73 @@ public class Intruder implements Interop.Agent.Intruder {
 				return turnRight();
 			}
 		}
-		List<Action> actionSpace = new ArrayList<Action>();
-		actionSpace.add(Action.Left);
-		actionSpace.add(Action.Right);
-		Integer[] nextPosition = DiscreteMap.getCoordinate((int)angle.getDegrees(), currentPosition.getCoordinate());
-		Vertice nextVertice = map.getVertice(nextPosition);
-		ObjectType objType = nextVertice.getType();
-		if(objType != ObjectType.Wall && objType != ObjectType.Teleport && objType != ObjectType.SentryTower) {
-			actionSpace.add(Action.Move);
+		
+		int steps = 3;
+		int[] counter = new int[steps];
+		double[] result = new double[3];
+		while(!checkCounter(counter)) {
+			Angle angle = Angle.fromRadians(this.angle.getRadians());
+			Vertice currentPosition = this.currentPosition;
+			for(int i = 0; i < steps; i++) {
+				switch(counter[i]) {
+				case 0:
+					angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() +45));
+					break;
+				case 1:
+					angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() -45));
+					break;
+				case 2:
+					Integer[] newPosition = DiscreteMap.getCoordinate((int)angle.getDegrees(), currentPosition.getCoordinate());
+					currentPosition = new Vertice(null, new Point(2*radius*newPosition[0], 2*radius*newPosition[1]), 0, newPosition);
+					break;
+				}
+				result[counter[0]] += simulateAction(percepts.getVision(), angle, currentPosition);
+			}
+			increaseCounter(counter);
 		}
 		
-		double actionValue = 0;
-		Action selectedAction = null;
-		for(Action action : actionSpace) {
-			double value = simulateAction(action, percepts.getVision());
-			if(value > actionValue) {
-				actionValue = value;
-				selectedAction = action;
+		int max = 0;
+		for(int i = 1; i < 3; i++) {
+			if(result[i] > result[max]) {
+				max = i;
 			}
 		}
-		if(selectedAction == null) {
-			return forward();
-		}
-		switch(selectedAction) {
-		case Left:
-			return turnLeft(); 
-		case Right:
+
+		switch(max) {
+		case 0:
+			return turnLeft();
+		case 1:
 			return turnRight();
-		case Move:
+		case 2:
 			return forward();
 		default:
 			return new NoAction();
 		}
 	}
 	
-	public double simulateAction(Action action, VisionPrecepts percepts) {
-		int vertexMultiply = 1;
-		Angle angle = Angle.fromRadians(this.angle.getRadians());
-		Vertice currentPosition = this.currentPosition;
-		
-		switch(action) {
-		case Left:
-			angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() +45));
-			break;
-		case Right:
-			angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() -45));
-			break;
-		case Move:
-			Integer[] newPosition = DiscreteMap.getCoordinate((int)angle.getDegrees(), currentPosition.getCoordinate());
-			currentPosition = map.getVertice(newPosition);
-			break;
+	private void increaseCounter(int[] counter) {
+		int increase = 1;
+		for(int i = 0; i < counter.length; i++) {
+			if(counter[i] + increase > 2) {
+				counter[i] = 0;
+			}
+			else {
+				counter[i] += increase;
+				increase = 0;
+			}
 		}
-		
-		
+	}
+	
+	private boolean checkCounter(int[] counter) {
+		for(int i = 0; i < counter.length; i++) {
+			if(counter[i] != 2) return false;
+		}
+		return true;
+	}
+	*/
+	
+	public double simulateAction(VisionPrecepts percepts, Angle angle, Vertice currentPosition) {
+		int vertexMultiply = 1;
 		double result = vertexMultiply*numberNewVerticesInSight(angle,currentPosition, percepts);
 		return result;
 	}
@@ -174,6 +349,10 @@ public class Intruder implements Interop.Agent.Intruder {
 		int samples = 10;
 		double viewRange = percepts.getFieldOfView().getRange().getValue();
 		double step = viewRange / samples;
+		if(step > radius) {
+			samples = (int)(viewRange / radius);
+			step = radius;
+		}
 		double currentAngle = (viewAngle+4)/2;
 		while(currentAngle >= -viewAngle/2) {
 			double finalAngle = 0;
@@ -206,15 +385,21 @@ public class Intruder implements Interop.Agent.Intruder {
 		return new Rotate(Angle.fromDegrees(+45));
 	}
 	
-	private Move forward() {
+	private Move forward(double maxDistance) {
 		this.lastAction = Action.Move;
+		double distance;
 		
 		if(this.angle.getDegrees() % 90 == 0) {
-			return new Move(new Distance(2*radius));
+			distance = 2*radius;
 		}
 		else {
-			return new Move(new Distance(Math.sqrt(2*Math.pow(2*radius, 2))));
+			distance = Math.sqrt(2*Math.pow(2*radius, 2));
 		}
+		while(distance > maxDistance) {
+			distanceCounter.offer(maxDistance);
+			distance = distance - maxDistance;
+		}
+		return new Move(new Distance(distance));
 	}
 	
 	private void updateState() {
@@ -238,6 +423,10 @@ public class Intruder implements Interop.Agent.Intruder {
 		int samples = 10;
 		double viewRange = percepts.getFieldOfView().getRange().getValue();
 		double step = viewRange / samples;
+		if(step > radius) {
+			samples = (int)(viewRange / radius);
+			step = radius;
+		}
 		double currentAngle = (viewAngle+4)/2;
 		while(currentAngle >= -viewAngle/2) {
 			double finalAngle = 0;
