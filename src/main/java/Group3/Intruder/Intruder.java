@@ -171,10 +171,18 @@ public class Intruder implements Interop.Agent.Intruder {
 				escape = true;
 				inVertice.setType(ObjectType.Danger);
 				break;
-			//case Intruder:
-				//actionList.add(Action.Left);
-				//actionList.add(Action.Move);
-				//break;
+			case Intruder:
+				Random rand = new Random();
+				int r = rand.nextInt(2);
+				if(r == 0) {
+					actionList.add(Action.Left);
+					actionList.add(Action.Move);
+				}
+				else {
+					actionList.add(Action.Right);
+					actionList.add(Action.Move);
+				}
+				break;
 			default:
 				inVertice.setType(ObjectType.Unknown);
 				break;
@@ -188,8 +196,8 @@ public class Intruder implements Interop.Agent.Intruder {
 		int x = currentPosition.getCoordinate()[0];
 		int y = currentPosition.getCoordinate()[1];
 		
-		for(Vertice v : map.getAllVertices()) {
-			if(BFS.checkVertice2(v)) {
+		for(Vertice v : BFS.getReachableVertices(currentPosition)) {
+			if(BFS.checkVertice2(v) && v.getEdges().size() < 8) {
 				int xp = v.getCoordinate()[0];
 				int yp = v.getCoordinate()[1];
 				double distance = Math.sqrt(Math.pow(xp-x, 2)+Math.pow(yp-y, 2));
@@ -207,8 +215,10 @@ public class Intruder implements Interop.Agent.Intruder {
 			map.unMark();
 			escape = false;
 			Vertice escape = findEscape();
+			map.unMark();
 			Stack<Vertice> target = BFS.findPath(currentPosition, escape);
 			if(target != null) {
+				actionList = new LinkedList<Action>();
 				generateActionList(target);
 				return;
 			}
@@ -272,6 +282,7 @@ public class Intruder implements Interop.Agent.Intruder {
 	private void generateActionList(Stack<Vertice> path) {
 		if(path == null) {
 			actionList.add(Action.Move);
+			return;
 		}
 		Vertice start = path.pop();
 		int currentDegrees = (int)angle.getDegrees();

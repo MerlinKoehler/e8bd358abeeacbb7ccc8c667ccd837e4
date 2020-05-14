@@ -1,7 +1,9 @@
 package Group3.DiscreteMap;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class BFS {
 	public static Stack<Vertice> findNonCompleteVertice(Vertice start){
@@ -90,8 +92,30 @@ public class BFS {
 		return null;
 	}
 	
+	public static List<Vertice> getReachableVertices(Vertice start){
+		ArrayList<Vertice> vertices = new ArrayList<Vertice>();
+		
+		Queue<Vertice> queue = new LinkedList<Vertice>();
+		start.marked = true;
+		queue.offer(start);
+		while(queue.size() != 0) {
+			Vertice v = queue.poll();
+			for(DirectedEdge edge : v.getEdges()) {
+				if(!edge.endVertice.isMarked()) {
+					Vertice w = edge.endVertice;
+					if(checkVertice2(w)) {
+						w.setMarked(true);
+						vertices.add(w);
+						queue.offer(w);
+					}
+				}
+			}
+		}
+		
+		return vertices;
+	}
+	
 	public static Stack<Vertice> findPath(Vertice start, Vertice end){
-		int count = 0;
 		Queue<Vertice> queue = new LinkedList<Vertice>();
 		start.marked = true;
 		queue.offer(start);
@@ -109,7 +133,6 @@ public class BFS {
 				if(!edge.endVertice.isMarked()) {
 					Vertice w = edge.endVertice;
 					if(checkVertice2(w)) {
-						count++;
 						w.setMarked(true);
 						w.setParent(v);
 						queue.offer(w);
