@@ -28,7 +28,7 @@ public class Guard implements Interop.Agent.Guard {
 	double currentX = 0;
 	double currentY = 0;
 	double currentAngleInRads = 0;
-	double gridSize = 0.5;
+	double gridSize = 5;
 	int currentMapCount = 1;
 
 	//Make a start map.
@@ -61,6 +61,9 @@ public class Guard implements Interop.Agent.Guard {
 
 		//--------------------------------------------------------------------------------------------------------------
 		// Update the map, is the action was performed
+		if (lastAction != null) {
+			System.out.println(lastAction.getClass());
+		}
 		if (percepts.wasLastActionExecuted()){
 			updateInternalMap(percepts); // will also update the agent's current  state
 		}
@@ -113,8 +116,8 @@ public class Guard implements Interop.Agent.Guard {
 			double oldY = currentY;
 
 			// Update this accordingly
-			double currentX = oldX + Math.cos(currentAngleInRads) * ((Move) lastAction).getDistance().getValue();
-			double currentY = oldY - Math.sin(currentAngleInRads) * ((Move) lastAction).getDistance().getValue();
+			currentX = oldX + Math.cos(currentAngleInRads) * ((Move) lastAction).getDistance().getValue();
+			currentY = oldY - Math.sin(currentAngleInRads) * ((Move) lastAction).getDistance().getValue();
 
 			currentMap.updateGrid(new Point(oldX, oldY), new Point(currentX, currentY), 1);
 			updateMapSight(percepts);

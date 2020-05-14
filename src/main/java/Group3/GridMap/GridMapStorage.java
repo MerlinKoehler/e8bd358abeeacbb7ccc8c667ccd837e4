@@ -22,8 +22,9 @@ public class GridMapStorage {
         this.size = size;
 
         Grid tile = new Grid(new Point((this.size/2.0) ,-(this.size/2.0)), new Point((this.size/2.0), (this.size/2.0)), new Point((-this.size/2.0), -(this.size/2.0)), new Point((-this.size/2.0), (this.size/2.0)), size, type);
-        System.out.println("initial tile " + tile.getTopLeft());
+        System.out.println("initial tile " + tile.getBottomLeft() + " " + tile.getTopRight());
 
+        current = tile;
         // The tile where the agent starts.
         grid.add(tile);
     }
@@ -36,7 +37,9 @@ public class GridMapStorage {
 
         Grid tile = new Grid(new Point((this.size/2) ,-(this.size/2)), new Point((this.size/2), (this.size/2)), new Point((-this.size/2), -(this.size/2)), new Point((-this.size/2), (this.size/2)), size, type);
         tile.setTeleport_to(teleportNr);
+        System.out.println("teleport tile " + tile.getBottomLeft() + " " + tile.getTopRight());
 
+        current = tile;
         // The tile where the agent starts.
         grid.add(tile);
     }
@@ -60,48 +63,53 @@ public class GridMapStorage {
 
         // Could be set to different "step sizes", which is what the 5 signifies
         double distance = (new Interop.Geometry.Distance(lastPosition, newPosition)).getValue();
-        double scalingFactor = distance * 5;
+        double scalingFactor = distance * 2;
         int integerFactor = (int) scalingFactor;
 
-        // Loop through the whole line with small steps.
-        for (int i = 0; i < (int) integerFactor; i++){
-            currentX = currentX + (newPosition.getX() - lastPosition.getX()) / scalingFactor ;
-            currentY = currentY + (newPosition.getY() - lastPosition.getY()) / scalingFactor;
+        if (current != null) {
+            // Loop through the whole line with small steps.
+            for (int i = 0; i < (int) integerFactor; i++) {
+                currentX = currentX + (newPosition.getX() - lastPosition.getX()) / scalingFactor;
+                currentY = currentY + (newPosition.getY() - lastPosition.getY()) / scalingFactor;
 
-            Grid temp = this.findCurrentTile(new Point(currentX, currentY));
-            if (temp == null){
-                temp = addTile(currentX, currentY, current, 1);
+                Grid temp = this.findCurrentTile(new Point(currentX, currentY));
+                if (temp == null) {
+                    temp = addTile(currentX, currentY, current, 1);
 
-                // Update adjacency list
-                for (int j = 0; j < this.getGrid().size(); j++){
-                    temp.addAdjacent(this.getGrid().get(j));
-                }
+                    // Update adjacency list
+                    /*for (int j = 0; j < this.getGrid().size(); j++) {
+                        temp.addAdjacent(this.getGrid().get(j));
+                    }*/
 
-                current = temp;
-            }
-            else{
-                current = temp;
-                temp.seen();
-            }
-        }
-
-        // Then, set it in the right position.
-        if (scalingFactor > integerFactor) {
-            currentX = currentX + (newPosition.getX() - lastPosition.getX()) / scalingFactor;
-            currentY = currentY + (newPosition.getY() - lastPosition.getY()) / scalingFactor;
-
-            Grid temp = this.findCurrentTile(new Point(currentX, currentY));
-            if (temp == null){
-                // here we can see, the type changes, according to what the last grid's type was supposed to be
-                temp = addTile(currentX, currentY, current, type);
-
-                // Update adjacency list
-                for (int j = 0; j < this.getGrid().size(); j++){
-                    temp.addAdjacent(this.getGrid().get(j));
+                    current = temp;
+                } else {
+                    current = temp;
+                    temp.seen();
                 }
             }
-            else{
-                temp.seen();
+
+
+            // Then, set it in the right position.
+            if (scalingFactor > integerFactor) {
+                currentX = currentX + (newPosition.getX() - lastPosition.getX()) / scalingFactor;
+                currentY = currentY + (newPosition.getY() - lastPosition.getY()) / scalingFactor;
+
+                Grid temp = this.findCurrentTile(new Point(currentX, currentY));
+                if (temp == null) {
+                    // here we can see, the type changes, according to what the last grid's type was supposed to be
+                    temp = addTile(currentX, currentY, current, type);
+                    System.out.println("currentX: " + currentX + " " + " currentY: " + currentY);
+
+                    // Update adjacency list
+                    for (int j = 0; j < this.getGrid().size(); j++) {
+                        temp.addAdjacent(this.getGrid().get(j));
+                    }
+                } else {
+                    if (temp.getType() == 1) {
+                        temp.setType(type);
+                    }
+                    temp.seen();
+                }
             }
         }
     }
@@ -159,9 +167,13 @@ public class GridMapStorage {
                     new Point(this.current.getTopLeft().getX() - size, this.current.getTopLeft().getY()), new Point(this.current.getTopLeft().getX() - size, this.current.getTopLeft().getY() + size), this.size, type);
         }
 
+        for (int i = 0; i < this.getGrid().size(); i++){
+            temp.addAdjacent(grid.get(i));
+            grid.get(i).addAdjacent(temp);
+        }
+
         // Add it to the grid
         System.out.println("Added a grid. " + temp.getBottomLeft() + " " + temp.getTopRight());
-        System.out.println(type);
         grid.add(temp);
         return temp;
     }
