@@ -32,7 +32,7 @@ public class AgentsFactory implements IAgentFactory{
     	
     	List<Guard> guards = new ArrayList<Guard>();
     	for(int i = 0; i < number; i++) {
-    		Group3.Guard2.Guard2 guard =  new Group3.Guard2.Guard2();
+    		Group3.Guard guard =  new Group3.Guard();
     		//Group3.ExplorationAgent agent = new Group3.ExplorationAgent();
     		guards.add(guard);
     		//guards.add(agent);

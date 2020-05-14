@@ -189,4 +189,12 @@ public class DiscreteMap {
 		}
 			
 	}
+
+	public void removeDanger() {
+		for(String key: vertices.keySet()) {
+			if(vertices.get(key).getType() == ObjectType.Danger) {
+				vertices.get(key).setType(ObjectType.None);
+			}
+		}
+	}
 }
