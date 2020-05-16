@@ -6,6 +6,7 @@ import Interop.Action.GuardAction;
 import Interop.Action.Move;
 import Interop.Action.Rotate;
 import Interop.Geometry.Angle;
+import Interop.Geometry.Direction;
 import Interop.Geometry.Distance;
 import Interop.Geometry.Point;
 import Interop.Percept.GuardPercepts;
@@ -41,14 +42,7 @@ public class Guard implements Interop.Agent.Guard {
 	int lastSeenIntruder = Integer.MAX_VALUE;
 	boolean chasing = false;
 
-	//General structure guard - finds action
-	public GuardAction getAction(GuardPercepts percepts) {
-		if (percepts.getAreaPercepts().isJustTeleported()){
-			currentX = 0;
-			currentY = 0;
-			currentAngleInRads = 0;
-		}
-
+	public double getCurrentmaxDist(GuardPercepts percepts){
 		// First, find the maximum distance in which the guard can currently move.
 		double currentSlowDownModifier = 1;
 
@@ -64,11 +58,25 @@ public class Guard implements Interop.Agent.Guard {
 
 		// The maximum distance a guard can currently be moves is found:
 		double maximumDistance = percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue() * currentSlowDownModifier;
+		return maximumDistance;
+	}
 
+	//General structure guard - finds action
+	public GuardAction getAction(GuardPercepts percepts) {
+		if (percepts.getAreaPercepts().isJustTeleported()){
+			currentX = 0;
+			currentY = 0;
+			currentAngleInRads = 0;
+		}
+
+
+
+		// The maximum distance a guard can currently be moves is found:
+		double maximumDistance = this.getCurrentmaxDist(percepts);
 		//--------------------------------------------------------------------------------------------------------------
 		// Update the map, is the action was performed
 		if (lastAction != null) {
-			System.out.println(lastAction.getClass());
+			//System.out.println(lastAction.getClass());
 		}
 		if (percepts.wasLastActionExecuted()){
 			updateInternalMap(percepts); // will also update the agent's current  state
@@ -78,7 +86,7 @@ public class Guard implements Interop.Agent.Guard {
 		Object[] vision = percepts.getVision().getObjects().getAll().toArray();
 		for (int i = 0; i < vision.length; i++) {
 			if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Intruder) {
-				lastAction = chaseIntruder();
+				lastAction = chaseIntruder((ObjectPercept)vision[i], percepts);
 				//return lastAction;
 			}
 		}
@@ -167,9 +175,18 @@ public class Guard implements Interop.Agent.Guard {
 		return action;
 	}
 
-	public GuardAction chaseIntruder(){
+	public GuardAction chaseIntruder(ObjectPercept intruder, GuardPercepts percepts){
 		GuardAction action = null;
-
+		if(!chasing){
+			Point a = intruder.getPoint();
+			Direction b = a.getClockDirection();
+			action = new Rotate(Angle.fromRadians(b.getRadians()));
+			chasing = true;
+		}else{
+			double maxDist = this.getCurrentmaxDist(percepts);
+			action = new Move(new Distance(maxDist));
+			chasing = false;
+		}
 
 
 		return action;
