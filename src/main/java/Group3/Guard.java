@@ -4,7 +4,6 @@ import Group3.GridMap.Grid;
 import Group3.GridMap.GridMapStorage;
 import Interop.Action.GuardAction;
 import Interop.Action.Move;
-import Interop.Action.NoAction;
 import Interop.Action.Rotate;
 import Interop.Geometry.Angle;
 import Interop.Geometry.Distance;
@@ -13,8 +12,10 @@ import Interop.Percept.GuardPercepts;
 import Interop.Percept.Sound.SoundPercept;
 import Interop.Percept.Vision.ObjectPercept;
 import Interop.Percept.Vision.ObjectPerceptType;
-import Interop.Utils.Utils;
 
+import Interop.Action.NoAction;
+import Interop.Geometry.Direction;
+import Interop.Utils.Utils;
 import java.util.Random;
 
 public class Guard implements Interop.Agent.Guard {
@@ -70,14 +71,14 @@ public class Guard implements Interop.Agent.Guard {
             updateInternalMap(percepts); // will also update the agent's current  state
         }
 
-        // First, check whether a intruder is seen at the moment.
-        Object[] vision = percepts.getVision().getObjects().getAll().toArray();
-        for (Object aVision : vision) {
-            if (((ObjectPercept) aVision).getType() == ObjectPerceptType.Intruder) {
-                lastAction = chaseIntruder();
-                //return lastAction;
-            }
-        }
+		// First, check whether a intruder is seen at the moment.
+		Object[] vision = percepts.getVision().getObjects().getAll().toArray();
+		for (int i = 0; i < vision.length; i++) {
+			if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Intruder) {
+				lastAction = chaseIntruder((ObjectPercept)vision[i], percepts);
+				//return lastAction;
+			}
+		}
 
         //for (Grid grid : currentMap.getGrid()) {
         //    System.out.println(grid);
@@ -251,9 +252,18 @@ public class Guard implements Interop.Agent.Guard {
         return action;
     }
 
-    public GuardAction chaseIntruder() {
-        GuardAction action = null;
-
+	public GuardAction chaseIntruder(ObjectPercept intruder, GuardPercepts percepts){
+		GuardAction action = null;
+		if(!chasing){
+			Point a = intruder.getPoint();
+			Direction b = a.getClockDirection();
+			action = new Rotate(Angle.fromRadians(b.getRadians()));
+			chasing = true;
+		}else{
+			double maxDist = this.getCurrentmaxDist(percepts);
+			action = new Move(new Distance(maxDist));
+			chasing = false;
+		}
 
         return action;
     }

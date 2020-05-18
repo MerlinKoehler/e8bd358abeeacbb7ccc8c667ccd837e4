@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
-import com.sun.org.apache.xalan.internal.xsltc.dom.CachedNodeListIterator;
+
 
 import java.util.List;
 import java.util.Queue;
@@ -30,7 +30,7 @@ import Interop.Percept.IntruderPercepts;
 import Interop.Percept.Percepts;
 import Interop.Percept.Vision.ObjectPercept;
 import Interop.Percept.Vision.VisionPrecepts;
-import sun.nio.cs.MS950_HKSCS_XP;
+
 
 public class Intruder implements Interop.Agent.Intruder {
 	

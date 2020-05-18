@@ -1,5 +1,6 @@
 package Group3;
 
+import Group3.Intruder.Intruder;
 import Group3.StaticObjects.*;
 import Interop.Action.*;
 import Interop.Geometry.Angle;
@@ -72,8 +73,8 @@ public class MainControl {
         staticObjects = readMap.getStaticObjects();
 
         // Initialize Guards and Intruders:
-        intruders = AgentsFactory.createIntruders(storage.getNumIntruders());
-        guards = AgentsFactory.createGuards(storage.getNumGuards());
+        //intruders = AgentsFactory.createIntruders(storage.getNumIntruders());
+        //guards = AgentsFactory.createGuards(storage.getNumGuards());
 
         // Initialize the states of the agents
         // TODO: Add the correct coordinates from the map file. Actually the agents will be placed at 0,0

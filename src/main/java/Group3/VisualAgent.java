@@ -1,6 +1,7 @@
 package Group3;
 
 
+import Group3.Intruder.Intruder;
 import Interop.Geometry.Direction;
 import Interop.Geometry.Point;
 import javafx.scene.paint.Color;

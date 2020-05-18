@@ -26,7 +26,6 @@ import Interop.Percept.IntruderPercepts;
 import Interop.Percept.Percepts;
 import Interop.Percept.Vision.ObjectPercept;
 import Interop.Percept.Vision.VisionPrecepts;
-import sun.nio.cs.MS950_HKSCS_XP;
 
 public class Guard2 implements Interop.Agent.Guard {
 	

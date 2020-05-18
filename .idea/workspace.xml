@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="869c7e1c-225c-4856-b8fb-aaf522d3f77f" name="Default Changelist" comment="Fix" />
-    <ignored path="$PROJECT_DIR$/out/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="869c7e1c-225c-4856-b8fb-aaf522d3f77f" name="Default Changelist" comment="Fix">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/main/Group9/map/maps/test_2.map" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/main/Group9/map/maps/test_2.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/main/META-INF/main.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/map/maps/test_2.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/map/maps/test_2.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Guard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Guard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Guard2/Guard2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Guard2/Guard2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Dummy_Intruder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Dummy_Intruder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Intruder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Intruder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/VisualAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/VisualAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group9/gui2/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group9/gui2/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group9/map/maps/test_2.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group9/map/maps/test_2.map" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,116 +43,6 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/MainScene.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2856">
-              <caret lean-forward="true" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/MainSceneTry.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="863">
-              <caret line="148" column="44" lean-forward="true" selection-start-line="148" selection-start-column="44" selection-end-line="148" selection-end-column="44" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2548#2549#0" expanded="true" />
-                <element signature="e#2580#2581#0" expanded="true" />
-                <element signature="e#15340#15341#0" expanded="true" />
-                <element signature="e#15373#15374#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/Gui.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="182">
-              <caret line="102" column="74" selection-start-line="102" selection-start-column="74" selection-end-line="102" selection-end-column="74" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1226#1227#0" expanded="true" />
-                <element signature="e#1253#1254#0" expanded="true" />
-                <element signature="e#2776#2777#0" expanded="true" />
-                <element signature="e#2877#2878#0" expanded="true" />
-                <element signature="e#3060#3061#0" expanded="true" />
-                <element signature="e#3157#3158#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Game.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-374">
-              <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/MainController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="46" selection-start-line="46" selection-end-line="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainControl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#61516#61517#0" expanded="true" />
-                <element signature="e#61552#61553#0" expanded="true" />
-                <element signature="e#61605#61606#0" expanded="true" />
-                <element signature="e#61639#61640#0" expanded="true" />
-                <element signature="e#61974#61975#0" expanded="true" />
-                <element signature="e#62039#62040#0" expanded="true" />
-                <element signature="e#62938#62939#0" expanded="true" />
-                <element signature="e#62965#62966#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainScreen.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="84" column="69" lean-forward="true" selection-start-line="84" selection-start-column="31" selection-end-line="84" selection-end-column="69" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Group9/Game.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="436">
-              <caret line="99" selection-start-line="99" selection-end-line="99" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -129,139 +50,19 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>fromDegrees</find>
-      <find>captureDista</find>
-      <find>capt</find>
-      <find>gameFi</find>
-      <find>getAct</find>
-      <find>checkc</find>
-      <find>checkC</find>
-      <find>checkLe</find>
-      <find>doSt</find>
-      <find>main</find>
-      <find>legal</find>
-      <find>check</find>
-      <find>dos</find>
-      <find>getMap</find>
-      <find>str</find>
-      <find>draw</find>
-      <find>scale</find>
-      <find>drawM</find>
-      <find>playb</find>
-      <find>animationL</find>
-      <find>gui</find>
-      <find>run</find>
-      <find>canvas</find>
-      <find>drawMo</find>
-    </findStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/StaticObjects/StaticObject.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/AgentState.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/AgentsFactory.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/Game.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/Pheromone.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/Sound.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/map/dynamic/Pheromone.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/map/GameMap.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/GUI2.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/VisualAgent.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/Game.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/GameGUI.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/MainSceneO.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/MapVisualization.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/VisualMao.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/map/objects/StaticObject.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/VisualObject.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/map/VisualMao.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/map/MapReader.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/GuiSettings.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group3/MainScreen.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/MainScene.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/MainController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/MainSceneTry.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Group9/gui2/Gui.java" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="945" />
-    <option name="width" value="985" />
-    <option name="height" value="1035" />
-  </component>
+  <component name="ProjectId" id="1buTUgeX2UvXoxszUntTxM61YLt" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Group3" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Group3" type="462c0819:PsiDirectoryNode" />
-              <item name="StaticObjects" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Group9" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Group9" type="462c0819:PsiDirectoryNode" />
-              <item name="gui2" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="e8bd358abeeacbb7ccc8c667ccd837e4" type="b2602c69:ProjectViewProjectNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="Group9" type="462c0819:PsiDirectoryNode" />
-              <item name="map" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-    </panes>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1586265722181" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/Group9/gui2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ms/MSGroupProject" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
@@ -274,25 +75,26 @@
       <recent name="C:\Users\Acer\Documents\e8bd358abeeacbb7ccc8c667ccd837e4\src\main\java\Group9\gui2" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager" selected="Application.Gui">
+  <component name="RunManager" selected="Application.Gui (1)">
     <configuration name="Game" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Group3.Game" />
       <module name="main" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="Group9.map.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Gui (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GUI.gui2.Gui" />
+      <module name="main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="GUI.gui2.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -326,20 +128,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MainControl" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Group3.MainControl" />
-      <module name="main" />
-      <option name="PROGRAM_PARAMETERS" value="C:\Users\Oskar\Desktop\project2-2\samplemap.txt" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Group9.map.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MainScreen" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Group3.MainScreen" />
       <module name="main" />
@@ -354,19 +142,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.MainControl" />
       <item itemvalue="Application.MainScreen" />
       <item itemvalue="Application.Game" />
       <item itemvalue="Application.Main" />
       <item itemvalue="Application.Gui" />
+      <item itemvalue="Application.Gui (1)" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Gui (1)" />
         <item itemvalue="Application.Gui" />
         <item itemvalue="Application.MainScreen" />
         <item itemvalue="Application.Game" />
         <item itemvalue="Application.Main" />
-        <item itemvalue="Application.MainControl" />
       </list>
     </recent_temporary>
   </component>
@@ -398,410 +186,47 @@
     <option name="localTasksCounter" value="3" />
     <servers />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23557048" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="Designer" order="3" />
-      <window_info id="UI Designer" order="4" />
-      <window_info id="Capture Tool" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="0" weight="0.3285968" />
-      <window_info anchor="bottom" id="Message" order="1" />
-      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.4986577" weight="0.20679887" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" sideWeight="0.49731544" visible="true" weight="0.24220963" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.28596804" />
-      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49798658" weight="0.43767706" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50201344" side_tool="true" weight="0.46033993" />
-      <window_info anchor="bottom" id="Version Control" order="10" sideWeight="0.4986577" weight="0.15014164" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Maven Projects" order="4" />
-      <window_info anchor="right" id="Maven" order="5" />
-      <window_info anchor="right" id="Theme Preview" order="6" />
-      <window_info anchor="right" id="Capture Analysis" order="7" />
-      <window_info anchor="right" id="Palette&#9;" order="8" />
-    </layout>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="For StaticObjects, now p1= upper left p2= upper right p3= bottom left et p4= bottom right (no matter what the order in which its read from the map file)" />
     <MESSAGE value="Fixed collision checking" />
     <option name="LAST_COMMIT_MESSAGE" value="Fixed collision checking" />
   </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/Interop/Percept/Smell/SmellPercept.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Interop/Percept/Sound/SoundPercept.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-16">
-          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Interop/Percept/Sound/SoundPercepts.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="10" column="19" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/samplemap.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="33" column="28" lean-forward="true" selection-start-line="33" selection-start-column="28" selection-end-line="33" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/SoundStorage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/PheromoneStorage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="83" column="20" selection-start-line="83" selection-start-column="20" selection-end-line="83" selection-end-column="20" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Sound.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-476">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2374" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/objects/Door.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/agent/container/IntruderContainer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/AgentsFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/area/ModifyViewEffect.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/ViewRange.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/parser/Parser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3026">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/objects/MapObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-180">
-          <caret line="13" column="38" lean-forward="true" selection-start-line="13" selection-start-column="38" selection-end-line="13" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/GUI2.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/dynamic/Pheromone.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="19" column="77" lean-forward="true" selection-start-line="19" selection-start-column="77" selection-end-line="19" selection-end-column="77" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MapVisualization.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="571">
-          <caret line="60" selection-start-line="2" selection-end-line="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/tree/PointContainer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/dynamic/DynamicObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/StaticObjects/Wall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MapReader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="9" selection-start-line="9" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/StaticObjects/StaticObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="12" column="3" lean-forward="true" selection-start-line="12" selection-start-column="3" selection-end-line="12" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Storage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-119">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/GameGUI.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/GameSettings.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/VisualObject.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/VisualAgent.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/Callback.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="17" selection-start-line="2" selection-start-column="17" selection-end-line="2" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Map.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-17">
-          <caret line="13" column="26" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/GameMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
-          <folding>
-            <element signature="e#2159#2160#0" expanded="true" />
-            <element signature="e#2194#2195#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/GuiSettings.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="478">
-          <caret line="47" column="76" selection-start-line="47" selection-start-column="76" selection-end-line="47" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/GraphicElement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Pheromone.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="46" column="63" selection-start-line="46" selection-start-column="41" selection-end-line="46" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/VisualAgent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/MapVisualization.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/VisualMap.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/MapReader.java" />
-    <entry file="jar://C:/Program Files/Java/jdk-10.0.2/lib/src.zip!/javafx.graphics/javafx/application/Application.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="350" column="25" selection-start-line="350" selection-start-column="25" selection-end-line="350" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/VisualObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainControl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#61516#61517#0" expanded="true" />
-            <element signature="e#61552#61553#0" expanded="true" />
-            <element signature="e#61605#61606#0" expanded="true" />
-            <element signature="e#61639#61640#0" expanded="true" />
-            <element signature="e#61974#61975#0" expanded="true" />
-            <element signature="e#62039#62040#0" expanded="true" />
-            <element signature="e#62938#62939#0" expanded="true" />
-            <element signature="e#62965#62966#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/map/objects/StaticObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/Game.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="99" selection-start-line="99" selection-end-line="99" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/MainController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="46" selection-start-line="46" selection-end-line="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/Game.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-374">
-          <caret line="25" column="17" selection-start-line="25" selection-start-column="17" selection-end-line="25" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group3/MainScreen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="84" column="69" lean-forward="true" selection-start-line="84" selection-start-column="31" selection-end-line="84" selection-end-column="69" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/MainScene.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2856">
-          <caret lean-forward="true" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/MainSceneTry.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="863">
-          <caret line="148" column="44" lean-forward="true" selection-start-line="148" selection-start-column="44" selection-end-line="148" selection-end-column="44" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2548#2549#0" expanded="true" />
-            <element signature="e#2580#2581#0" expanded="true" />
-            <element signature="e#15340#15341#0" expanded="true" />
-            <element signature="e#15373#15374#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Group9/gui2/Gui.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="102" column="74" selection-start-line="102" selection-start-column="74" selection-end-line="102" selection-end-column="74" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1226#1227#0" expanded="true" />
-            <element signature="e#1253#1254#0" expanded="true" />
-            <element signature="e#2776#2777#0" expanded="true" />
-            <element signature="e#2877#2878#0" expanded="true" />
-            <element signature="e#3060#3061#0" expanded="true" />
-            <element signature="e#3157#3158#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+  <component name="WindowStateProjectService">
+    <state x="421" y="96" key="FileChooserDialogImpl" timestamp="1589542988799">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="421" y="96" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1589542988799" />
+    <state width="1237" height="38" key="GridCell.Tab.0.bottom" timestamp="1589632561836">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="38" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1589632561836" />
+    <state width="1237" height="38" key="GridCell.Tab.0.center" timestamp="1589632561835">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="38" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1589632561835" />
+    <state width="1237" height="38" key="GridCell.Tab.0.left" timestamp="1589632561835">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="38" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1589632561835" />
+    <state width="1237" height="38" key="GridCell.Tab.0.right" timestamp="1589632561835">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state width="1237" height="38" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1589632561835" />
+    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1589614756685">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.680@0.0.1280.680" timestamp="1589614756685" />
   </component>
   <component name="masterDetails">
     <states>

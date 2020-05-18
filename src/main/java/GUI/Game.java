@@ -102,7 +102,7 @@ public class Game implements Runnable {
 
             Spawn.Guard guardSpawn = gameMap.getObjects(Spawn.Guard.class).get(0);
             List<PointContainer.Circle> usedSpawns = new ArrayList<>();
-            agentFactory.createGuards(settings.getNumGuards()).forEach(a -> {
+            agentFactory.createGuards(settings.getNumGuards()).forEach(a -> { //new Vector2(10,10);
                 Vector2 spawn = generateRandomSpawnLocation(guardSpawn.getArea().getAsPolygon(),
                         new PointContainer.Circle(new Vector2.Origin(), AgentContainer._RADIUS), solids, usedSpawns);
                 GuardContainer guardContainer = new GuardContainer(a, spawn, new Vector2(0, 1).normalise(),
@@ -115,7 +115,7 @@ public class Game implements Runnable {
         {
             Spawn.Intruder intruderSpawn = gameMap.getObjects(Spawn.Intruder.class).get(0);
             List<PointContainer.Circle> usedSpawns = new ArrayList<>();
-            agentFactory.createIntruders(settings.getNumIntruders()).forEach(e -> {
+            agentFactory.createIntruders(settings.getNumIntruders()).forEach(e -> { //new Vector2(10,11);
                 Vector2 spawn = generateRandomSpawnLocation(intruderSpawn.getArea().getAsPolygon(),
                         new PointContainer.Circle(new Vector2.Origin(), AgentContainer._RADIUS), solids, usedSpawns);
                 IntruderContainer intruderContainer = new IntruderContainer(e, spawn, new Vector2(0, 1).normalise(),
