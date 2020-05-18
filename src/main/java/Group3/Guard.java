@@ -36,9 +36,30 @@ public class Guard implements Interop.Agent.Guard {
     /* When it is chased, keep track of this to decide on an action */
     private int lastSeenIntruder = Integer.MAX_VALUE;
     private boolean chasing = false;
+    boolean chasing2 = false;
+    boolean chasing3 = false;
 
     private Point explorationTarget = null;
     private int rotateInPlace = 8;
+
+    public double getCurrentmaxDist(GuardPercepts percepts){
+        // First, find the maximum distance in which the guard can currently move.
+        double currentSlowDownModifier = 1;
+
+        if (percepts.getAreaPercepts().isInDoor()){
+            currentSlowDownModifier = percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInDoor();
+        }
+        else if (percepts.getAreaPercepts().isInSentryTower()){
+            currentSlowDownModifier = percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInSentryTower();
+        }
+        else if (percepts.getAreaPercepts().isInWindow()){
+            currentSlowDownModifier = percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInWindow();
+        }
+
+        // The maximum distance a guard can currently be moves is found:
+        double maximumDistance = percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue() * currentSlowDownModifier;
+        return maximumDistance;
+    }
 
     //General structure guard - finds action
     public GuardAction getAction(GuardPercepts percepts) {
@@ -48,19 +69,10 @@ public class Guard implements Interop.Agent.Guard {
             currentAngleInRads = 0;
         }
 
-        // First, find the maximum distance in which the guard can currently move.
-        double currentSlowDownModifier = 1;
 
-        if (percepts.getAreaPercepts().isInDoor()) {
-            currentSlowDownModifier = percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInDoor();
-        } else if (percepts.getAreaPercepts().isInSentryTower()) {
-            currentSlowDownModifier = percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInSentryTower();
-        } else if (percepts.getAreaPercepts().isInWindow()) {
-            currentSlowDownModifier = percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInWindow();
-        }
 
         // The maximum distance a guard can currently be moves is found:
-        double maximumDistance = percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue() * currentSlowDownModifier;
+        double maximumDistance = this.getCurrentmaxDist(percepts);
 
         //--------------------------------------------------------------------------------------------------------------
         // Update the map, is the action was performed
@@ -253,17 +265,28 @@ public class Guard implements Interop.Agent.Guard {
     }
 
 	public GuardAction chaseIntruder(ObjectPercept intruder, GuardPercepts percepts){
-		GuardAction action = null;
-		if(!chasing){
-			Point a = intruder.getPoint();
-			Direction b = a.getClockDirection();
-			action = new Rotate(Angle.fromRadians(b.getRadians()));
-			chasing = true;
-		}else{
-			double maxDist = this.getCurrentmaxDist(percepts);
-			action = new Move(new Distance(maxDist));
-			chasing = false;
-		}
+        GuardAction action = null;
+        if(!chasing){
+            Point a = intruder.getPoint();
+            Direction b = a.getClockDirection();
+            action = new Rotate(Angle.fromRadians(b.getRadians()));
+            chasing = true;
+            chasing2 = true;
+        }else if(chasing2){
+            double maxDist = this.getCurrentmaxDist(percepts);
+            action = new Move(new Distance(maxDist/2));
+            chasing2 = false;
+            chasing3 = true;
+        }else if(chasing3) {
+            Point a = intruder.getPoint();
+            Direction b = a.getClockDirection();
+            action = new Rotate(Angle.fromRadians(b.getRadians()));
+        }else {
+            double maxDist = this.getCurrentmaxDist(percepts);
+            action = new Move(new Distance(maxDist));
+            chasing3 = false;
+            chasing = false;
+        }
 
         return action;
     }

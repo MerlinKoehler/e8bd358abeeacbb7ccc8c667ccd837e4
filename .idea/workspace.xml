@@ -21,19 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="869c7e1c-225c-4856-b8fb-aaf522d3f77f" name="Default Changelist" comment="Fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/main/Group9/map/maps/test_2.map" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/main/Group9/map/maps/test_2.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/main/META-INF/main.kotlin_module" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/GUI/map/maps/test_2.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/GUI/map/maps/test_2.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Guard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Guard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Guard2/Guard2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Guard2/Guard2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Dummy_Intruder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Dummy_Intruder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Intruder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Intruder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/MainControl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/VisualAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/VisualAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group9/gui2/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group9/gui2/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group9/map/maps/test_2.map" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group9/map/maps/test_2.map" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +40,8 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="MIXED" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="ProjectId" id="1buTUgeX2UvXoxszUntTxM61YLt" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -196,6 +186,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="For StaticObjects, now p1= upper left p2= upper right p3= bottom left et p4= bottom right (no matter what the order in which its read from the map file)" />
@@ -223,10 +214,10 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state width="1237" height="38" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1589632561835" />
-    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1589614756685">
+    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1589832246139">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.680@0.0.1280.680" timestamp="1589614756685" />
+    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.680@0.0.1280.680" timestamp="1589832246139" />
   </component>
   <component name="masterDetails">
     <states>
