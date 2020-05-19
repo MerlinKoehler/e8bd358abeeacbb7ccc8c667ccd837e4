@@ -86,9 +86,8 @@ public class Guard implements Interop.Agent.Guard {
         if (lastAction != null) {
             //System.out.println(lastAction.getClass());
         }
-        if (percepts.wasLastActionExecuted()) {
-            updateInternalMap(percepts); // will also update the agent's current  state
-        }
+        // Automatically update your map every time
+        updateInternalMap(percepts); // will also update the agent's current  state
 
         // First, check whether a intruder is seen at the moment.
         Object[] vision = percepts.getVision().getObjects().getAll().toArray();
@@ -165,7 +164,6 @@ public class Guard implements Interop.Agent.Guard {
                 else{
                     lastAction = new Rotate(Angle.fromRadians(needToMove));
                 }
-                return lastAction;
             }
             else{
                 // if it bumps into something
@@ -173,13 +171,12 @@ public class Guard implements Interop.Agent.Guard {
                     how_long_exploring = 0;
                     randomly_exploring = true;
                     lastAction = new Rotate(Angle.fromDegrees(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getDegrees() * random.nextDouble()));
-                    return lastAction;
                 }
                 else{
                     lastAction = new Move(new Distance(maximumDistance));
-                    return lastAction;
                 }
             }
+            return lastAction;
         }
 
 
@@ -270,17 +267,6 @@ public class Guard implements Interop.Agent.Guard {
 
     }
 
-    // Use the map and a general exploring procedure to explore as much as possible.
-    // Try to discover the intruder.
-    private GuardAction explore(GuardPercepts percepts) {
-        /* Doesn't work for some reason, action returned by this
-        function is not executed (literally nothing happens) */
-
-        double maximumDistance = percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue() *
-                percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue();
-        return new Move(new Distance(maximumDistance));
-    }
-
 
     // Update the map according to the action that was performed.
     // Also update the state of the agent.
@@ -324,6 +310,7 @@ public class Guard implements Interop.Agent.Guard {
         }
     }
 
+    //Updates the sight of a map (creates grids), given the points of the vision
     public void updateMapSight(GuardPercepts percepts) {
         // The same as before, but use the special properties. (Such as 'wall' and 'teleport')
 
@@ -344,14 +331,7 @@ public class Guard implements Interop.Agent.Guard {
         }
     }
 
-
-    public GuardAction goTowardsYell(SoundPercept goTo) {
-        GuardAction action = null;
-
-
-        return action;
-    }
-
+    // Method that returns actions which make the guard agent chase the intruder agent
 	public GuardAction chaseIntruder(ObjectPercept intruder, GuardPercepts percepts){
         GuardAction action = null;
         if(!chasing){

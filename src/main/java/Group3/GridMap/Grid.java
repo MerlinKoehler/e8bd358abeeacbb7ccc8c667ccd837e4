@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 /*
     Points are all based on the agent.
+    One single grid here means a square.
  */
 
 public class Grid {
@@ -21,11 +22,10 @@ public class Grid {
     //keeps track of when the last time was when it was seen
     private int lastSeen;
 
-    // Will contain maximally 4 tiles (surrounding eight directions).
-    //
+    // Will contain maximally 8 tiles (surrounding eight directions).
     private Grid[] adjacentTo = new Grid[8];
 
-    // make keys in case it's a teleport (0 means it is not a teleport or that it hasn't found it yet)
+    // Make keys in case it's a teleport (0 means it is not a teleport or that it hasn't found it yet)
     private int teleport_to = 0;
 
     public Grid(Point bottomRight, Point topRight, Point bottomLeft, Point topLeft, double size, int type) {
@@ -35,6 +35,7 @@ public class Grid {
         this.topRight = topRight;
         this.bottomLeft = bottomLeft;
 
+        // Size is set to size, lastSeen is 0 at the start, as you see it now.
         this.size = size;
         this.lastSeen = 0;
 
@@ -54,6 +55,7 @@ public class Grid {
         return lastSeen;
     }
 
+    // Check whether a point is inside of this tile
     public boolean isInsideThisTile(Point point){
         if ((point.getX() <= this.bottomRight.getX()) && (point.getX() >= this.bottomLeft.getX()) && (point.getY() >= this.bottomLeft.getY()) && (point.getY() <= this.topLeft.getY())){
             return true;
@@ -80,6 +82,7 @@ public class Grid {
 
     // For the adjacent methods.
     // 0 = top, 1 = top right, 2 = right, 3 = bottom right, 4= bottom, 5 = bottom left, 6 = left, 7 = top left
+    // Check whether one tile is adjacent to another, and set it in its list.
     public void addAdjacent(Grid grid){
         // top
         if (grid.getBottomLeft().getX() == this.topLeft.getX() && grid.getBottomLeft().getY() == this.topLeft.getY() && grid.getBottomRight().getX() == this.topRight.getX() && grid.getBottomRight().getY() == this.topRight.getY() ){
@@ -123,6 +126,7 @@ public class Grid {
         }
     }
 
+    // Get the adjacency list
     public Grid[] getAdjacentTo() {
         return adjacentTo;
     }

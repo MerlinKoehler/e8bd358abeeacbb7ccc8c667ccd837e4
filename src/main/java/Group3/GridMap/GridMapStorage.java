@@ -7,15 +7,18 @@ import Interop.Geometry.*;
 import java.util.ArrayList;
 
 // This is a discrete representation of this map.
+// Grid get added to it when they are currently not in the grid map and the intruder passes through it, or sees it.
+// Some of these grids might be partially out of the map, if the gridsize is big
 
 public class GridMapStorage {
 
+    //Set the arraylist, containing separate grids, the size of one, and which one you're currently in
     private ArrayList<Grid> grid;
     private double size;
     private Grid current; // which box you're in
     // Again, create grids with: bottom right, top right, bottom left, top right
 
-    // normally, without teleporting
+    // Normally, without teleporting, so at the start of the program
     public GridMapStorage(double size){
         grid = new ArrayList<Grid>();
         int type = 1; //normally
@@ -29,7 +32,7 @@ public class GridMapStorage {
         grid.add(tile);
     }
 
-    //if you just teleported
+    //If you just teleported, create a new one
     public GridMapStorage(double size, int teleportNr){
         grid = new ArrayList<Grid>();
         int type = 3;
@@ -44,6 +47,7 @@ public class GridMapStorage {
         grid.add(tile);
     }
 
+    // Finds the grid the agent is currently in
     public Grid findCurrentTile(Point current){
         for (int i = 0; i < grid.size(); i++){
             if (grid.get(i).isInsideThisTile(current)){
@@ -54,6 +58,7 @@ public class GridMapStorage {
     }
 
     // Automatically updates the Grid.
+    // Between two points, adds every grid
     public void updateGrid(Point lastPosition, Point newPosition, int type) { // type will be of the last tile
         // create grids for every place we walk through (adjacent to the ones which already exist)
         current = findCurrentTile(lastPosition); //should already be in there
@@ -90,6 +95,7 @@ public class GridMapStorage {
 
 
             // Then, set it in the right position.
+            // Also, at the end of this (so eg when fov is used), set whether it's a wall or teleportation.
             if (scalingFactor > integerFactor) {
                 currentX = currentX + (newPosition.getX() - lastPosition.getX()) / scalingFactor;
                 currentY = currentY + (newPosition.getY() - lastPosition.getY()) / scalingFactor;
@@ -114,7 +120,9 @@ public class GridMapStorage {
         }
     }
 
-    // need to double check!!!!!
+    // Add a tile
+    // This implementation is based on the old grid, and the point it is in now
+    // Checks for the direction compared to the old grid
     private Grid addTile(double currentX, double currentY, Grid current, int type) {
         Grid temp = null;
 
