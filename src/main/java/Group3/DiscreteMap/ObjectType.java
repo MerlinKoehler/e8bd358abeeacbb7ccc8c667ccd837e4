@@ -11,5 +11,6 @@ public enum ObjectType {
 	  SpawnAreaIntruders,
 	  None,
 	  Unknown,
-	  Danger
+	  Danger,
+	  Intruder
 }

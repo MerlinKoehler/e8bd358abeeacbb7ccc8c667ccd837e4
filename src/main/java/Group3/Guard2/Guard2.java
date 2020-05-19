@@ -3,6 +3,9 @@ package Group3.Guard2;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
+
+import com.sun.org.apache.bcel.internal.generic.INVOKESTATIC;
+
 import java.util.List;
 import java.util.Queue;
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ public class Guard2 implements Interop.Agent.Guard {
 	Angle angle;
 	Queue<Action> actionList = new LinkedList<Action>();
 	Queue<Double> distanceCounter = new LinkedList<Double>();
-	boolean foundTarget = false;
+	boolean foundTarget = true;
 	
 	@Override
 	public GuardAction getAction(GuardPercepts percepts) {
@@ -147,10 +150,6 @@ public class Guard2 implements Interop.Agent.Guard {
 			case ShadedArea:
 				inVertice.setType(ObjectType.ShadedArea);
 				break;
-			case TargetArea:
-				inVertice.setType(ObjectType.TargetArea);
-				foundTarget = true;
-				break;
 			case Teleport:
 				inVertice.setType(ObjectType.Teleport);
 				break;
@@ -159,6 +158,11 @@ public class Guard2 implements Interop.Agent.Guard {
 				break;
 			case Window:
 				inVertice.setType(ObjectType.Window);
+				break;
+			case Intruder:
+				map.removeIntruder();
+				inVertice.setType(ObjectType.Intruder);
+				foundTarget = true;
 				break;
 			default:
 				inVertice.setType(ObjectType.Unknown);
@@ -170,7 +174,10 @@ public class Guard2 implements Interop.Agent.Guard {
 	private void getNextAction(GuardPercepts percepts) {
 		if(foundTarget) {
 			map.unMark();
-			Stack<Vertice> target = BFS.findPath(currentPosition, ObjectType.TargetArea);
+			Stack<Vertice> target = BFS.findPath(currentPosition, ObjectType.Intruder);
+			map.removeIntruder();
+			foundTarget = false;
+			map.reset();
 			if(target != null) {
 				generateActionList(target);
 				return;

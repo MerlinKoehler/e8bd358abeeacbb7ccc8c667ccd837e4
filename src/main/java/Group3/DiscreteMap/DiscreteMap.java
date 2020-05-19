@@ -197,4 +197,12 @@ public class DiscreteMap {
 			}
 		}
 	}
+	
+	public void removeIntruder() {
+		for(String key: vertices.keySet()) {
+			if(vertices.get(key).getType() == ObjectType.Intruder) {
+				vertices.get(key).setType(ObjectType.None);
+			}
+		}
+	}
 }

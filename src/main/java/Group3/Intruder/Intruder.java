@@ -71,7 +71,7 @@ public class Intruder implements Interop.Agent.Intruder {
 			updateState();
 		}
 		else {
-			System.out.println("Illegal Move!!!");
+			//System.out.println("Illegal Move!!!");
 			actionList = new LinkedList<Action>();
 			actionList.offer(Action.Left);
 			actionList.offer(Action.Move);
@@ -101,13 +101,13 @@ public class Intruder implements Interop.Agent.Intruder {
 	private IntruderAction returnAction(Action action, IntruderPercepts percepts) {
 		switch(action) {
 		case Left:
-			System.out.println("Left");
+			//System.out.println("Left");
 			return turnLeft(); 
 		case Right:
-			System.out.println("Right");
+			//System.out.println("Right");
 			return turnRight();
 		case Move:
-			System.out.println("Move");
+			//System.out.println("Move");
 			double maxMoveDistance = percepts.getScenarioIntruderPercepts().getMaxMoveDistanceIntruder().getValue();
 			if(percepts.getAreaPercepts().isInSentryTower()) {
 				maxMoveDistance = maxMoveDistance * percepts.getScenarioIntruderPercepts().getScenarioPercepts().getSlowDownModifiers().getInSentryTower();
