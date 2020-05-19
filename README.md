@@ -18,11 +18,8 @@ What things you need to install the software and how to install them
 
 Open a command line in the root of the repository and run:
 ```
-cp samplemap.txt src/main/java
-cd src/main/java/
-javac -cp . Group3/IntersectionPoint.java
-javac -cp . Group3/MainScreen.java
-java -cp . Group3.MainScreen
+javac -cp src/main/java src/main/java/GUI/gui2/Gui.java
+java -cp src/main/java GUI.gui2.Gui
 ```
 
 ## Built With
@@ -38,3 +35,5 @@ java -cp . Group3.MainScreen
 * **Rita Naryzhnyaya**
 * **Victor Breda**
 
+## Credits
+Special thanks to group 9 for the game controller and group 11 for the amazing GUI!
