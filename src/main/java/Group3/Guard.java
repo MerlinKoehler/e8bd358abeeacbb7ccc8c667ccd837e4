@@ -39,6 +39,13 @@ public class Guard implements Interop.Agent.Guard {
     boolean chasing2 = false;
     boolean chasing3 = false;
 
+    /* For the exploration */
+    private boolean randomly_exploring = true;
+    // If not, then retrace a bit in the map
+    private int how_long_exploring = 0;
+    private final int maxExplorationTime = 1000;
+    private double targetDirection = -1;
+
     private Point explorationTarget = null;
     private int rotateInPlace = 8;
 
@@ -67,9 +74,9 @@ public class Guard implements Interop.Agent.Guard {
             currentX = 0;
             currentY = 0;
             currentAngleInRads = 0;
+            how_long_exploring = 0;
+            randomly_exploring = true;
         }
-
-
 
         // The maximum distance a guard can currently be moves is found:
         double maximumDistance = this.getCurrentmaxDist(percepts);
@@ -77,35 +84,110 @@ public class Guard implements Interop.Agent.Guard {
         //--------------------------------------------------------------------------------------------------------------
         // Update the map, is the action was performed
         if (lastAction != null) {
-            System.out.println(lastAction.getClass());
+            //System.out.println(lastAction.getClass());
         }
         if (percepts.wasLastActionExecuted()) {
             updateInternalMap(percepts); // will also update the agent's current  state
         }
 
-		// First, check whether a intruder is seen at the moment.
-		Object[] vision = percepts.getVision().getObjects().getAll().toArray();
-		for (int i = 0; i < vision.length; i++) {
-			if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Intruder) {
-				lastAction = chaseIntruder((ObjectPercept)vision[i], percepts);
-				//return lastAction;
-			}
-		}
+        // First, check whether a intruder is seen at the moment.
+        Object[] vision = percepts.getVision().getObjects().getAll().toArray();
+        for (int i = 0; i < vision.length; i++) {
+            if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Intruder) {
+                lastAction = chaseIntruder((ObjectPercept) vision[i], percepts);
+                return lastAction;
+            }
+        }
 
         //for (Grid grid : currentMap.getGrid()) {
         //    System.out.println(grid);
         //}
         // Lower priority than chasing a guard.
-        /*
-        if (!percepts.wasLastActionExecuted() || currentMap.getGrid().isEmpty()) {
-            // Rotate randomly in case the exploration is not working (IDK if we'll need it)
-            lastAction = new Rotate(Angle.fromDegrees(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getDegrees() * random.nextDouble()));
-            //return lastAction;
+
+        if (how_long_exploring <= maxExplorationTime) {
+            how_long_exploring++;
+            //System.out.println(how_long_exploring);
+            //random exploration at first
+            if (!percepts.wasLastActionExecuted() || currentMap.getGrid().isEmpty()) {
+                // Rotate randomly in case the exploration is not working (IDK if we'll need it)
+                lastAction = new Rotate(Angle.fromDegrees(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getDegrees() * random.nextDouble()));
+                return lastAction;
+            }
+            else if (percepts.wasLastActionExecuted()) {
+                lastAction = new Move(new Distance(maximumDistance));
+                return lastAction;
+            }
         }
-        */
+        else if (how_long_exploring > maxExplorationTime){
+            System.out.println("retrace");
+            //after a certain time, go back to the place which hasn't been seen for the longest of time
+            if (targetDirection != -1){
+                int max = -1;
+                Grid target = null;
+                for(int i = 0; i < currentMap.getGrid().size(); i++){
+                    max = Math.max(currentMap.getGrid().get(i).getLastSeen(), max);
+                    if (max == currentMap.getGrid().get(i).getLastSeen()) {
+                        target = currentMap.getGrid().get(i);
+                    }
+                }
+                double xcoor = target.getTopRight().getX() - target.getSize();
+                double ycoor = target.getTopRight().getY() - target.getSize();
+
+                //Point coordinate_to_go_to = new Point(xcoor, ycoor);
+                // Now, depending on the angle and the coordinated, set the direction
+                double clockTo;
+                double clockAway;
+
+                if (xcoor == 0 && ycoor == 0) {
+                    clockTo = 0;
+                }
+                else{
+                    clockTo = Interop.Utils.Utils.clockAngle(xcoor, ycoor);
+                }
+                if (currentX == 0 && currentY == 0){
+                    clockAway = 0;
+                }
+                else {
+                    clockAway = Interop.Utils.Utils.clockAngle(currentX, currentY);
+                }
+                targetDirection = currentAngleInRads + (clockTo - clockAway);
+                System.out.println(targetDirection);
+            }
+
+            if (currentAngleInRads != targetDirection){
+                double needToMove = targetDirection - currentAngleInRads;
+                if (needToMove > percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()){
+                    lastAction = new Rotate(Angle.fromRadians(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
+                }
+                else if (needToMove < - percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()){
+                    lastAction = new Rotate(Angle.fromRadians(-percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
+                }
+                else{
+                    lastAction = new Rotate(Angle.fromRadians(needToMove));
+                }
+                return lastAction;
+            }
+            else{
+                // if it bumps into something
+                if(!percepts.wasLastActionExecuted()){
+                    how_long_exploring = 0;
+                    randomly_exploring = true;
+                    lastAction = new Rotate(Angle.fromDegrees(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getDegrees() * random.nextDouble()));
+                    return lastAction;
+                }
+                else{
+                    lastAction = new Move(new Distance(maximumDistance));
+                    return lastAction;
+                }
+            }
+        }
 
 
+        /*
+        Other way of exploration - currently not used.
+         */
         /* EXPLORATION */
+
         if (false)
             return new NoAction();
         if (rotateInPlace > 0) {
@@ -115,9 +197,9 @@ public class Guard implements Interop.Agent.Guard {
         }
 
         if (explorationTarget != null) {
-            System.out.println("DISTANCE: " + new Distance(new Point(currentX, currentY), explorationTarget).getValue());
-            System.out.println("TILE LOCATION: " + explorationTarget.getX() + " : " + explorationTarget.getY());
-            System.out.println("AGENT LOCATION: " + currentX + " : " + currentY);
+            //System.out.println("DISTANCE: " + new Distance(new Point(currentX, currentY), explorationTarget).getValue());
+            //System.out.println("TILE LOCATION: " + explorationTarget.getX() + " : " + explorationTarget.getY());
+            //System.out.println("AGENT LOCATION: " + currentX + " : " + currentY);
             if (new Distance(new Point(currentX, currentY), explorationTarget).getValue() < 1) {
                 explorationTarget = null; // target reached
                 rotateInPlace = 8;
@@ -163,6 +245,7 @@ public class Guard implements Interop.Agent.Guard {
         System.out.println(notSeenFor);
 
         /* Determine the nearest corner point belonging the grid tile */
+
         Distance distanceToGridCornerPoint = new Distance(Integer.MAX_VALUE);
         Point[] cornerPoints = {
                 g.getBottomLeft(),
@@ -184,6 +267,7 @@ public class Guard implements Interop.Agent.Guard {
         lastAction = new Rotate(rotateBy);
         //lastAction = new NoAction();
         return lastAction;
+
     }
 
     // Use the map and a general exploring procedure to explore as much as possible.
@@ -198,12 +282,6 @@ public class Guard implements Interop.Agent.Guard {
     }
 
 
-
-
-
-
-
-
     // Update the map according to the action that was performed.
     // Also update the state of the agent.
     // Codes: 1 = possible to walk through, 2 = wall, 3 = teleport
@@ -211,18 +289,23 @@ public class Guard implements Interop.Agent.Guard {
         // Add '1' to the lastSeen variable. (The ones we saw will be set to 0 anyways.)
         currentMap.updateSeen();
 
-
         // Create a new map when it has just teleported.
         if (percepts.getAreaPercepts().isJustTeleported()) {
             currentMap = new GridMapStorage(gridSize, currentMapCount);
             currentMapCount = currentMapCount + 1;
             updateMapSight(percepts);
+            //System.out.println("teleported");
         } else if (lastAction instanceof Interop.Action.Rotate) {
             currentAngleInRads = currentAngleInRads + ((Rotate) lastAction).getAngle().getRadians();
+            if (currentAngleInRads > Math.PI *2){
+                currentAngleInRads = currentAngleInRads % (2 * Math.PI);
+            }
             updateMapSight(percepts);
+            //System.out.println("rotate");
         }
         // Can check the places in front of it.
         else if (lastAction instanceof Interop.Action.Move) {
+            //System.out.println("move");
             // First the starting place.
             double oldX = currentX;
             double oldY = currentY;
@@ -231,7 +314,12 @@ public class Guard implements Interop.Agent.Guard {
             currentX = oldX + Math.cos(currentAngleInRads) * ((Move) lastAction).getDistance().getValue();
             currentY = oldY + Math.sin(currentAngleInRads) * ((Move) lastAction).getDistance().getValue();
 
+            //System.out.println(" Current x is " + currentX);
+            //System.out.println(" Current y is " + currentY);
+
             currentMap.updateGrid(new Point(oldX, oldY), new Point(currentX, currentY), 1);
+            //System.out.println(currentMap.findCurrentTile(new Point(currentX,currentY)).getBottomLeft());
+            //System.out.println(currentMap.findCurrentTile(new Point(currentX,currentY)).getTopRight());
             updateMapSight(percepts);
         }
     }

@@ -22,7 +22,7 @@ public class GridMapStorage {
         this.size = size;
 
         Grid tile = new Grid(new Point((this.size/2.0) ,-(this.size/2.0)), new Point((this.size/2.0), (this.size/2.0)), new Point((-this.size/2.0), -(this.size/2.0)), new Point((-this.size/2.0), (this.size/2.0)), size, type);
-        System.out.println("initial tile " + tile.getBottomLeft() + " " + tile.getTopRight());
+        //System.out.println("initial tile " + tile.getBottomLeft() + " " + tile.getTopRight());
 
         current = tile;
         // The tile where the agent starts.
@@ -37,7 +37,7 @@ public class GridMapStorage {
 
         Grid tile = new Grid(new Point((this.size/2) ,-(this.size/2)), new Point((this.size/2), (this.size/2)), new Point((-this.size/2), -(this.size/2)), new Point((-this.size/2), (this.size/2)), size, type);
         tile.setTeleport_to(teleportNr);
-        System.out.println("teleport tile " + tile.getBottomLeft() + " " + tile.getTopRight());
+        //System.out.println("teleport tile " + tile.getBottomLeft() + " " + tile.getTopRight());
 
         current = tile;
         // The tile where the agent starts.
@@ -98,7 +98,7 @@ public class GridMapStorage {
                 if (temp == null) {
                     // here we can see, the type changes, according to what the last grid's type was supposed to be
                     temp = addTile(currentX, currentY, current, type);
-                    System.out.println("currentX: " + currentX + " " + " currentY: " + currentY);
+                    //System.out.println("currentX: " + currentX + " " + " currentY: " + currentY);
 
                     // Update adjacency list
                     for (int j = 0; j < this.getGrid().size(); j++) {
@@ -173,7 +173,7 @@ public class GridMapStorage {
         }
 
         // Add it to the grid
-        System.out.println("Added a grid. " + temp.getBottomLeft() + " " + temp.getTopRight());
+        //System.out.println("Added a grid. " + temp.getBottomLeft() + " " + temp.getTopRight());
         grid.add(temp);
         return temp;
     }

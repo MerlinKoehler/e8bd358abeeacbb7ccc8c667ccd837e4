@@ -172,4 +172,8 @@ public class Grid {
     public int getTeleport_to(){
         return teleport_to;
     }
+
+    public double getSize(){
+        return this.size;
+    }
 }
