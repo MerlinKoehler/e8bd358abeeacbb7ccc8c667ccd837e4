@@ -19,28 +19,21 @@ public class GridMapStorage {
     // Again, create grids with: bottom right, top right, bottom left, top right
 
     // Normally, without teleporting, so at the start of the program
-    public GridMapStorage(double size){
+    public GridMapStorage(double size, boolean teleported){
         grid = new ArrayList<Grid>();
-        int type = 1; //normally
+
+        int type;
+        if (!teleported){
+            type = 1; //normally
+        }
+        else{
+            type = 3;
+        }
+
         this.size = size;
 
         Grid tile = new Grid(new Point((this.size/2.0) ,-(this.size/2.0)), new Point((this.size/2.0), (this.size/2.0)), new Point((-this.size/2.0), -(this.size/2.0)), new Point((-this.size/2.0), (this.size/2.0)), size, type);
         //System.out.println("initial tile " + tile.getBottomLeft() + " " + tile.getTopRight());
-
-        current = tile;
-        // The tile where the agent starts.
-        grid.add(tile);
-    }
-
-    //If you just teleported, create a new one
-    public GridMapStorage(double size, int teleportNr){
-        grid = new ArrayList<Grid>();
-        int type = 3;
-        this.size = size;
-
-        Grid tile = new Grid(new Point((this.size/2) ,-(this.size/2)), new Point((this.size/2), (this.size/2)), new Point((-this.size/2), -(this.size/2)), new Point((-this.size/2), (this.size/2)), size, type);
-        tile.setTeleport_to(teleportNr);
-        //System.out.println("teleport tile " + tile.getBottomLeft() + " " + tile.getTopRight());
 
         current = tile;
         // The tile where the agent starts.

@@ -2,20 +2,22 @@ package Group3;
 
 import Group3.GridMap.Grid;
 import Group3.GridMap.GridMapStorage;
-import Interop.Action.GuardAction;
-import Interop.Action.Move;
-import Interop.Action.Rotate;
+import Interop.Action.*;
 import Interop.Geometry.Angle;
 import Interop.Geometry.Distance;
 import Interop.Geometry.Point;
 import Interop.Percept.GuardPercepts;
+import Interop.Percept.Smell.SmellPercept;
+import Interop.Percept.Smell.SmellPerceptType;
 import Interop.Percept.Sound.SoundPercept;
+import Interop.Percept.Sound.SoundPerceptType;
 import Interop.Percept.Vision.ObjectPercept;
 import Interop.Percept.Vision.ObjectPerceptType;
 
-import Interop.Action.NoAction;
 import Interop.Geometry.Direction;
 import Interop.Utils.Utils;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Guard implements Interop.Agent.Guard {
@@ -25,11 +27,12 @@ public class Guard implements Interop.Agent.Guard {
     private double currentX = 0;
     private double currentY = 0;
     private double currentAngleInRads = 0;
+    private int exploringType = 1; // 1 is advanced random, other is tile to tile
+    private boolean yellsAndPheromones = false;
 
     /* GRID MAP SETTINGS */
-    private double gridSize = 1;
-    private int currentMapCount = 1;
-    private GridMapStorage currentMap = new GridMapStorage(gridSize);
+    private double gridSize = 10;
+    private GridMapStorage currentMap = new GridMapStorage(gridSize, false);
 
     private Random random = new Random(); // used for random rotations and movement
 
@@ -41,25 +44,30 @@ public class Guard implements Interop.Agent.Guard {
 
     /* For the exploration */
     private boolean randomly_exploring = true;
-    // If not, then retrace a bit in the map
+
+    // If not, then retrace a bit in the map.
     private int how_long_exploring = 0;
-    private final int maxExplorationTime = 1000;
+    private final int maxExplorationTime = 100;
     private double targetDirection = -1;
 
+    // For chasing the yell.
+    private double directionChangeNeeded = 0;
+    private boolean chasingYell = false;
+
+    // Second searching method.
     private Point explorationTarget = null;
     private int rotateInPlace = 8;
 
-    public double getCurrentmaxDist(GuardPercepts percepts){
+    public double getCurrentmaxDist(GuardPercepts percepts) {
         // First, find the maximum distance in which the guard can currently move.
         double currentSlowDownModifier = 1;
 
-        if (percepts.getAreaPercepts().isInDoor()){
+        // Check for certain percepts whether they hold or not.
+        if (percepts.getAreaPercepts().isInDoor()) {
             currentSlowDownModifier = percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInDoor();
-        }
-        else if (percepts.getAreaPercepts().isInSentryTower()){
+        } else if (percepts.getAreaPercepts().isInSentryTower()) {
             currentSlowDownModifier = percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInSentryTower();
-        }
-        else if (percepts.getAreaPercepts().isInWindow()){
+        } else if (percepts.getAreaPercepts().isInWindow()) {
             currentSlowDownModifier = percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInWindow();
         }
 
@@ -70,10 +78,13 @@ public class Guard implements Interop.Agent.Guard {
 
     //General structure guard - finds action
     public GuardAction getAction(GuardPercepts percepts) {
+        // In case it has just teleported; reset the internal system.
         if (percepts.getAreaPercepts().isJustTeleported()) {
             currentX = 0;
             currentY = 0;
             currentAngleInRads = 0;
+
+            // Needed for advanced random exploration
             how_long_exploring = 0;
             randomly_exploring = true;
         }
@@ -82,103 +93,90 @@ public class Guard implements Interop.Agent.Guard {
         double maximumDistance = this.getCurrentmaxDist(percepts);
 
         //--------------------------------------------------------------------------------------------------------------
-        // Update the map, is the action was performed
-        if (lastAction != null) {
-            //System.out.println(lastAction.getClass());
+        // Update the map, if the action was performed
+        if (lastAction != null && percepts.wasLastActionExecuted()) {
+            updateInternalMap(percepts); // will also update the agent's current  state
         }
-        // Automatically update your map every time
-        updateInternalMap(percepts); // will also update the agent's current  state
 
-        // First, check whether a intruder is seen at the moment.
+        // First, check whether a intruder is seen at the moment - overrides other actions.
         Object[] vision = percepts.getVision().getObjects().getAll().toArray();
         for (int i = 0; i < vision.length; i++) {
             if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Intruder) {
+                // for testing
+                //if (true) {
+                //    lastAction = new Yell();
+                //   return lastAction;
+                //}
+                // end of testing statement
                 lastAction = chaseIntruder((ObjectPercept) vision[i], percepts);
                 return lastAction;
             }
+        }
+
+        /*
+        // If it is already chasing one of these.
+        if (chasingYell){
+            if (directionChangeNeeded > 0){
+                // rotate
+            }
+            else{
+
+            }
+        }*/
+
+        // Add some rules for yells and pheromones, and how they are handled.
+        if (yellsAndPheromones){
+            // Yells have the highest priority, these signify an agent has seen an intruder.
+            // Store the information of the yells, which can later be used to determine an action.
+            boolean yellFound = false;
+            ArrayList<SoundPercept> yells = new ArrayList<>();
+            Object[] sounds = percepts.getSounds().getAll().toArray();
+
+            // Finds and stored yells.
+            for (int i = 0; i < sounds.length; i++) {
+                if (((SoundPercept) sounds[i]).getType() == SoundPerceptType.Yell) {
+                    yellFound = true;
+                    yells.add((SoundPercept) sounds[i]);
+                }
+            }
+
+            // For pheromones, also store the information, in a similar way.
+            // Only two types of pheromones are used.
+            boolean pheroFound = false;
+            ArrayList<SmellPercept> phers1 = new ArrayList<>();
+            ArrayList<SmellPercept> phers2 = new ArrayList<>();
+
+            // Pheromones have the second priority Signify various things, depending on pheromone.
+            Object[] smells = percepts.getSmells().getAll().toArray();
+            for (int i = 0; i < smells.length; i++) {
+                pheroFound = true;
+                if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone1) {
+                    phers1.add((SmellPercept) smells[i]);
+                }
+                else if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone2){
+                    phers2.add((SmellPercept) smells[i]);
+                }
+            }
+
+            // In case any of these was found, use this in the choice of action.
+            if (yellFound || pheroFound){
+                if (yellFound){
+                    chasingYell = true;
+                }
+                lastAction = handleYellAndPheromones(yells, phers1, phers2);
+                return lastAction;
+            }
+        }
+
+        if (exploringType == 1) {
+            lastAction = advancedRandomExploring(percepts, maximumDistance);
+            return lastAction;
         }
 
         //for (Grid grid : currentMap.getGrid()) {
         //    System.out.println(grid);
         //}
         // Lower priority than chasing a guard.
-
-        if (how_long_exploring <= maxExplorationTime) {
-            how_long_exploring++;
-            //System.out.println(how_long_exploring);
-            //random exploration at first
-            if (!percepts.wasLastActionExecuted() || currentMap.getGrid().isEmpty()) {
-                // Rotate randomly in case the exploration is not working (IDK if we'll need it)
-                lastAction = new Rotate(Angle.fromDegrees(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getDegrees() * random.nextDouble()));
-                return lastAction;
-            }
-            else if (percepts.wasLastActionExecuted()) {
-                lastAction = new Move(new Distance(maximumDistance));
-                return lastAction;
-            }
-        }
-        else if (how_long_exploring > maxExplorationTime){
-            System.out.println("retrace");
-            //after a certain time, go back to the place which hasn't been seen for the longest of time
-            if (targetDirection != -1){
-                int max = -1;
-                Grid target = null;
-                for(int i = 0; i < currentMap.getGrid().size(); i++){
-                    max = Math.max(currentMap.getGrid().get(i).getLastSeen(), max);
-                    if (max == currentMap.getGrid().get(i).getLastSeen()) {
-                        target = currentMap.getGrid().get(i);
-                    }
-                }
-                double xcoor = target.getTopRight().getX() - target.getSize();
-                double ycoor = target.getTopRight().getY() - target.getSize();
-
-                //Point coordinate_to_go_to = new Point(xcoor, ycoor);
-                // Now, depending on the angle and the coordinated, set the direction
-                double clockTo;
-                double clockAway;
-
-                if (xcoor == 0 && ycoor == 0) {
-                    clockTo = 0;
-                }
-                else{
-                    clockTo = Interop.Utils.Utils.clockAngle(xcoor, ycoor);
-                }
-                if (currentX == 0 && currentY == 0){
-                    clockAway = 0;
-                }
-                else {
-                    clockAway = Interop.Utils.Utils.clockAngle(currentX, currentY);
-                }
-                targetDirection = currentAngleInRads + (clockTo - clockAway);
-                System.out.println(targetDirection);
-            }
-
-            if (currentAngleInRads != targetDirection){
-                double needToMove = targetDirection - currentAngleInRads;
-                if (needToMove > percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()){
-                    lastAction = new Rotate(Angle.fromRadians(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
-                }
-                else if (needToMove < - percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()){
-                    lastAction = new Rotate(Angle.fromRadians(-percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
-                }
-                else{
-                    lastAction = new Rotate(Angle.fromRadians(needToMove));
-                }
-            }
-            else{
-                // if it bumps into something
-                if(!percepts.wasLastActionExecuted()){
-                    how_long_exploring = 0;
-                    randomly_exploring = true;
-                    lastAction = new Rotate(Angle.fromDegrees(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getDegrees() * random.nextDouble()));
-                }
-                else{
-                    lastAction = new Move(new Distance(maximumDistance));
-                }
-            }
-            return lastAction;
-        }
-
 
         /*
         Other way of exploration - currently not used.
@@ -200,12 +198,11 @@ public class Guard implements Interop.Agent.Guard {
             if (new Distance(new Point(currentX, currentY), explorationTarget).getValue() < 1) {
                 explorationTarget = null; // target reached
                 rotateInPlace = 8;
-            }
-            else if (explorationTarget.getClockDirection().getDistance(
+            } else if (explorationTarget.getClockDirection().getDistance(
                     Angle.fromRadians(currentAngleInRads - Math.PI)).getDegrees() > 5) {
                 Angle rotateBy = Angle.fromRadians(
                         Utils.getSignedDistanceBetweenAngles(
-                        currentAngleInRads, explorationTarget.getClockDirection().getRadians() - Math.PI
+                                currentAngleInRads, explorationTarget.getClockDirection().getRadians() - Math.PI
                         )
                 );
                 if (Math.abs(rotateBy.getDegrees()) >
@@ -214,8 +211,7 @@ public class Guard implements Interop.Agent.Guard {
                 System.out.println("ROTATE BY: " + rotateBy.getDegrees());
                 lastAction = new Rotate(rotateBy);
                 return lastAction;
-            }
-            else {
+            } else {
                 Distance moveBy = new Distance(new Point(currentX, currentY), explorationTarget);
                 if (moveBy.getValue() > percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue())
                     moveBy = new Distance(percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue());
@@ -267,7 +263,6 @@ public class Guard implements Interop.Agent.Guard {
 
     }
 
-
     // Update the map according to the action that was performed.
     // Also update the state of the agent.
     // Codes: 1 = possible to walk through, 2 = wall, 3 = teleport
@@ -277,13 +272,15 @@ public class Guard implements Interop.Agent.Guard {
 
         // Create a new map when it has just teleported.
         if (percepts.getAreaPercepts().isJustTeleported()) {
-            currentMap = new GridMapStorage(gridSize, currentMapCount);
-            currentMapCount = currentMapCount + 1;
+            currentMap = new GridMapStorage(gridSize, true);
             updateMapSight(percepts);
             //System.out.println("teleported");
-        } else if (lastAction instanceof Interop.Action.Rotate) {
+        }
+
+        // ELse, if it simply rotated, update the map according to what the agent can see at the moment.
+        else if (lastAction instanceof Interop.Action.Rotate) {
             currentAngleInRads = currentAngleInRads + ((Rotate) lastAction).getAngle().getRadians();
-            if (currentAngleInRads > Math.PI *2){
+            if (currentAngleInRads > Math.PI * 2) {
                 currentAngleInRads = currentAngleInRads % (2 * Math.PI);
             }
             updateMapSight(percepts);
@@ -331,6 +328,103 @@ public class Guard implements Interop.Agent.Guard {
         }
     }
 
+    public GuardAction handleYellAndPheromones(ArrayList<SoundPercept> yells, ArrayList<SmellPercept> pher1, ArrayList<SmellPercept> pher2){
+            // For yell: go directly towards it- choose the first one to go to (as there is no further information about the yells.)
+
+            // I removed most of this code for now to not mess up our code
+            Direction goInto;
+            if (yells.size() != 0){
+                goInto = yells.get(0).getDirection();
+            }
+
+
+
+            // Pheromone 1: Signifies that a teleport is nearby-- be more cautious.
+
+            // Pheromone 2: Signifies that another guard is searching through this area- dropped every once in a while
+            // So-> turn around and go into another direction.
+
+            // Both pheromone 1 and yell-> walk certain distance to target direction-> stage some actions.
+
+            return null;
+    }
+
+    public GuardAction advancedRandomExploring(GuardPercepts percepts, double maximumDistance) {
+        if (how_long_exploring <= maxExplorationTime) {
+            targetDirection = -1;
+            how_long_exploring++;
+
+            //Random exploration at first - simply walking around
+            if (!percepts.wasLastActionExecuted() || currentMap.getGrid().isEmpty()) {
+                // Rotate randomly in case the exploration is not working (IDK if we'll need it)
+                lastAction = new Rotate(Angle.fromDegrees(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getDegrees() * random.nextDouble()));
+                return lastAction;
+            } else if (percepts.wasLastActionExecuted()) {
+                lastAction = new Move(new Distance(maximumDistance));
+                return lastAction;
+            }
+        }
+
+        // After a certain amount of time, walk in the direction of an area that hasn't been seen for the longest time.
+        else if (how_long_exploring > maxExplorationTime) {
+
+            // Firstly, find the direction to go in.
+            if (targetDirection == -1) {
+                int max = -1;
+                Grid target = null;
+
+                // Find the tile that has not been seen for the longest time.
+                for (int i = 0; i < currentMap.getGrid().size(); i++) {
+                    max = Math.max(currentMap.getGrid().get(i).getLastSeen(), max);
+
+                    // Set the target tile.
+                    if (max == currentMap.getGrid().get(i).getLastSeen()) {
+                        target = currentMap.getGrid().get(i);
+                    }
+                }
+
+                // Find the coordinates of the target tile's middle point.
+                double xcoor = target.getTopRight().getX() - target.getSize();
+                double ycoor = target.getTopRight().getY() - target.getSize();
+
+                // Find angles between vectors
+                double yvec = ycoor - currentY;
+                double xvec = xcoor - currentX;
+                double magnvec = Math.sqrt(xvec*xvec + yvec*yvec);
+
+                // Calculate the angle differences
+                if (currentAngleInRads <= Math.atan(yvec/xvec)){
+                    targetDirection =  currentAngleInRads + Math.acos((xvec * Math.cos(currentAngleInRads*1)+ yvec * Math.sin(currentAngleInRads*1))/magnvec);
+                }
+                else{
+                    targetDirection = currentAngleInRads - Math.acos((xvec * Math.cos(currentAngleInRads*1)+ yvec * Math.sin(currentAngleInRads*1))/magnvec);
+                }
+            }
+
+            if (currentAngleInRads != targetDirection) {
+                double needToMove = targetDirection - currentAngleInRads;
+                if (needToMove > percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()) {
+                    lastAction = new Rotate(Angle.fromRadians(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
+                } else if (needToMove < -percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()) {
+                    lastAction = new Rotate(Angle.fromRadians(-percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
+                } else {
+                    lastAction = new Rotate(Angle.fromRadians(needToMove));
+                }
+            } else {
+                // if it bumps into something
+                if (!percepts.wasLastActionExecuted()) {
+                    targetDirection = -1;
+                    how_long_exploring = 0;
+                    randomly_exploring = true;
+                    lastAction = new Rotate(Angle.fromDegrees(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getDegrees() * random.nextDouble()));
+                } else {
+                    lastAction = new Move(new Distance(maximumDistance));
+                }
+            }
+        }
+        return lastAction;
+    }
+
     // Method that returns actions which make the guard agent chase the intruder agent
 	public GuardAction chaseIntruder(ObjectPercept intruder, GuardPercepts percepts){
         GuardAction action = null;
@@ -355,7 +449,6 @@ public class Guard implements Interop.Agent.Guard {
             chasing3 = false;
             chasing = false;
         }
-
         return action;
     }
 }
