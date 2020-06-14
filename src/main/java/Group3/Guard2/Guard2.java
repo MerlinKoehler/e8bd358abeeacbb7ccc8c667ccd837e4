@@ -40,13 +40,17 @@ public class Guard2 implements Interop.Agent.Guard {
 	Angle angle;
 	Queue<Action> actionList = new LinkedList<Action>();
 	Queue<Double> distanceCounter = new LinkedList<Double>();
-	boolean foundTarget = true;
-	
+	boolean foundTarget = false;
+    GuardAction action = new NoAction();
+	double maxMoveDistance;
+    
+    
 	@Override
 	public GuardAction getAction(GuardPercepts percepts) {
 		// TODO Auto-generated method stub
 		
 		if(this.map == null || percepts.getAreaPercepts().isJustTeleported()) {
+			maxMoveDistance = percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue();
 			viewAngle = percepts.getVision().getFieldOfView().getViewAngle().getDegrees();
 			radius = Math.sqrt(Math.pow(percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue(),2)/2)/2;
 			angle = Angle.fromDegrees(0);
@@ -83,7 +87,12 @@ public class Guard2 implements Interop.Agent.Guard {
 		//System.out.println("");
 		//System.out.println(map.toString(currentPosition.getCoordinate()));
 		
-		if(actionList.size() == 0) {
+		
+		if(foundTarget) {
+			foundTarget = false;
+			return action;
+		}
+		else if(actionList.size() == 0) {
 			getNextAction(percepts);
 			if(actionList.size() == 0) {
 				actionList.offer(Action.Move);
@@ -160,10 +169,30 @@ public class Guard2 implements Interop.Agent.Guard {
 				inVertice.setType(ObjectType.Window);
 				break;
 			case Intruder:
-				map.removeIntruder();
-				inVertice.setType(ObjectType.Intruder);
+				map = null;
 				foundTarget = true;
-				break;
+				double degree = Math.atan2(percept.getPoint().getY(), percept.getPoint().getX());
+				Angle rotation = Angle.fromRadians(degree - Math.toRadians(90));
+				if(Math.abs(rotation.getDegrees()) > 15) {
+					if(rotation.getDegrees() > 0) {
+						action = new Rotate(Angle.fromDegrees(rotation.getDegrees() + 4));
+					}
+					else if(rotation.getDegrees() < 0) {
+						action = new Rotate(Angle.fromDegrees(rotation.getDegrees() + 4));
+					}
+				}
+				else {
+					double distance = Math.sqrt(Math.pow(percept.getPoint().getX(),2) + Math.pow(percept.getPoint().getY(),2));
+					if(distance > maxMoveDistance) {
+						action = new Move(new Distance(maxMoveDistance));
+					}
+					else {
+						action = new Move(new Distance(distance));
+					}
+				}
+				System.out.println(rotation.getDegrees());
+				Rotate rotate = new Rotate(rotation);
+				return;
 			default:
 				inVertice.setType(ObjectType.Unknown);
 				break;
@@ -234,6 +263,7 @@ public class Guard2 implements Interop.Agent.Guard {
 	private void generateActionList(Stack<Vertice> path) {
 		if(path == null) {
 			actionList.add(Action.Move);
+			return;
 		}
 		Vertice start = path.pop();
 		int currentDegrees = (int)angle.getDegrees();
