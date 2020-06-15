@@ -20,8 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="869c7e1c-225c-4856-b8fb-aaf522d3f77f" name="Default Changelist" comment="Fix">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Guard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Guard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Intruder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Group3/Intruder/Intruder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/main.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/main.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +43,6 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="MIXED" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="ProjectId" id="1buTUgeX2UvXoxszUntTxM61YLt" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -50,12 +51,14 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1586265722181" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../ms/MSGroupProject" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Intruder.java" />
     <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -92,12 +95,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Gui" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Group9.gui2.Gui" />
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GUI.Main" />
       <module name="main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Group9.gui2.*" />
+          <option name="PATTERN" value="GUI.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -105,12 +108,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Group9.Main" />
+    <configuration name="MainControl" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Group3.MainControl" />
       <module name="main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Group9.map.*" />
+          <option name="PATTERN" value="Group3.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -134,17 +137,17 @@
     <list>
       <item itemvalue="Application.MainScreen" />
       <item itemvalue="Application.Game" />
-      <item itemvalue="Application.Main" />
-      <item itemvalue="Application.Gui" />
       <item itemvalue="Application.Gui (1)" />
+      <item itemvalue="Application.MainControl" />
+      <item itemvalue="Application.Main" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Gui (1)" />
-        <item itemvalue="Application.Gui" />
-        <item itemvalue="Application.MainScreen" />
-        <item itemvalue="Application.Game" />
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.Game" />
+        <item itemvalue="Application.MainScreen" />
+        <item itemvalue="Application.MainControl" />
       </list>
     </recent_temporary>
   </component>
@@ -194,117 +197,41 @@
     <option name="LAST_COMMIT_MESSAGE" value="Fixed collision checking" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="421" y="96" key="FileChooserDialogImpl" timestamp="1589542988799">
+    <state x="421" y="96" key="FileChooserDialogImpl" timestamp="1592241142857">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="421" y="96" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1589542988799" />
-    <state width="1237" height="38" key="GridCell.Tab.0.bottom" timestamp="1589632561836">
+    <state x="421" y="96" key="FileChooserDialogImpl/0.0.1280.680@0.0.1280.680" timestamp="1592241142857" />
+    <state width="1237" height="69" key="GridCell.Tab.0.bottom" timestamp="1592222111010">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="38" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1589632561836" />
-    <state width="1237" height="38" key="GridCell.Tab.0.center" timestamp="1589632561835">
+    <state width="1237" height="69" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1592222111010" />
+    <state width="1237" height="69" key="GridCell.Tab.0.center" timestamp="1592222111010">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="38" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1589632561835" />
-    <state width="1237" height="38" key="GridCell.Tab.0.left" timestamp="1589632561835">
+    <state width="1237" height="69" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1592222111010" />
+    <state width="1237" height="69" key="GridCell.Tab.0.left" timestamp="1592222111010">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="38" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1589632561835" />
-    <state width="1237" height="38" key="GridCell.Tab.0.right" timestamp="1589632561835">
+    <state width="1237" height="69" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1592222111010" />
+    <state width="1237" height="69" key="GridCell.Tab.0.right" timestamp="1592222111010">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1237" height="38" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1589632561835" />
-    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1589832246139">
+    <state width="1237" height="69" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1592222111010" />
+    <state x="373" y="61" key="RollbackChangesDialog" timestamp="1592146705780">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.680@0.0.1280.680" timestamp="1589832246139" />
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ArtifactsStructureConfigurable.UI">
-        <settings>
-          <artifact-editor />
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="FacetStructureConfigurable.UI">
-        <settings>
-          <last-edited>No facets are configured</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="GlobalLibrariesConfigurable.UI">
-        <settings>
-          <last-edited>Python 3.7 interpreter library</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="JdkListConfigurable.UI">
-        <settings>
-          <last-edited>10</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ModuleStructureConfigurable.UI">
-        <settings>
-          <last-edited>main</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-                <option value="0.6" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>10</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
+    <state x="373" y="61" key="RollbackChangesDialog/0.0.1280.680@0.0.1280.680" timestamp="1592146705780" />
+    <state x="121" y="0" key="SettingsEditor" timestamp="1591974862817">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="121" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1591974862817" />
+    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1592147223165">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="450" y="255" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1280.680@0.0.1280.680" timestamp="1592147223165" />
+    <state x="297" y="151" key="run.anything.popup" timestamp="1591799834919">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="297" y="151" key="run.anything.popup/0.0.1280.680@0.0.1280.680" timestamp="1591799834919" />
   </component>
 </project>
