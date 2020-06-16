@@ -98,7 +98,7 @@ public class Guard implements Interop.Agent.Guard {
             if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Intruder) {
                 // This finds the direction in which the guard needs to turn.
                 startChasing((ObjectPercept) vision[i], percepts);
-
+                chasing = true;
                 //chaseIntruder((ObjectPercept) vision[i], percepts);
             }
         }
