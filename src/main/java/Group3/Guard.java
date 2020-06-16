@@ -98,7 +98,12 @@ public class Guard implements Interop.Agent.Guard {
             if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Intruder) {
                 // This finds the direction in which the guard needs to turn.
                 startChasing((ObjectPercept) vision[i], percepts);
-                chasing = true;
+                if (chasing == false){
+                    System.out.println("start chasing, angle is " + directionChangeNeeded);
+                    chasing = true;
+                    return new Yell();
+                }
+                break;
                 //chaseIntruder((ObjectPercept) vision[i], percepts);
             }
         }
@@ -166,26 +171,27 @@ public class Guard implements Interop.Agent.Guard {
             }
         }
 
+        directionChangeNeeded = directionChangeNeeded % (2 * Math.PI);
+
         // Check whether a direction change is needed for the chasing of yells, if so do this, and then run until the wall is hit.
         if (Math.abs(directionChangeNeeded) > 0 && (chasingYell || chasing || runningFromPher)){
+            System.out.println(" change needed now: " + directionChangeNeeded);
             how_long_exploring = 0;
             if (directionChangeNeeded > percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()) {
                 lastAction = new Rotate(Angle.fromRadians(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
-            }
-            else if (-directionChangeNeeded > percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()) {
+            } else if (directionChangeNeeded < -percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()) {
                 lastAction = new Rotate(Angle.fromRadians(-percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
-            }
-            else{
-                new Rotate(Angle.fromRadians(directionChangeNeeded));
+            } else {
+                lastAction = new Rotate(Angle.fromRadians(directionChangeNeeded));
             }
             return lastAction;
         }
         // If the direction is good, then walk in a straight line (until it needs to be adjusted again, or an action is not executed.)
-        else if ((chasingYell || chasing || runningFromPher)&& percepts.wasLastActionExecuted() ){
+        else if (Math.abs(directionChangeNeeded) == 0 && (chasingYell || chasing || runningFromPher) && percepts.wasLastActionExecuted() ){
             how_long_exploring = 0;
-            return new Move(new Distance(maximumDistance));
+            return new Move(new Distance(maximumDistance/2));
         }
-        else{
+        else if ((chasingYell || chasing || runningFromPher) && !percepts.wasLastActionExecuted()){
             chasingYell = false;
             chasing = false;
             runningFromPher = false;
@@ -330,7 +336,7 @@ public class Guard implements Interop.Agent.Guard {
             currentAngleInRads = currentAngleInRads + ((Rotate) lastAction).getAngle().getRadians();
 
             // Adjust the change in direction needed.
-            if (directionChangeNeeded > 0) {
+            if (directionChangeNeeded != 0) {
                 directionChangeNeeded = directionChangeNeeded - ((Rotate) lastAction).getAngle().getRadians();
             }
 
@@ -386,6 +392,7 @@ public class Guard implements Interop.Agent.Guard {
     // When yells and/or pheromones are spotted, set the direction change that is needed.
     public void handleYellAndPheromones(ArrayList<SoundPercept> yells, ArrayList<SmellPercept> pher){
             // For yells, the direction is already given.
+
             Direction goInto = null;
             if (yells.size() != 0){
                 goInto = yells.get(0).getDirection();
@@ -425,6 +432,7 @@ public class Guard implements Interop.Agent.Guard {
 
             // Firstly, find the direction to go in. (This will always hold true if it has first explored.)
             if (targetDirection == -1) {
+                System.out.println("backtracking");
                 int max = -1;
                 Grid target = null;
 
