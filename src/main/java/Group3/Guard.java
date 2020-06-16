@@ -482,18 +482,7 @@ public class Guard implements Interop.Agent.Guard {
 
     // Calculates the direction change that is needed to chase after the intruder.
     public void startChasing(ObjectPercept intruder, GuardPercepts percepts){
-        // Find angles between vectors
-        double yvec = intruder.getPoint().getY() - currentY;
-        double xvec = intruder.getPoint().getX()- currentX;
-        double magnvec = Math.sqrt(xvec*xvec + yvec*yvec);
-
-        // Calculate the angle differences
-        if (currentAngleInRads <= Math.atan(yvec/xvec)){
-            directionChangeNeeded =  Math.acos((xvec * Math.cos(currentAngleInRads*1)+ yvec * Math.sin(currentAngleInRads*1))/magnvec);
-        }
-        else{
-            directionChangeNeeded = - Math.acos((xvec * Math.cos(currentAngleInRads*1)+ yvec * Math.sin(currentAngleInRads*1))/magnvec);
-        }
+        directionChangeNeeded = intruder.getPoint().getClockDirection().getRadians();
     }
 
     // I used another method for chasing, so currently, this is not used.
