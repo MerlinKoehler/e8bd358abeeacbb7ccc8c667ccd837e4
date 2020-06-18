@@ -3,9 +3,6 @@ package Group3.Guard2;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
-
-import com.sun.org.apache.bcel.internal.generic.INVOKESTATIC;
-
 import java.util.List;
 import java.util.Queue;
 import java.util.ArrayList;
@@ -480,7 +477,12 @@ public class Guard2 implements Interop.Agent.Guard {
 					map.addVertice(new Vertice(ObjectType.None, new Point(2*radius*position[0], 2*radius*position[1]), radius, position));
 				}
 			}
-			currentAngle = currentAngle -1;
+			if(radius < 0.05) {
+				currentAngle = currentAngle -.1;
+			}
+			else {
+				currentAngle = currentAngle -1;
+			}
 		}
 	}
 	

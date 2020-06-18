@@ -529,7 +529,12 @@ public class Intruder implements Interop.Agent.Intruder {
 					map.addVertice(new Vertice(ObjectType.None, new Point(2*radius*position[0], 2*radius*position[1]), radius, position));
 				}
 			}
-			currentAngle = currentAngle -1;
+			if(radius < 0.05) {
+				currentAngle = currentAngle -.1;
+			}
+			else {
+				currentAngle = currentAngle -1;
+			}
 		}
 	}
 

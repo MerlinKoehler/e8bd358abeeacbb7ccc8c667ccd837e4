@@ -4,6 +4,9 @@ import GUI.Callback;
 import GUI.Game;
 import GUI.agent.container.GuardContainer;
 import GUI.agent.container.IntruderContainer;
+import GUI.agent.factories.DeepSpaceAgentFactory;
+import GUI.agent.factories.DefaultAgentFactory;
+import GUI.agent.factories.ShallowSpaceAgentFactory;
 import GUI.map.dynamic.DynamicObject;
 import GUI.map.parser.Parser;
 import javafx.animation.AnimationTimer;
@@ -31,7 +34,7 @@ public class MainController implements Runnable {
     public MainController(Gui gui, File mapFile,boolean generateHistory){
         this.gui = gui;
         this.generateHistory = generateHistory;
-        game = new Game(Parser.parseFile(mapFile.getAbsolutePath()), new Group3.AgentsFactory(), false, 15, new Callback<Game>() {
+        game = new Game(Parser.parseFile(mapFile.getAbsolutePath()), new Group3.IAgentsFactoryGroup3(), false, 15, new Callback<Game>() {
             @Override
             public void call(Game game) {
                 if(generateHistory){

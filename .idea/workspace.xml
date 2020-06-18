@@ -62,10 +62,10 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="Group9.map" />
+      <recent name="GUI.map" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Acer\Documents\e8bd358abeeacbb7ccc8c667ccd837e4\src\main\java\Group9\gui2" />
+      <recent name="C:\Users\Acer\Documents\e8bd358abeeacbb7ccc8c667ccd837e4\src\main\java\GUI\gui2" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Gui (1)">
@@ -74,7 +74,7 @@
       <module name="main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Group9.map.*" />
+          <option name="PATTERN" value="GUI.map.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -126,7 +126,7 @@
       <module name="main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Group9.map.*" />
+          <option name="PATTERN" value="GUI.map.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>

@@ -54,7 +54,7 @@ public class AllTests extends SimpleUnitTest {
         testAgentsFactory(Group6.AgentsFactory.class);
         testAgentsFactory(Group7.AgentsFactory.class);
         testAgentsFactory(Group8.AgentsFactory.class);
-        testAgentsFactory(Group9.AgentsFactory.class);
+        testAgentsFactory(GUI.AgentsFactory.class);
         testAgentsFactory(Group10.AgentsFactory.class);
         testAgentsFactory(Group11.AgentsFactory.class);
     }
