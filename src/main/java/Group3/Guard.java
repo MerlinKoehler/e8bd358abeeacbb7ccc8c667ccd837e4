@@ -35,23 +35,22 @@ public class Guard implements Interop.Agent.Guard {
     private int currentAgent = -1;
 
     // To track and take into account yells and pheromones
-    private boolean yellsAndPheromones = false;
+    private boolean yellsAndPheromones = true;
     private boolean runningFromPher = false;
     private boolean chasingYell = false;
-    private final int pheromonesDroppedTurns = 50;
+    private final int pheromonesDroppedTurns = 200;
 
     // GRID MAP SETTINGS
-    private double gridSize = 10;
+    private double gridSize = 20;
     private GridMapStorage currentMap = new GridMapStorage(gridSize, false);
 
     // Create a Random object for rotations.
     private Random random = new Random();
 
     //When it is chased, keep track of this to decide on an action.
-    private int lastSeenIntruder = Integer.MAX_VALUE;
     private boolean chasing = false;
-    boolean chasing2 = false;
-    boolean chasing3 = false;
+    //boolean chasing2 = false;
+    //boolean chasing3 = false;
 
     // Settings for the advanced random exploration.
     private int how_long_exploring = 0;
@@ -59,6 +58,7 @@ public class Guard implements Interop.Agent.Guard {
 
     // Keep track of how much the angle needs to be changed.
     private double directionChangeNeeded = 0;
+    private double distanceChangeNeeded = 0;
     private double targetDirection = -1;
 
     // Settings for the second exploration method.
@@ -85,6 +85,7 @@ public class Guard implements Interop.Agent.Guard {
 
         // The maximum distance a guard can currently be moves is found:
         double maximumDistance = this.getCurrentmaxDist(percepts);
+        distanceChangeNeeded = 0;
 
         //--------------------------------------------------------------------------------------------------------------
         // Update the map and the agent's state, if the action was performed
@@ -92,96 +93,62 @@ public class Guard implements Interop.Agent.Guard {
             updateInternalMap(percepts);
         }
 
+        // For this turn only - will remain false if no intruder is spotted.
+        boolean intruderVisible = false;
+
         // First, check whether a intruder is seen at the moment - overrides other actions.
         Object[] vision = percepts.getVision().getObjects().getAll().toArray();
         for (int i = 0; i < vision.length; i++) {
             if (((ObjectPercept) vision[i]).getType() == ObjectPerceptType.Intruder) {
+                intruderVisible = true;
+
                 // This finds the direction in which the guard needs to turn.
-                startChasing((ObjectPercept) vision[i], percepts);
+                startChasing((ObjectPercept) vision[i]);
+
+                // All these actions only need to be done once per chase.
                 if (chasing == false){
-                    System.out.println("start chasing, angle is " + directionChangeNeeded);
                     chasing = true;
-                    return new Yell();
+
+                    // Override the yell chasing and the running away from pheromone - intruder has top priority.
+                    chasingYell = false;
+                    runningFromPher = false;
+
+                    // Yell, to alert guards nearby, if yells are being used.
+                    if (yellsAndPheromones) {
+                        return new Yell();
+                    }
                 }
-                break;
-                //chaseIntruder((ObjectPercept) vision[i], percepts);
+                break; // Don't need to take other intruders into account, just chase one.
             }
         }
 
-        // Override the chasing of the yell and the running away from pheromones.
-        if (chasing){
-            chasingYell = false;
-            runningFromPher = false;
+        // Track noise. Change of direction is based on noise.
+        if (chasing && !intruderVisible){
+            trackNoise(percepts);
         }
 
-        // Check whether there are yells and/or pheromones, handles this accordingly.
+        // Check for yells and pheromones.
         if (yellsAndPheromones && !chasing){
-            // Store the information of the yells, which can later be used to determine an action.
-            boolean yellFound = false;
-            ArrayList<SoundPercept> yells = new ArrayList<>();
-            Object[] sounds = percepts.getSounds().getAll().toArray();
-
-            // Finds and stored yells.
-            for (int i = 0; i < sounds.length; i++) {
-                if (((SoundPercept) sounds[i]).getType() == SoundPerceptType.Yell) {
-                    yellFound = true;
-                    yells.add((SoundPercept) sounds[i]);
-                }
-            }
-
-            // For pheromones, also store the information, in a similar way - only check the pheromones that the current guard doesn't drop.
-            boolean pheroFound = false;
-            ArrayList<SmellPercept> phers = new ArrayList<>();
-
-            // Pheromones have the second priority.
-            // Can show whether another guard is nearby.
-            Object[] smells = percepts.getSmells().getAll().toArray();
-            for (int i = 0; i < smells.length; i++) {
-                if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone1 && this.currentAgent %5 != 1){
-                    pheroFound = true;
-                    phers.add((SmellPercept) smells[i]);
-                }
-                else if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone2 && this.currentAgent %5 != 2){
-                    pheroFound = true;
-                    phers.add((SmellPercept) smells[i]);
-                }
-                else if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone3 && this.currentAgent %5 != 3){
-                    pheroFound = true;
-                    phers.add((SmellPercept) smells[i]);
-                }
-                else if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone4 && this.currentAgent %5 != 4){
-                    pheroFound = true;
-                    phers.add((SmellPercept) smells[i]);
-                }
-                else if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone5 && this.currentAgent %5 != 0){
-                    pheroFound = true;
-                    phers.add((SmellPercept) smells[i]);
-                }
-            }
-
-            // In case any of these was found, use this in the choice of action.
-            if (yellFound || pheroFound){
-                if (yellFound){
-                    chasingYell = true;
-                }
-                else if (pheroFound){
-                    runningFromPher = true;
-                }
-                handleYellAndPheromones(yells, phers);
-            }
+            pherAndYellHandling(percepts);
         }
 
+        // Change the direction change - want to make it as small as possible.
         directionChangeNeeded = directionChangeNeeded % (2 * Math.PI);
+        if (directionChangeNeeded > Math.PI){
+            directionChangeNeeded = directionChangeNeeded - 2* Math.PI;
+        }
 
         // Check whether a direction change is needed for the chasing of yells, if so do this, and then run until the wall is hit.
-        if (Math.abs(directionChangeNeeded) > 0 && (chasingYell || chasing || runningFromPher)){
-            System.out.println(" change needed now: " + directionChangeNeeded);
+        if (Math.abs(directionChangeNeeded) > Math.toRadians(10) && (chasingYell || chasing || runningFromPher)){
+            //System.out.println(" change needed now: " + directionChangeNeeded);
             how_long_exploring = 0;
             if (directionChangeNeeded > percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()) {
                 lastAction = new Rotate(Angle.fromRadians(percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
-            } else if (directionChangeNeeded < -percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()) {
+            }
+            else if (-directionChangeNeeded > percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()) {
                 lastAction = new Rotate(Angle.fromRadians(-percepts.getScenarioGuardPercepts().getScenarioPercepts().getMaxRotationAngle().getRadians()));
-            } else {
+            }
+            else {
                 lastAction = new Rotate(Angle.fromRadians(directionChangeNeeded));
             }
             return lastAction;
@@ -189,32 +156,23 @@ public class Guard implements Interop.Agent.Guard {
         // If the direction is good, then walk in a straight line (until it needs to be adjusted again, or an action is not executed.)
         else if (Math.abs(directionChangeNeeded) == 0 && (chasingYell || chasing || runningFromPher) && percepts.wasLastActionExecuted() ){
             how_long_exploring = 0;
-            return new Move(new Distance(maximumDistance/2));
+            if (distanceChangeNeeded >0) {
+                return new Move(new Distance(distanceChangeNeeded));
+            }
+            else{
+                return new Move(new Distance(maximumDistance));
+            }
         }
+        // Go back to normal - so it can normally explore again
         else if ((chasingYell || chasing || runningFromPher) && !percepts.wasLastActionExecuted()){
             chasingYell = false;
             chasing = false;
             runningFromPher = false;
         }
 
-        // Drop a pheromone every n amount of turns, to signal where the guard is.
-        if (turnNumber % pheromonesDroppedTurns == 0){
-            //System.out.println("droppher" + currentAgent);
-            if (this.currentAgent %5 != 1){
-               lastAction = new DropPheromone(SmellPerceptType.Pheromone1);
-            }
-            if (this.currentAgent %5 != 2){
-                lastAction = new DropPheromone(SmellPerceptType.Pheromone2);
-            }
-            if (this.currentAgent %5 != 3){
-                lastAction = new DropPheromone(SmellPerceptType.Pheromone3);
-            }
-            if (this.currentAgent %5 != 4){
-                lastAction = new DropPheromone(SmellPerceptType.Pheromone4);
-            } if (this.currentAgent %5 != 0){
-                lastAction = new DropPheromone(SmellPerceptType.Pheromone5);
-            }
-            return lastAction;
+        // Drop a pheromone, if needed.
+        if (turnNumber % pheromonesDroppedTurns == 0 && yellsAndPheromones){
+            return dropPheromone();
         }
 
         // If none of these conditions is met, then explore as normally.
@@ -223,9 +181,7 @@ public class Guard implements Interop.Agent.Guard {
             return lastAction;
         }
 
-        /*
-        NOTE: I did not change anything about Oskar's code, only the code above this part and below it.
-         */
+        //------------------START OF OSKAR'S CODE, IF NOT USED, REMOVE-------------------------------------------------
 
         //for (Grid grid : currentMap.getGrid()) {
         //    System.out.println(grid);
@@ -432,7 +388,7 @@ public class Guard implements Interop.Agent.Guard {
 
             // Firstly, find the direction to go in. (This will always hold true if it has first explored.)
             if (targetDirection == -1) {
-                System.out.println("backtracking");
+                //System.out.println("backtracking");
                 int max = -1;
                 Grid target = null;
 
@@ -489,11 +445,116 @@ public class Guard implements Interop.Agent.Guard {
     }
 
     // Calculates the direction change that is needed to chase after the intruder.
-    public void startChasing(ObjectPercept intruder, GuardPercepts percepts){
-        directionChangeNeeded = intruder.getPoint().getClockDirection().getRadians();
+    public void startChasing(ObjectPercept intruder){
+        directionChangeNeeded = Math.atan2(intruder.getPoint().getY(), intruder.getPoint().getX()) - Math.toRadians(90);
+        distanceChangeNeeded = Math.sqrt(Math.pow(intruder.getPoint().getX(),2) + Math.pow(intruder.getPoint().getY(),2));
     }
 
-    // I used another method for chasing, so currently, this is not used.
+    // Tracks certain noises, and finds the direction change needed.
+    public void trackNoise(GuardPercepts percepts){
+        Object[] sounds = percepts.getSounds().getAll().toArray();
+        double minAngle = 2 * Math.PI;
+        double currentAngle;
+        double changeNeeded = 2 * Math.PI;
+
+        for (int i = 0; i < sounds.length; i++) {
+            if (((SoundPercept) sounds[i]).getType() == SoundPerceptType.Noise) {
+                if (((SoundPercept) sounds[i]).getDirection().getRadians() > Math.PI){
+                    currentAngle = ((SoundPercept) sounds[i]).getDirection().getRadians() - 2 * Math.PI;
+                }
+                else{
+                    currentAngle = ((SoundPercept) sounds[i]).getDirection().getRadians();
+                }
+                minAngle = Math.min(Math.abs(currentAngle), minAngle);
+
+                if (minAngle == Math.abs(currentAngle)){
+                    changeNeeded = currentAngle;
+                }
+            }
+        }
+        directionChangeNeeded = changeNeeded;
+    }
+
+    // Searches through all the sound and smells, to find relevant information.
+    public void pherAndYellHandling(GuardPercepts percepts){
+        // Store the information of the yells, which can later be used to determine an action.
+        boolean yellFound = false;
+        ArrayList<SoundPercept> yells = new ArrayList<>();
+        Object[] sounds = percepts.getSounds().getAll().toArray();
+
+        // Finds and stored yells.
+        for (int i = 0; i < sounds.length; i++) {
+            if (((SoundPercept) sounds[i]).getType() == SoundPerceptType.Yell) {
+                yellFound = true;
+                yells.add((SoundPercept) sounds[i]);
+            }
+        }
+
+        // For pheromones, also store the information, in a similar way - only check the pheromones that the current guard doesn't drop.
+        boolean pheroFound = false;
+        ArrayList<SmellPercept> phers = new ArrayList<>();
+
+        // Pheromones have the second priority.
+        // Can show whether another guard is nearby.
+        Object[] smells = percepts.getSmells().getAll().toArray();
+        for (int i = 0; i < smells.length; i++) {
+            if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone1 && this.currentAgent %5 != 1){
+                pheroFound = true;
+                phers.add((SmellPercept) smells[i]);
+            }
+            else if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone2 && this.currentAgent %5 != 2){
+                pheroFound = true;
+                phers.add((SmellPercept) smells[i]);
+            }
+            else if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone3 && this.currentAgent %5 != 3){
+                pheroFound = true;
+                phers.add((SmellPercept) smells[i]);
+            }
+            else if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone4 && this.currentAgent %5 != 4){
+                pheroFound = true;
+                phers.add((SmellPercept) smells[i]);
+            }
+            else if (((SmellPercept) smells[i]).getType() == SmellPerceptType.Pheromone5 && this.currentAgent %5 != 0){
+                pheroFound = true;
+                phers.add((SmellPercept) smells[i]);
+            }
+        }
+
+        // In case any of these was found, use this in the choice of action.
+        if (yellFound || pheroFound){
+            if (yellFound){
+                chasingYell = true;
+                //System.out.println("Yell!!!");
+            }
+            else if (pheroFound){
+                runningFromPher = true;
+            }
+            handleYellAndPheromones(yells, phers);
+        }
+    }
+
+    // Drops a pheromone, decided which one.
+    public GuardAction dropPheromone(){
+        // Drop a pheromone every n amount of turns, to signal where the guard is.
+        if (this.currentAgent %5 == 1){
+            lastAction = new DropPheromone(SmellPerceptType.Pheromone1);
+        }
+        if (this.currentAgent %5 == 2){
+            lastAction = new DropPheromone(SmellPerceptType.Pheromone2);
+        }
+        if (this.currentAgent %5 == 3){
+            lastAction = new DropPheromone(SmellPerceptType.Pheromone3);
+        }
+        if (this.currentAgent %5 == 4){
+            lastAction = new DropPheromone(SmellPerceptType.Pheromone4);
+        }
+        if (this.currentAgent %5 == 0){
+            lastAction = new DropPheromone(SmellPerceptType.Pheromone5);
+        }
+        return lastAction;
+    }
+
+    /*
     // Method that returns actions which make the guard agent chase the intruder agent
 	public GuardAction chaseIntruder(ObjectPercept intruder, GuardPercepts percepts){
         GuardAction action = null;
@@ -519,7 +580,7 @@ public class Guard implements Interop.Agent.Guard {
             chasing = false;
         }
         return action;
-    }
+    }*/
 
     // Resets the coordinates and other properties.
     public void reset(){
