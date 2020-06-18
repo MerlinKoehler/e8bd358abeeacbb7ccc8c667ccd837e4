@@ -33,7 +33,15 @@ import Interop.Percept.Vision.VisionPrecepts;
 
 
 public class Intruder implements Interop.Agent.Intruder {
+	
+	private static int serialNumber = 0;
+	
+	public Intruder() {
+		ownSerialNumber = Intruder.serialNumber;
+		Intruder.serialNumber ++;
+	}
 
+	private int ownSerialNumber;
 	Action lastAction = null;
 	DiscreteMap map;
 	Vertice currentPosition;
@@ -43,6 +51,7 @@ public class Intruder implements Interop.Agent.Intruder {
 	Queue<Action> actionList = new LinkedList<Action>();
 	Queue<Double> distanceCounter = new LinkedList<Double>();
 	boolean foundTarget = false;
+	int foundTeleport = 0;
 	boolean escape = false;
 
 	@Override
@@ -159,6 +168,7 @@ public class Intruder implements Interop.Agent.Intruder {
 					break;
 				case Teleport:
 					inVertice.setType(ObjectType.Teleport);
+					if(foundTeleport == 0) foundTeleport = 1;
 					break;
 				case Wall:
 					inVertice.setType(ObjectType.Wall);
@@ -240,6 +250,13 @@ public class Intruder implements Interop.Agent.Intruder {
 	}
 
 	private void getNextAction(IntruderPercepts percepts) {
+		if(foundTeleport == 1 && (ownSerialNumber % 2 == 0)) {
+			foundTeleport = 2;
+			map.unMark();
+			Stack<Vertice> path = BFS.findPath(currentPosition, ObjectType.Teleport);
+			generateActionList(path);
+			return;
+		}
 		if(escape) {
 			//map.unMark();
 			escape = false;
@@ -513,7 +530,7 @@ public class Intruder implements Interop.Agent.Intruder {
 			step = radius;
 		}
 		double currentAngle = (viewAngle+4)/2;
-		while(currentAngle >= -viewAngle/2) {
+		while(currentAngle >= -(viewAngle+4)/2) {
 			double finalAngle = 0;
 			if(angle.getDegrees() > 180) finalAngle = getTrueAngle(currentAngle + (angle.getDegrees()-360) + 90);
 			else finalAngle = getTrueAngle(currentAngle + angle.getDegrees() + 90);

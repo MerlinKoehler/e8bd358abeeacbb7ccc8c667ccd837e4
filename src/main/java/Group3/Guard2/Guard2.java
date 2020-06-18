@@ -461,7 +461,7 @@ public class Guard2 implements Interop.Agent.Guard {
 			step = radius;
 		}
 		double currentAngle = (viewAngle+4)/2;
-		while(currentAngle >= -viewAngle/2) {
+		while(currentAngle >= -(viewAngle+4)/2) {
 			double finalAngle = 0;
 			if(angle.getDegrees() > 180) finalAngle = getTrueAngle(currentAngle + (angle.getDegrees()-360) + 90);
 			else finalAngle = getTrueAngle(currentAngle + angle.getDegrees() + 90);
