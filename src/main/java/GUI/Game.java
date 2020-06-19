@@ -73,6 +73,8 @@ public class Game implements Runnable {
     private final boolean queryIntent;
     private Semaphore lock = new Semaphore(1);
 
+    private int numberOfTurns = 0;
+
     public Game(GameMap gameMap, final boolean queryIntent)
     {
         this(gameMap, new DefaultAgentFactory(), queryIntent, -1, null);
@@ -88,6 +90,7 @@ public class Game implements Runnable {
                 Callback<Game> turnTickCallback)
     {
         gameMap.setGame(this);
+        this.numberOfTurns = 0;
         this.turnTickCallback = turnTickCallback;
         this.ticks = new AtomicInteger(ticks);
 
@@ -318,12 +321,18 @@ public class Game implements Runnable {
         return null;
     }
 
+    public int getNumberOfTurns() {
+        return numberOfTurns;
+    }
+
     /**
      * Executes one full turn of the game.
      * @return
      */
     public final Team turn()
+
     {
+        numberOfTurns++;
         lockin(this::cooldown);
 
         // Note: Intruders move first.
