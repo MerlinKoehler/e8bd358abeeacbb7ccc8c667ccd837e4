@@ -84,8 +84,8 @@ sentry = 100, 110, 110, 110, 110, 120, 100, 120, 102.5, 112.5, 107.5, 112.5, 107
 // LEVEL 6 - BASIC TELEPORTATION
 teleportArea = 195, 20, 200, 20, 200, 25, 195, 25, 8, 115, 12, 115, 12, 120, 8, 120
 
-// LEVEL 7 - TWO SEPARATE AREA, create walls to separate!
+// LEVEL 7 - TWO SEPARATE AREA, CREATE WALLS TO SEPARATE
 wall = 68, 60, 70, 60, 70, 121, 68, 121
 
-// LEVEL 8 - several teleports in the same room
+// LEVEL 8 - SEVERAL TELEPORTS IN THE SAME ROOM
 teleportArea = 210, 105, 213, 105, 213, 110, 210, 110, 12, 12, 18, 12, 18, 16, 12, 16
