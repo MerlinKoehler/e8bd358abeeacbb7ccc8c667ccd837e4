@@ -1,6 +1,4 @@
 package Group3.Guard2;
-
-import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 import java.util.List;
@@ -14,7 +12,6 @@ import Group3.DiscreteMap.DiscreteMap;
 import Group3.DiscreteMap.ObjectType;
 import Group3.DiscreteMap.Vertice;
 import Interop.Action.GuardAction;
-import Interop.Action.IntruderAction;
 import Interop.Action.Move;
 import Interop.Action.NoAction;
 import Interop.Action.Rotate;
@@ -22,30 +19,59 @@ import Interop.Geometry.Angle;
 import Interop.Geometry.Distance;
 import Interop.Geometry.Point;
 import Interop.Percept.GuardPercepts;
-import Interop.Percept.IntruderPercepts;
-import Interop.Percept.Percepts;
 import Interop.Percept.Vision.ObjectPercept;
 import Interop.Percept.Vision.VisionPrecepts;
 
+/**
+ * Second guard class
+ * @author Merlin Köhler
+ *
+ */
 public class Guard2 implements Interop.Agent.Guard {
 	
+	// The last action performed by the guard.
 	Action lastAction = null;
+	
+	// The discrete map build up by the guard (its memory).
 	DiscreteMap map;
+	
+	// The current vertex position of the guard in the discrete graph map.
 	Vertice currentPosition;
+	
+	// The view angle as defined in the map file.
 	double viewAngle;
+	
+	// The vertex radius.
 	double radius;
+	
+	// The current angle of the guard.
 	Angle angle;
+	
+	// An action list (queue of actions) used for path planning.
 	Queue<Action> actionList = new LinkedList<Action>();
+	
+	// To perform moves in smaller steps (like in doors, windows or sentry towers) 
+	// one need to perform multiple moves for going from one vertex to another.
+	// The distance counter stores the move distances needed. 
 	Queue<Double> distanceCounter = new LinkedList<Double>();
+	
+	// If an intruder is in sight of the guard, this flag is set to true.
 	boolean foundTarget = false;
+	
+	// The next action to be performed to catch the intruder.
     GuardAction action = new NoAction();
+    
+    // The maximum move distance of the guard.
 	double maxMoveDistance;
     
-    
+	/** Returns the next move of the guard.
+	 * @param percepts: The current perception of the guard.
+	 */
 	@Override
 	public GuardAction getAction(GuardPercepts percepts) {
 		// TODO Auto-generated method stub
 		
+		// If the agent is newly initialized or is just teleported initialize all variables and a new map object.
 		if(this.map == null || percepts.getAreaPercepts().isJustTeleported()) {
 			maxMoveDistance = percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue();
 			viewAngle = percepts.getVision().getFieldOfView().getViewAngle().getDegrees();
@@ -62,33 +88,38 @@ public class Guard2 implements Interop.Agent.Guard {
 				actionList.offer(Action.Right);
 			}
 		}
+		// If the agent is moving in smaller steps (e.g. in a sentry tower / door), return a new move.
 		if(distanceCounter.size() != 0) {
 			return new Move(new Distance(distanceCounter.poll()));
 		}
+		
+		// Update the agent state (position / rotation) if the last action was executed.
 		if(percepts.wasLastActionExecuted()) {
 			updateState();
 		}
+		// Else turn left and move (prevent agent getting stuck).
 		else {
 			System.out.println("Illegal Move Guard!!!");
 			actionList = new LinkedList<Action>();
 			actionList.offer(Action.Left);
 			actionList.offer(Action.Move);
 		}
-		if(percepts.getAreaPercepts().isInSentryTower()) {
-			//System.out.println("In Sentry");
-		}
+		
+		// Create new empty vertices in the view range of the guard.
 		createNewVerticesInSight(percepts.getVision());
 		//System.out.println(map.toString(currentPosition.getCoordinate()));
+		// Fill the vertices with objects out of the vision percepts.
 		evaluateVision(percepts.getVision());
 		
 		//System.out.println("");
 		//System.out.println(map.toString(currentPosition.getCoordinate()));
 		
-		
+		// If an intruder is in sight, perform the next action to catch the intruder.
 		if(foundTarget) {
 			foundTarget = false;
 			return action;
 		}
+		// Else continue exploring the map.
 		else if(actionList.size() == 0) {
 			getNextAction(percepts);
 			if(actionList.size() == 0) {
@@ -101,6 +132,12 @@ public class Guard2 implements Interop.Agent.Guard {
 		}
 	}
 	
+	/**
+	 * Converts a discrete action to a continuous action.
+	 * @param action: The discrete action (Left / Right / Move)
+	 * @param percepts: The scenario perception (Needed for the maximum move distance).
+	 * @return A continuous GuardAction.
+	 */
 	private GuardAction returnAction(Action action, GuardPercepts percepts) {
 		switch(action) {
 		case Left:
@@ -130,6 +167,70 @@ public class Guard2 implements Interop.Agent.Guard {
 		}
 	}
 	
+	/**
+	 * A continuous rotate left by 45 degrees action.
+	 * @return: A continuous rotate left by 45 degrees action.
+	 */
+	private Rotate turnLeft() {
+		lastAction = Action.Left;
+		return new Rotate(Angle.fromDegrees(-45));
+	}
+	
+	/**
+	 * A continuous rotate right by 45 degrees action.
+	 * @return: A continuous rotate right by 45 degrees action.
+	 */
+	private Rotate turnRight() {
+		lastAction = Action.Right;
+		return new Rotate(Angle.fromDegrees(+45));
+	}
+	
+	/**
+	 * Returns a new forward action.
+	 * @param maxDistance The maximum move distance of the agent.
+	 * @return One or more move forward actions.
+	 */
+	private Move forward(double maxDistance) {
+		this.lastAction = Action.Move;
+		double distance;
+		
+		if(this.angle.getDegrees() % 90 == 0) {
+			distance = 2*radius;
+		}
+		else {
+			distance = Math.sqrt(2*Math.pow(2*radius, 2));
+		}
+		while(distance > maxDistance) {
+			distanceCounter.offer(maxDistance);
+			distance = distance - maxDistance;
+		}
+		return new Move(new Distance(distance));
+	}
+	
+	/**
+	 * Update the agent state based on the last executed action.
+	 */
+	private void updateState() {
+		if(lastAction != null) {
+			switch(lastAction) {
+			case Left:
+				this.angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() +45));
+				break;
+			case Right:
+				this.angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() -45));
+				break;
+			case Move:
+				Integer[] newPosition = DiscreteMap.getCoordinate((int)angle.getDegrees(), currentPosition.getCoordinate());
+				currentPosition = map.getVertice(newPosition);
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * A method for evaluation of the current vision perception of the agent. All objects perceived get stored into the discrete graph map.
+	 * @param vision The current vision perception of the agent.
+	 */
 	private void evaluateVision(VisionPrecepts vision) {
 		Set<ObjectPercept> objectPercepts = vision.getObjects().getAll();
 		for(ObjectPercept percept : objectPercepts) {
@@ -140,7 +241,6 @@ public class Guard2 implements Interop.Agent.Guard {
 			double addY = currentPosition.getCenter().getY();
 			Point rotatePoint = truePoint(percept.getPoint());
 			Point truePoint = new Point(rotatePoint.getX() + addX, rotatePoint.getY() + addY);
-			int l = 1;
 			// TODO: Add x and y
 			Vertice inVertice = getRelativeVertice(truePoint);
 			switch(percept.getType()) {
@@ -166,10 +266,16 @@ public class Guard2 implements Interop.Agent.Guard {
 				inVertice.setType(ObjectType.Window);
 				break;
 			case Intruder:
+				
+				// If an intruder is spotted, estimate the next best action to execute to catch the intruder. 
 				map = null;
 				foundTarget = true;
+				
+				// Get the direction of the intruder
 				double degree = Math.atan2(percept.getPoint().getY(), percept.getPoint().getX());
 				Angle rotation = Angle.fromRadians(degree - Math.toRadians(90));
+				
+				// If intruder is in a range of +-15 degrees move forward, else rotate towards the intruder
 				if(Math.abs(rotation.getDegrees()) > 15) {
 					if(rotation.getDegrees() > 0) {
 						action = new Rotate(Angle.fromDegrees(rotation.getDegrees() + 4));
@@ -187,8 +293,6 @@ public class Guard2 implements Interop.Agent.Guard {
 						action = new Move(new Distance(distance));
 					}
 				}
-				//System.out.println(rotation.getDegrees());
-				Rotate rotate = new Rotate(rotation);
 				return;
 			default:
 				inVertice.setType(ObjectType.Unknown);
@@ -197,6 +301,10 @@ public class Guard2 implements Interop.Agent.Guard {
 		}
 	}
 	
+	/**
+	 * Gets the next action(s) of the guard.
+	 * @param percepts The perception of the guard. 
+	 */
 	private void getNextAction(GuardPercepts percepts) {
 		if(foundTarget) {
 			map.unMark();
@@ -257,6 +365,10 @@ public class Guard2 implements Interop.Agent.Guard {
 		}
 	}
 	
+	/**
+	 * A function, that converts a path of vertices to a list of discrete actions, to follow the path.
+	 * @param path The path of vertices.
+	 */
 	private void generateActionList(Stack<Vertice> path) {
 		if(path == null) {
 			actionList.add(Action.Move);
@@ -371,12 +483,25 @@ public class Guard2 implements Interop.Agent.Guard {
 	}
 	*/
 	
+	/**
+	 * A function for estimating the information gain of an action.
+	 * @param percepts: The agents perception.
+	 * @param angle: The view angle of the agent in the new state.
+	 * @param currentPosition: The position of the agent in the new state.
+	 * @return Currently: The number of new vertices explored in the new state. Can be extended with more parameters, for example cost of the action.
+	 */
 	public double simulateAction(VisionPrecepts percepts, Angle angle, Vertice currentPosition) {
-		int vertexMultiply = 1;
-		double result = vertexMultiply*numberNewVerticesInSight(angle,currentPosition, percepts);
+		double result = numberNewVerticesInSight(angle,currentPosition, percepts);
 		return result;
 	}
 	
+	/**
+	 * Returns the number of new vertices in sight of the agent. 
+	 * @param angle The rotation of the agent.
+	 * @param currentPosition The position of the agent.
+	 * @param percepts The perception of the agent.
+	 * @return The number of newly explored vertices.
+	 */
 	private int numberNewVerticesInSight(Angle angle, Vertice currentPosition, VisionPrecepts percepts) {
 		int count = 0;
 		int samples = 10;
@@ -408,50 +533,10 @@ public class Guard2 implements Interop.Agent.Guard {
 		return count;
 	}
 	
-	private Rotate turnLeft() {
-		lastAction = Action.Left;
-		return new Rotate(Angle.fromDegrees(-45));
-	}
-	
-	private Rotate turnRight() {
-		lastAction = Action.Right;
-		return new Rotate(Angle.fromDegrees(+45));
-	}
-	
-	private Move forward(double maxDistance) {
-		this.lastAction = Action.Move;
-		double distance;
-		
-		if(this.angle.getDegrees() % 90 == 0) {
-			distance = 2*radius;
-		}
-		else {
-			distance = Math.sqrt(2*Math.pow(2*radius, 2));
-		}
-		while(distance > maxDistance) {
-			distanceCounter.offer(maxDistance);
-			distance = distance - maxDistance;
-		}
-		return new Move(new Distance(distance));
-	}
-	
-	private void updateState() {
-		if(lastAction != null) {
-			switch(lastAction) {
-			case Left:
-				this.angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() +45));
-				break;
-			case Right:
-				this.angle = Angle.fromDegrees(getTrueAngle(this.angle.getDegrees() -45));
-				break;
-			case Move:
-				Integer[] newPosition = DiscreteMap.getCoordinate((int)angle.getDegrees(), currentPosition.getCoordinate());
-				currentPosition = map.getVertice(newPosition);
-				break;
-			}
-		}
-	}
-	
+	/**
+	 * Create new graph map vertices in sight of the agent.
+	 * @param percepts The current perception of the agent.
+	 */
 	private void createNewVerticesInSight(VisionPrecepts percepts) {
 		int samples = 10;
 		double viewRange = percepts.getFieldOfView().getRange().getValue();
@@ -486,6 +571,11 @@ public class Guard2 implements Interop.Agent.Guard {
 		}
 	}
 	
+	/**
+	 * A method that returns the true angle (0 - 360) from an angle. Example: (-40 == 320) 
+	 * @param angle The angle (can be negative).
+	 * @return The true angle.
+	 */
 	private double getTrueAngle(double angle) {
 		if(angle < 0) {
 			angle = 360 + angle;
@@ -499,13 +589,22 @@ public class Guard2 implements Interop.Agent.Guard {
 		return angle;
 	}
 	
+	/**
+	 * A method that returns the vertex of a point based on a relative coordinate. Used for vision evaluation.
+	 * @param point The point relative to the agent.
+	 * @return The vertex containing the location of the relative point.
+	 */
 	private Vertice getRelativeVertice(Point point) {
 		Integer[] position = getRelativeVerticeCoordinate(point);
 		//System.out.println(position[0] + ";" + position[1]);
 		return map.getVertice(position);
 	}
 	
-	
+	/**
+	 * Gets the vertex, which contains the given relative point.
+	 * @param point The point, relative to the agent.
+	 * @return The vertex containing the point. 
+	 */
 	private Integer[] getRelativeVerticeCoordinate(Point point) {
 		//Point truePoint = truePoint(point);
 		//double x = truePoint.getX();
@@ -557,7 +656,11 @@ public class Guard2 implements Interop.Agent.Guard {
 		return new Integer[]{xVertice, yVertice};
 	}
 	
-	
+	/**
+	 * A method for calculating the true point based on a relative point to the agent.
+	 * @param point The point relative to the agent.
+	 * @return The true point, taking into account the rotation and position of the agent.
+	 */
 	private Point truePoint(Point point) {
 		double x = -point.getX();
 		double y = point.getY();
@@ -573,7 +676,7 @@ public class Guard2 implements Interop.Agent.Guard {
 		double y_ = y*Math.cos(angle.getRadians()) + x * Math.sin(angle.getRadians());
 		return new Point(x_, y_);
 	}
-	
+	/*
 	private Point getCenterPoint(int degrees) {
 		double x = currentPosition.getCenter().getX();
 		double y = currentPosition.getCenter().getY();
@@ -599,4 +702,5 @@ public class Guard2 implements Interop.Agent.Guard {
 			return null;
 		}
 	}
+	*/
 }

@@ -1,4 +1,5 @@
 package Group3.Intruder;
+
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
@@ -66,7 +67,7 @@ public class Intruder implements Interop.Agent.Intruder {
 	Queue<Action> actionList = new LinkedList<Action>();
 	
 	// To perform moves in smaller steps (like in doors, windows or sentry towers) 
-	// one need to perform multiple moves for going from one vertice to another.
+	// one need to perform multiple moves for going from one vertex to another.
 	// The distance counter stores the move distances needed. 
 	Queue<Double> distanceCounter = new LinkedList<Double>();
 	
@@ -149,7 +150,7 @@ public class Intruder implements Interop.Agent.Intruder {
 	 * Converts a discrete action to a continuous action.
 	 * @param action: The discrete action (Left / Right / Move)
 	 * @param percepts: The scenario perception (Needed for the maximum move distance).
-	 * @return A continous IntruderAction.
+	 * @return A continuous IntruderAction.
 	 */
 	private IntruderAction returnAction(Action action, IntruderPercepts percepts) {
 		switch(action) {
@@ -254,7 +255,6 @@ public class Intruder implements Interop.Agent.Intruder {
 			double addY = currentPosition.getCenter().getY();
 			Point rotatePoint = truePoint(percept.getPoint());
 			Point truePoint = new Point(rotatePoint.getX() + addX, rotatePoint.getY() + addY);
-			int l = 1;
 			// TODO: Add x and y
 			Vertice inVertice = getRelativeVertice(truePoint);
 			switch(percept.getType()) {
