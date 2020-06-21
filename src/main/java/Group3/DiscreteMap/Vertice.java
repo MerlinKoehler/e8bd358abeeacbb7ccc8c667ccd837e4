@@ -1,19 +1,43 @@
 package Group3.DiscreteMap;
 
 import java.util.ArrayList;
-
 import Interop.Geometry.Point;
 
+/**
+ * A class representing a vertex in a graph map.
+ * @author Margarita Naryzhnyaya, Merlin Köhler, Paula Gitu
+ *
+ */
 public class Vertice {
 	
+	// Object type of the vertex (Wall, Sentry Tower, Teleport...)
 	ObjectType type;
+	
+	// Connected directed edges
 	ArrayList<DirectedEdge> edges;
+	
+	// Center coordinate
 	Point center;
+	
+	// Radius of the vertex
 	double radius;
+	
+	// Discrete coordinate of the vertex
 	Integer coordinate[];
+	
+	// Flag, used for BFS.
 	boolean marked = false;
+	
+	// Parent, used for path planning in BFS. 
 	Vertice parent = null;
 
+	/**
+	 * Initializes a new vertex.
+	 * @param type: Object type of the vertex.
+	 * @param center: Center point of the vertex.
+	 * @param radius: Radius of the vertex.
+	 * @param coordinate: Discrete coordinate of the vertex.
+	 */
 	public Vertice(ObjectType type, Point center, double radius, Integer[] coordinate) {
 		this.center = center;
 		this.radius = radius;
@@ -21,18 +45,12 @@ public class Vertice {
 		this.edges = new ArrayList<DirectedEdge>();
 		this.coordinate = coordinate;
 	}
-	
-	public ObjectType getType() {
-		return type;
-	}
-	public void setType(ObjectType type) {
-		this.type = type;
-	}
-	
-	public ArrayList<DirectedEdge> getEdges() {
-		return edges;
-	}
 
+	/**
+	 * Add an edge from one vertex to another. The reverse edge is automatically added.
+	 * @param endVertice: The final vertex. 
+	 * @param degrees: The rotation angle from this vertex to the final vertex.
+	 */
 	public void addEdge(Vertice endVertice, int degrees) {
 		DirectedEdge edge = new DirectedEdge(this, endVertice, degrees);
 		this.edges.add(edge);
@@ -46,6 +64,11 @@ public class Vertice {
 		endVertice.edges.add(reverseedge);
 	}
 	
+	/**
+	 * Checks if a continuous point is inside the vertex area.
+	 * @param point The point to check.
+	 * @return True if its inside the vertex, false otherwise.
+	 */
 	public boolean isInside(Point point) {
 		double xmin = center.getX() - radius;
 		double xmax = center.getX() + radius;
@@ -62,6 +85,8 @@ public class Vertice {
 		else return false;
 	}
 
+	// Getters and Setters.
+	
 	public Point getCenter() {
 		return center;
 	}
@@ -88,5 +113,16 @@ public class Vertice {
 	
 	public String toString() {
 		return "[" + this.coordinate[0] + "|" + this.coordinate[2] + "]";
+	}
+	
+	public ObjectType getType() {
+		return type;
+	}
+	public void setType(ObjectType type) {
+		this.type = type;
+	}
+	
+	public ArrayList<DirectedEdge> getEdges() {
+		return edges;
 	}
 }

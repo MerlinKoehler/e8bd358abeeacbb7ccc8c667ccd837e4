@@ -237,7 +237,10 @@ public class DiscreteMap {
 		}
 	}
 	
-	
+	/**
+	 * Checks and connects new vertices to already existing vertices in the map
+	 * @param vertice: The new vertex added to the map.
+	 */
 	private void checkNewVertice(Vertice vertice) {
 		for(int i = 0; i <= 315; i+=45) {
 			Integer[] position = getCoordinate(i, vertice.coordinate);
