@@ -1,4 +1,4 @@
-package Group3;
+package Group3_Game_Controller;
 
 import GUI.Main;
 import GUI.agent.container.IntruderContainer;
@@ -7,16 +7,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-/**
- * A class that can perform a set number of games in a row, and stores the information in a csv file.
- * @author Oskar Wielgos
- */
-
+// number of guards - number of intruders - map name - duration of game in rounds - intruders captured - who won - type of guard
 
 public class TestAutomation {
 
-    private static int n = 1; // number of tests to perform
-    private static String filename = "data.csv"; // dump location
+    private static int n = 30; // number of tests to perform
+    private static String filename = "data_20_guard.csv"; // dump location
     private static GUI.Game game;
 
     public static void main(String[] args) {

@@ -3,9 +3,10 @@ package Group3.GridMap;
 import Interop.Geometry.*;
 import java.util.ArrayList;
 
-// This is a discrete representation of this map.
-// Grid get added to it when they are currently not in the grid map and the intruder passes through it, or sees it.
-// Some of these grids might be partially out of the map, if the gridsize is big
+/**
+ * A class to store all the tiles in a gridmap.
+ * @author Janneke van Baden
+ */
 
 public class GridMapStorage {
 
@@ -16,6 +17,12 @@ public class GridMapStorage {
     // Again, create grids with: bottom right, top right, bottom left, top right
 
     // Normally, without teleporting, so at the start of the program
+
+    /**
+     * Creates this storage.
+     * @param size The size of tiles in a grid.
+     * @param teleported True if this is created after teleporting, else false.
+     */
     public GridMapStorage(double size, boolean teleported){
         grid = new ArrayList<Grid>();
 
@@ -37,7 +44,12 @@ public class GridMapStorage {
         grid.add(tile);
     }
 
-    // Finds the grid the agent is currently in
+
+    /**
+     * Determines in which tile a certain point is.
+     * @param current The point the tile needs to be determined of.
+     * @return The tile the point is in.
+     */
     public Grid findCurrentTile(Point current){
         for (int i = 0; i < grid.size(); i++){
             if (grid.get(i).isInsideThisTile(current)){
@@ -47,11 +59,14 @@ public class GridMapStorage {
         return null;
     }
 
-    // Automatically updates the Grid.
-    // Between two points, adds every grid
-    public void updateGrid(Point lastPosition, Point newPosition, int type) { // type will be of the last tile
-        // create grids for every place we walk through (adjacent to the ones which already exist)
-        current = findCurrentTile(lastPosition); //should already be in there
+    /**
+     * Automatically updates the gridmap.
+     * @param lastPosition The point before a move was made.
+     * @param newPosition The point after a move was made.
+     * @param type The type of the last tile it is in.
+     */
+    public void updateGrid(Point lastPosition, Point newPosition, int type) {
+        current = findCurrentTile(lastPosition);
 
         double currentX = lastPosition.getX();
         double currentY = lastPosition.getY();
@@ -71,18 +86,12 @@ public class GridMapStorage {
                 if (temp == null) {
                     temp = addTile(currentX, currentY, current, 1);
 
-                    // Update adjacency list
-                    /*for (int j = 0; j < this.getGrid().size(); j++) {
-                        temp.addAdjacent(this.getGrid().get(j));
-                    }*/
-
                     current = temp;
                 } else {
                     current = temp;
                     temp.seen();
                 }
             }
-
 
             // Then, set it in the right position.
             // Also, at the end of this (so eg when fov is used), set whether it's a wall or teleportation.
@@ -110,9 +119,18 @@ public class GridMapStorage {
         }
     }
 
-    // Add a tile
+    //
     // This implementation is based on the old grid, and the point it is in now
     // Checks for the direction compared to the old grid
+
+    /**
+     * Add a tile to the gridmap.
+     * @param currentX: The x-coordinate of the point.
+     * @param currentY: The y-coordinate of the point.
+     * @param current: The tile an agent used to be in
+     * @param type: The type of the tile.
+     * @return The tile that was created.
+     */
     private Grid addTile(double currentX, double currentY, Grid current, int type) {
         Grid temp = null;
 
@@ -180,7 +198,9 @@ public class GridMapStorage {
         return grid;
     }
 
-    // Add 1 to every grid tile - keeps track of when a certain tile was seen.
+    /**
+     * Add 1 to every grid tile - keeps track of when a certain tile was seen.
+     */
     public void updateSeen() {
         for (int i = 0; i < grid.size(); i++){
             grid.get(i).increaseSeen();

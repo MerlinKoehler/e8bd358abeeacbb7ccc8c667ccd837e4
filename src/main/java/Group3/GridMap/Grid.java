@@ -3,9 +3,9 @@ package Group3.GridMap;
 import Interop.Geometry.Point;
 import java.util.ArrayList;
 
-/*
-    Points are all based on the agent.
-    One single grid here means a square.
+/**
+ * A class for a tile of a grid map.
+ * @author Janneke van Baden
  */
 
 public class Grid {
@@ -25,9 +25,16 @@ public class Grid {
     // Will contain maximally 8 tiles (surrounding eight directions).
     private Grid[] adjacentTo = new Grid[8];
 
-    // Make keys in case it's a teleport (0 means it is not a teleport or that it hasn't found it yet)
-    private int teleport_to = 0;
 
+    /**
+     * Initialize the tile.
+     * @param bottomRight The point at the bottom right of the tile.
+     * @param topRight The point at the top right of the tile.
+     * @param bottomLeft The point at the bottom left of the tile.
+     * @param topLeft The point at the top left of the tile.
+     * @param size The size of and edge of the tile.
+     * @param type The type of the tile (1: possible to walk through, 2: wall, 3: teleport)
+     */
     public Grid(Point bottomRight, Point topRight, Point bottomLeft, Point topLeft, double size, int type) {
         // Only one point needed to create a new tile in the grid
         this.bottomRight = bottomRight;
@@ -43,10 +50,16 @@ public class Grid {
         this.type = type;
     }
 
+    /**
+     * Sets this tile's "seen" property to 0.
+     */
     public void seen(){
         this.lastSeen = 0;
     }
 
+    /**
+     * Increases the "seen" property by 1.
+     */
     public void increaseSeen(){
         this.lastSeen = this.lastSeen + 1;
     }
@@ -55,7 +68,13 @@ public class Grid {
         return lastSeen;
     }
 
-    // Check whether a point is inside of this tile
+    //
+
+    /**
+     * Check whether a point is inside of this tile
+     * @param point The point which needs to be checked.
+     * @return true if it is inside the tile, else return false.
+     */
     public boolean isInsideThisTile(Point point){
         if ((point.getX() <= this.bottomRight.getX()) && (point.getX() >= this.bottomLeft.getX()) && (point.getY() >= this.bottomLeft.getY()) && (point.getY() <= this.topLeft.getY())){
             return true;
@@ -63,7 +82,6 @@ public class Grid {
         return false;
     }
 
-    // Get all different points in this grid.
     public Point getBottomLeft() {
         return bottomLeft;
     }
@@ -80,10 +98,12 @@ public class Grid {
         return topRight;
     }
 
-    // For the adjacent methods.
-    // 0 = top, 1 = top right, 2 = right, 3 = bottom right, 4= bottom, 5 = bottom left, 6 = left, 7 = top left
-    // Check whether one tile is adjacent to another, and set it in its list.
+    /**
+     * Check whether one tile is adjacent to another, and set it in its list.
+     * @param grid The grid to which all these adjacent grids need to be added, and vice versa.
+     */
     public void addAdjacent(Grid grid){
+        // 0 = top, 1 = top right, 2 = right, 3 = bottom right, 4= bottom, 5 = bottom left, 6 = left, 7 = top left
         // top
         if (grid.getBottomLeft().getX() == this.topLeft.getX() && grid.getBottomLeft().getY() == this.topLeft.getY() && grid.getBottomRight().getX() == this.topRight.getX() && grid.getBottomRight().getY() == this.topRight.getY() ){
             adjacentTo[0] = grid;
@@ -126,12 +146,17 @@ public class Grid {
         }
     }
 
-    // Get the adjacency list
     public Grid[] getAdjacentTo() {
         return adjacentTo;
     }
 
     // returns the direction
+
+    /**
+     * Check which direction a tile is in, if it's adjacent to this tile.
+     * @param grid The tile the direction (compared to this tile) is needed for.
+     * @return If top=> 0, top right=> 1, right=> 2, bottom right=> 3 bottom=> 4, bottom left=> 5, left=> 6, top left=> 7, not adjacent=> -1
+     */
     public int isAdjacent(Grid grid){
         if (grid == adjacentTo[0]){
             return 0;
@@ -166,15 +191,6 @@ public class Grid {
 
     public int getType(){
         return type;
-    }
-
-    // In case it is a teleport area - not implemented yet
-    public void setTeleport_to(int teleport_to) {
-        this.teleport_to = teleport_to;
-    }
-
-    public int getTeleport_to(){
-        return teleport_to;
     }
 
     public double getSize(){

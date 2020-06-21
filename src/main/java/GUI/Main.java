@@ -7,7 +7,7 @@ import Group3.TestAutomation;
 public class Main {
 
     private static Game game;
-    private static String mapPath = "./src/main/java/GUI/map/maps/test_2.map";
+    private static String mapPath = "./src/main/java/Group3/MapLevels/complexity8.map";
 
     public static void main(String[] args) {
 
