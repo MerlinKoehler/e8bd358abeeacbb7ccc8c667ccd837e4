@@ -2,7 +2,7 @@ package Group3.DiscreteMap;
 
 /**
  * An enumeration of object types in the game.
- * @author Merlin Köhler
+ * @author Merlin Koehler
  *
  */
 public enum ObjectType {

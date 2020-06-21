@@ -2,7 +2,7 @@ package Group3.DiscreteMap;
 
 /**
  * A class that represents an directed edge.
- * @author Margarita Naryzhnyaya, Merlin Köhler, Paula Gitu
+ * @author Margarita Naryzhnyaya, Merlin Koehler, Paula Gitu
  *
  */
 public class DirectedEdge {

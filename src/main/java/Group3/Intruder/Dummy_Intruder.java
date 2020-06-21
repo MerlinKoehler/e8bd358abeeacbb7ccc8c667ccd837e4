@@ -7,7 +7,7 @@ import Interop.Percept.IntruderPercepts;
 
 /**
  * Just a dummy intruder doing nothing. 
- * @author Merlin Köhler
+ * @author Merlin Koehler
  *
  */
 public class Dummy_Intruder implements Interop.Agent.Intruder {

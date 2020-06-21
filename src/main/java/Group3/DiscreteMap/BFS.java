@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * A class for performing a breadth first search on a graph map.
- * @author Margarita Naryzhnyaya, Merlin Köhler, Paula Gitu
+ * @author Margarita Naryzhnyaya, Merlin Koehler, Paula Gitu
  *
  */
 

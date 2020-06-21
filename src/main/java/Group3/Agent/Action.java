@@ -2,7 +2,7 @@ package Group3.Agent;
 
 /**
  * Enumeration of discrete agent actions.
- * @author Merlin Köhler
+ * @author Merlin Koehler
  *
  */
 public enum Action {

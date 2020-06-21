@@ -5,7 +5,7 @@ import Interop.Geometry.Point;
 
 /**
  * A class representing a vertex in a graph map.
- * @author Margarita Naryzhnyaya, Merlin Köhler, Paula Gitu
+ * @author Margarita Naryzhnyaya, Merlin Koehler, Paula Gitu
  *
  */
 public class Vertice {

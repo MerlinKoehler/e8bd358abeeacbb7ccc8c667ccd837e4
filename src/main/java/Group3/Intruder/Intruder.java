@@ -26,7 +26,7 @@ import Interop.Percept.Vision.VisionPrecepts;
 
 /**
  * Intruder Class.
- * @author Margarita Naryzhnyaya, Merlin Köhler, Paula Gitu
+ * @author Margarita Naryzhnyaya, Merlin Koehler, Paula Gitu
  *
  */
 public class Intruder implements Interop.Agent.Intruder {

@@ -5,7 +5,7 @@ import java.util.ArrayList;;
 
 /**
  * A class, that represents a discrete graph map.
- * @author Margarita Naryzhnyaya, Merlin Köhler, Paula Gitu
+ * @author Margarita Naryzhnyaya, Merlin Koehler, Paula Gitu
  *
  */
 public class DiscreteMap {

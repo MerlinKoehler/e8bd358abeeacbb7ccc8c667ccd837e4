@@ -24,7 +24,7 @@ import Interop.Percept.Vision.VisionPrecepts;
 
 /**
  * Second guard class
- * @author Merlin Köhler
+ * @author Merlin Koehler
  *
  */
 public class Guard2 implements Interop.Agent.Guard {
