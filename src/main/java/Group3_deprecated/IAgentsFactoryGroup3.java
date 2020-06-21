@@ -1,4 +1,4 @@
-package Group3;
+package Group3_deprecated;
 
 import Interop.Agent.Guard;
 import Interop.Agent.Intruder;

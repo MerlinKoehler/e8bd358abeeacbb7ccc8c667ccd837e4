@@ -1,9 +1,21 @@
 package Group3.DiscreteMap;
 
+/**
+ * A class that represents an directed edge.
+ * @author Margarita Naryzhnyaya, Merlin Köhler, Paula Gitu
+ *
+ */
 public class DirectedEdge {
 	Vertice startVertice;
 	Vertice endVertice;
 	int degrees;
+	
+	/**
+	 * Initializes a new directed edge
+	 * @param startVertice The start vertex
+	 * @param endVertice The end vertex
+	 * @param degrees The absolute number of degrees from the start to the end vertex.
+	 */
 	public DirectedEdge(Vertice startVertice, Vertice endVertice, int degrees) {
 		this.startVertice = startVertice;
 		this.endVertice = endVertice;

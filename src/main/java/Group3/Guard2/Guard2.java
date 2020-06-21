@@ -69,13 +69,13 @@ public class Guard2 implements Interop.Agent.Guard {
 			updateState();
 		}
 		else {
-			System.out.println("Illegal Move!!!");
+			System.out.println("Illegal Move Guard!!!");
 			actionList = new LinkedList<Action>();
 			actionList.offer(Action.Left);
 			actionList.offer(Action.Move);
 		}
 		if(percepts.getAreaPercepts().isInSentryTower()) {
-			System.out.println("In Sentry");
+			//System.out.println("In Sentry");
 		}
 		createNewVerticesInSight(percepts.getVision());
 		//System.out.println(map.toString(currentPosition.getCoordinate()));
@@ -104,13 +104,13 @@ public class Guard2 implements Interop.Agent.Guard {
 	private GuardAction returnAction(Action action, GuardPercepts percepts) {
 		switch(action) {
 		case Left:
-			System.out.println("Left");
+			//System.out.println("Left");
 			return turnLeft(); 
 		case Right:
-			System.out.println("Right");
+			//System.out.println("Right");
 			return turnRight();
 		case Move:
-			System.out.println("Move");
+			//System.out.println("Move");
 			double maxMoveDistance = percepts.getScenarioGuardPercepts().getMaxMoveDistanceGuard().getValue();
 			if(percepts.getAreaPercepts().isInSentryTower()) {
 				maxMoveDistance = maxMoveDistance * percepts.getScenarioGuardPercepts().getScenarioPercepts().getSlowDownModifiers().getInSentryTower();
@@ -187,7 +187,7 @@ public class Guard2 implements Interop.Agent.Guard {
 						action = new Move(new Distance(distance));
 					}
 				}
-				System.out.println(rotation.getDegrees());
+				//System.out.println(rotation.getDegrees());
 				Rotate rotate = new Rotate(rotation);
 				return;
 			default:

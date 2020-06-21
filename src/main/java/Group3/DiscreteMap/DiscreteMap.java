@@ -3,9 +3,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;;
 
+/**
+ * A class, that represents a discrete graph map.
+ * @author Margarita Naryzhnyaya, Merlin Köhler, Paula Gitu
+ *
+ */
 public class DiscreteMap {
-	private static final String ArrayList = null;
 
+	// A hash map of all vertices in the graph map.
 	HashMap<String, Vertice> vertices;
 	
 	int xMin = 0;
@@ -13,15 +18,27 @@ public class DiscreteMap {
 	int yMin = 0;
 	int yMax = 0;
 	
+	/**
+	 * Initialize a new discrete graph map
+	 */
 	public DiscreteMap() {
 		this.vertices = new HashMap<String, Vertice>();
 	}
 
+	/**
+	 * Gets a vertex based on given coordinates
+	 * @param position The coordinates of the vertex.
+	 * @return The vertex at the given position.
+	 */
 	public Vertice getVertice(Integer[] position) {
 		String key = position[0] + " " + position[1];
 		return vertices.get(key);
 	}
 	
+	/**
+	 * Returns all vertices in the map.
+	 * @return All vertices.
+	 */
 	public List<Vertice> getAllVertices() {
 		ArrayList<Vertice> verticeList = new ArrayList<Vertice>();
 		for(String key: vertices.keySet()) {
@@ -30,6 +47,10 @@ public class DiscreteMap {
 		return verticeList;
 	}
 
+	/**
+	 * Add a new vertex object.
+	 * @param vertice The vertex to add.
+	 */
 	public void addVertice(Vertice vertice) {
 		checkNewVertice(vertice);
 		
@@ -52,11 +73,23 @@ public class DiscreteMap {
 		this.vertices.put(key,vertice);
 	}
 	
+	/**
+	 * Checks if an vertex exists (based on the coordinates).
+	 * @param coordinate The coordinate of the vertex.
+	 * @return True, if vertex exists, else false.
+	 */
 	public boolean verticeExists(Integer[] coordinate) {
 		String key = coordinate[0] + " " + coordinate[1];
 		return vertices.containsKey(key);
 	}
 	
+	
+	/**
+	 * Gets the absolute coordinate based on a relative position of a vertex.
+	 * @param degrees The angle of the vertex.
+	 * @param currentPosition The absolute current position.
+	 * @return The absolute coordinate of the vertex.
+	 */
 	public static Integer[] getCoordinate(int degrees, Integer[] currentPosition) {
 		int x = currentPosition[0];
 		int y = currentPosition[1];
@@ -83,6 +116,9 @@ public class DiscreteMap {
 		}
 	}
 	
+	/**
+	 * String ASCII representation of the map.
+	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for(int y = yMax; y >= yMin; y--) {
@@ -109,6 +145,12 @@ public class DiscreteMap {
 					case Unknown:
 						sb.append("?");
 						break;
+					case Door:
+						sb.append("D");
+						break;
+					case Window:
+						sb.append("W");
+						break;
 					default:
 						sb.append("O");
 					}
@@ -122,6 +164,10 @@ public class DiscreteMap {
 		return sb.toString();
 	}
 	
+	/**
+	 * String ASCII representation of the map.
+	 * @param agentPosition: The agents current position. 
+	 */
 	public String toString(Integer[] agentPosition) {
 		StringBuilder sb = new StringBuilder();
 		for(int y = yMax; y >= yMin; y--) {
@@ -149,6 +195,12 @@ public class DiscreteMap {
 					case TargetArea:
 						sb.append("!");
 						break;
+					case Door:
+						sb.append("D");
+						break;
+					case Window:
+						sb.append("W");
+						break;
 					case Unknown:
 						sb.append("?");
 						break;
@@ -165,6 +217,9 @@ public class DiscreteMap {
 		return sb.toString();
 	}
 	
+	/**
+	 * Unmark all vertices after a BFS.
+	 */
 	public void unMark() {
 		for(String key: vertices.keySet()) {
 			Vertice vertice = vertices.get(key);
@@ -173,11 +228,15 @@ public class DiscreteMap {
 		}
 	}
 	
+	/**
+	 * Reset the whole map.
+	 */
 	public void reset() {
 		for(String key: vertices.keySet()) {
 			vertices.get(key).setType(ObjectType.None);
 		}
 	}
+	
 	
 	private void checkNewVertice(Vertice vertice) {
 		for(int i = 0; i <= 315; i+=45) {
@@ -190,6 +249,9 @@ public class DiscreteMap {
 			
 	}
 
+	/**
+	 * Remove all fields marked as danger.
+	 */
 	public void removeDanger() {
 		for(String key: vertices.keySet()) {
 			if(vertices.get(key).getType() == ObjectType.Danger) {
@@ -198,6 +260,9 @@ public class DiscreteMap {
 		}
 	}
 	
+	/**
+	 * Remove all fields, marked as intruder.
+	 */
 	public void removeIntruder() {
 		for(String key: vertices.keySet()) {
 			if(vertices.get(key).getType() == ObjectType.Intruder) {

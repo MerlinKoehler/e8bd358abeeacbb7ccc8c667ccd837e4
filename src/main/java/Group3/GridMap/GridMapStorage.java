@@ -1,8 +1,5 @@
 package Group3.GridMap;
 
-import Group3.MainControl;
-import Group3.GridMap.Grid;
-import Interop.Action.Sprint;
 import Interop.Geometry.*;
 import java.util.ArrayList;
 

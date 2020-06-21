@@ -1,4 +1,4 @@
-package Group3;
+package Group3_deprecated;
 
 import Interop.Agent.Guard;
 import Interop.Agent.Intruder;
@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import GUI.agent.factories.IAgentFactory;
-import Group3.Guard2.Guard2;
 
 /**
  * This class provides common way to build agents for the competition.
@@ -17,8 +16,8 @@ import Group3.Guard2.Guard2;
  * For example:
  * Agents must not hold ANY references to common objects or references to each other.
  */
-public class IAgentsFactoryGroup3 implements IAgentFactory{
-    public List<Intruder> createIntruders(int number) {
+public class AgentsFactory{
+    public static List<Intruder> createIntruders(int number) {
         
     	List<Intruder> intruders = new ArrayList<Intruder>();
     	
@@ -29,7 +28,7 @@ public class IAgentsFactoryGroup3 implements IAgentFactory{
     	
     	return intruders;
     }
-    public List<Guard> createGuards(int number) {
+    public static List<Guard> createGuards(int number) {
     	
     	List<Guard> guards = new ArrayList<Guard>();
     	for(int i = 0; i < number; i++) {

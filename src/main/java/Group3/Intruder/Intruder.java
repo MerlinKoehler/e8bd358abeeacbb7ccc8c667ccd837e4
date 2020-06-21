@@ -34,7 +34,7 @@ import Interop.Percept.Vision.VisionPrecepts;
 
 public class Intruder implements Interop.Agent.Intruder {
 	
-	private static int serialNumber = 0;
+	private static int serialNumber = 1;
 	
 	public Intruder() {
 		ownSerialNumber = Intruder.serialNumber;
@@ -80,13 +80,13 @@ public class Intruder implements Interop.Agent.Intruder {
 			updateState();
 		}
 		else {
-			//System.out.println("Illegal Move!!!");
+			System.out.println("Illegal Move Intruder!!!");
 			actionList = new LinkedList<Action>();
 			actionList.offer(Action.Left);
 			actionList.offer(Action.Move);
 		}
 		if(percepts.getAreaPercepts().isInSentryTower()) {
-			System.out.println("In Sentry");
+			// System.out.println("In Sentry");
 		}
 		createNewVerticesInSight(percepts.getVision());
 		//System.out.println(map.toString(currentPosition.getCoordinate()));
@@ -178,7 +178,7 @@ public class Intruder implements Interop.Agent.Intruder {
 					break;
 				case Guard:
 					map.removeDanger();
-					System.out.println("Danger");
+					//System.out.println("Danger");
 					escape = true;
 					inVertice.setType(ObjectType.Danger);
 					break;
