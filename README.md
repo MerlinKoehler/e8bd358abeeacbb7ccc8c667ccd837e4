@@ -22,6 +22,9 @@ javac -cp src/main/java src/main/java/GUI/gui2/Gui.java
 java -cp src/main/java GUI.gui2.Gui
 ```
 
+### Switching guards
+For using the second guard algorithm instead of the first one, uncomment line 39 and comment out line 37 in src/main/java/GUI/gui2/Gui.java.
+
 ## Built With
 
 * [JavaFX](https://openjfx.io/) - The graphic framework used

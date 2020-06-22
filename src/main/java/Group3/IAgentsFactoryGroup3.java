@@ -33,10 +33,11 @@ public class IAgentsFactoryGroup3 implements IAgentFactory{
     	
     	List<Guard> guards = new ArrayList<Guard>();
     	for(int i = 0; i < number; i++) {
+    		// for first guard
     		Group3.Guard1.Guard guard =  new Group3.Guard1.Guard();
-    		//Group3.ExplorationAgent agent = new Group3.ExplorationAgent();
+    		// for second guard
+    		//Group3.Guard2.Guard2 guard =  new Group3.Guard2.Guard2();
     		guards.add(guard);
-    		//guards.add(agent);
     	}
     	return guards;
     }
